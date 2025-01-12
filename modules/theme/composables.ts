@@ -45,7 +45,7 @@ export async function cookieBaker() {
 				token: token || "",
 			};
 			await api.user.getSelfUserInfo(userAuthToken);
-			userSettings = await api.user.getUserSettings(userAuthToken);
+			userSettings = await api.user.getUserSettings({ getUserSettingsRequest: userAuthToken });
 
 			cookieThemeType.value = userSettings?.userSettings?.themeType || THEME_ENV.SYSTEM_THEME;
 			cookieThemeColor.value = userSettings?.userSettings?.themeColor ? (PALETTE_LIST as unknown as string[]).includes(userSettings.userSettings.themeColor) ? userSettings.userSettings.themeColor : THEME_ENV.CUSTOM_THEME_COLOR : THEME_ENV.DEFAULT_THEME_COLOR;

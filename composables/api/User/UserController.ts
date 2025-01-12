@@ -193,9 +193,19 @@ export const uploadUserAvatar = async (fileName: string, avatarBlobData: Blob, s
  * @param getUserSettingsRequest 用户令牌
  * @returns 用户设置
  */
-export const getUserSettings = async (getUserSettingsRequest?: GetUserSettingsRequestDto): Promise<GetUserSettingsResponseDto> => {
+export const getUserSettings = async (request?: { getUserSettingsRequest?: GetUserSettingsRequestDto; headerCookie?: { cookie?: string | undefined } }): Promise<GetUserSettingsResponseDto> => {
+	// NOTE: use { Cookie: request?.headerCookie?.cookie ?? "" } to passing client-side cookies to backend API when SSR.
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	const userSettings = await POST(`${USER_API_URI}/settings`, getUserSettingsRequest, { credentials: "include" }) as GetUserSettingsResponseDto;
+	const userSettings = await POST( // WARN: 此处必须使用原生 fetch 方法，不要使用 useFetch，因为 getUserSettings 被 Nuxt 管辖之外的中间件调用了。
+		`${USER_API_URI}/settings`,
+		request?.getUserSettingsRequest,
+		{
+			credentials: "include",
+		},
+		{
+			Cookie: request?.headerCookie?.cookie ?? "",
+		},
+	) as GetUserSettingsResponseDto;
 	return userSettings;
 };
 
