@@ -22,9 +22,11 @@ export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> =>
  * @param getVideoByKvidRequest 从视频 ID 获取视频的请求参数
  * @returns 视频页面需要的响应
  */
-export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto): Promise<GetVideoByKvidResponseDto> => {
+export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetVideoByKvidResponseDto> => {
 	if (getVideoByKvidRequest && getVideoByKvidRequest.videoId) {
-		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { credentials: "include" });
+		// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+		// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { headers: headerCookie, credentials: "include" });
 		if (result.value)
 			return result.value;
 		else

@@ -21,7 +21,8 @@
 
 		if (Number.isFinite(kvid)) {
 			const getVideoByKvidRequest: GetVideoByKvidRequestDto = { videoId: kvid };
-			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest);
+			const headerCookie = useRequestHeaders(["cookie"]);
+			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest, headerCookie);
 			if (videoDataResponse.success) {
 				const videoData = videoDataResponse.video;
 				const videoPartData = videoData?.videoPart?.[0]; // TODO: 因为要做 分P 视频，所以这里获取到的视频是一个数组，这里暂时取了数组第 0 位。应改进为读取数组中的所有视频，并根据 id 排序渲染成 分P 列表

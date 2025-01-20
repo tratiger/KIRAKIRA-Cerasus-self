@@ -85,7 +85,7 @@ async function checkKvid(kvidString: string): Promise<true | Error> {
 			const getVideoByKvidRequest: GetVideoByKvidRequestDto = {
 				videoId: kvidNumber,
 			};
-			const videoInfoResult = await api.video.getVideoByKvid(getVideoByKvidRequest);
+			const videoInfoResult = await api.video.getVideoByKvid(getVideoByKvidRequest); // TODO: getVideoByKvid 是一个相对来说比较重的获取全部视频数据的 API，应该新建一个轻量一些的校验视频是否存在的 API
 			if (videoInfoResult.success && videoInfoResult.video)
 				return true;
 			else
