@@ -53,7 +53,7 @@
 					v-for="video in videos?.videos"
 					:key="video.videoId"
 					:videoId="video.videoId"
-					:uploader="video.uploader ?? ''"
+					:uploader="video.uploaderNickname ?? video.uploader ?? 'Unknown uploader'"
 					:uploaderId="video.uploaderId"
 					:image="video.image"
 					:date="new Date(video.uploadDate || 0)"
