@@ -9,10 +9,47 @@
 		/** 粉丝数。 */
 		fans: number;
 		/** 是否已关注？ */
-		isFollowed?: boolean;
+		isFollowing?: boolean;
+		/** 是否是自己？ */
+		isSelf?: boolean;
 		/** 用户 UID。 */
 		uid?: number;
 	}>();
+
+	const isFollowing = ref(props.isFollowing); // 是否正在关注
+	const isFollowingUploader = ref(false); // 是否正在关注一个用户
+
+	/**
+	 * 跳转到个人主页
+	 */
+	function jumpToSelfPage() {
+		navigate(`/user/${props.uid}`);
+	}
+
+	/**
+	 * 关注用户
+	 */
+	async function followingUploader() {
+		isFollowingUploader.value = true;
+		try {
+			const followingUploaderRequest: FollowingUploaderRequestDto = {
+				followingUid: props.uid ?? -1,
+			};
+			const { data } = await api.feed.followingUploader(followingUploaderRequest);
+			if (data.value?.success) {
+				isFollowing.value = true;
+				// TODO: 使用多语言
+				useToast("关注成功", "success");
+			} else
+				// TODO: 使用多语言
+				useToast("关注失败，请刷新页面后重试", "error", 5000);
+		} catch (error) {
+			// TODO: 使用多语言
+			useToast("关注用户时出错，请刷新页面后重试", "error", 5000);
+			console.error("ERROR", "关注用户时出错：", error);
+		}
+		isFollowingUploader.value = false;
+	}
 </script>
 
 <template>
@@ -22,7 +59,9 @@
 				{{ fans }} {{ t(fans).fans }}
 			</template>
 		</UserContent>
-		<Button v-if="!isFollowed" icon="add">{{ t.follow_verb }}</Button>
+		<!-- TODO: 使用多语言 -->
+		<Button v-if="isSelf" @click="jumpToSelfPage">个人主页</Button>
+		<Button v-else-if="!isFollowing" icon="add" :disabled="isFollowingUploader" :loading="isFollowingUploader" @click="followingUploader">{{ t.follow_verb }}</Button>
 		<Button v-else disabled icon="check">{{ t.following }}</Button>
 	</Comp>
 </template>

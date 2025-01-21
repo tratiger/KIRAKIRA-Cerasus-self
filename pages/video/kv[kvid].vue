@@ -111,7 +111,8 @@
 					:nickname="videoDetails?.uploaderInfo?.userNickname ?? ''"
 					:username="videoDetails?.uploaderInfo?.username ?? ''"
 					:fans="videoDetails?.uploaderSubscribers ?? 0"
-					isFollowed
+					:isFollowing="videoDetails?.uploaderInfo?.isFollowing"
+					:isSelf="videoDetails?.uploaderInfo?.isSelf"
 				/>
 
 				<!-- <Subheader
