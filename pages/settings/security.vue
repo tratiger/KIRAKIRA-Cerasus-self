@@ -507,6 +507,7 @@
 								type="text"
 								icon="verified"
 								placeholder="验证码"
+								autocomplete="off"
 							/>
 						</form>
 					</div>
@@ -545,7 +546,7 @@
 			<div class="delete-totp-modal">
 				<form>
 					<TextBox v-model="deleteTotpPassword" :required="true" type="password" icon="lock" :placeholder="t.password" autoComplete="current-password" />
-					<TextBox v-model="deleteTotpVerificationCode" :required="true" type="text" icon="lock" placeholder="TOTP 验证码" />
+					<TextBox v-model="deleteTotpVerificationCode" :required="true" type="text" icon="lock" placeholder="TOTP 验证码" autocomplete="off" />
 				</form>
 			</div>
 			<template #footer-right>
