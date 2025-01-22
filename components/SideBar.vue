@@ -53,7 +53,7 @@
 	 */
 	function onClickUser() {
 		if (!selfUserInfoStore.isLogined) showLogin.value = true;
-		else navigate(`/user/${selfUserInfoStore.uid}`);
+		else navigate(`/user/${selfUserInfoStore.userInfo.uid}`);
 	}
 
 	/**
@@ -81,8 +81,8 @@
 	<DefineAvatar>
 		<UserAvatar
 			v-if="selfUserInfoStore.isEffectiveCheckOnce"
-			v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.login"
-			:avatar="selfUserInfoStore.isLogined && !selfUserInfoStore.tempHideAvatarFromSidebar ? selfUserInfoStore.userAvatar : undefined"
+			v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
+			:avatar="selfUserInfoStore.isLogined && !selfUserInfoStore.tempHideAvatarFromSidebar ? selfUserInfoStore.userInfo.avatar : undefined"
 			hoverable
 		/>
 	</DefineAvatar>

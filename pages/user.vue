@@ -48,14 +48,14 @@
 
 	watch(urlUid, fetchUserData, { deep: false });
 
-	const selfUid = computed(() => userSelfInfoStore.uid);
+	const selfUid = computed(() => userSelfInfoStore.userInfo.uid);
 	watch(selfUid, fetchUserData, { deep: false });
 
 	const currentTab = computed(() => currentUserTab());
 
 	/** fetch the user profile data */
 	async function fetchUserData() {
-		if (userSelfInfoStore.isLogined && urlUid.value === userSelfInfoStore.uid) {
+		if (userSelfInfoStore.isLogined && urlUid.value === userSelfInfoStore.userInfo.uid) {
 			isSelf.value = true;
 			await api.user.getSelfUserInfo(); // 获取当前登录用户的用户信息
 		} else {
@@ -73,7 +73,7 @@
 
 	const titleAffixString = t.user_page.title_affix; // HACK: Bypass "A composable that requires access to the Nuxt instance was called outside of a plugin."
 
-	const titleUserNickname = computed(() => isSelf.value ? userSelfInfoStore.userNickname ? titleAffixString(userSelfInfoStore.userNickname) : "" : userInfo.value?.userNickname ? titleAffixString(userInfo.value?.userNickname) : "");
+	const titleUserNickname = computed(() => isSelf.value ? userSelfInfoStore.userInfo.userNickname ? titleAffixString(userSelfInfoStore.userInfo.userNickname) : "" : userInfo.value?.userNickname ? titleAffixString(userInfo.value?.userNickname) : "");
 
 	// const titleUserName = computed(() => isSelf.value ? "aaa" : "bbb");
 
@@ -87,16 +87,16 @@
 				<div class="content">
 					<UserContent
 						v-tooltip="isSelf ? t.profile.edit : undefined"
-						:avatar="isSelf ? userSelfInfoStore.userAvatar : userInfo?.avatar"
-						:username="isSelf ? userSelfInfoStore.username : userInfo?.username"
-						:nickname="isSelf ? userSelfInfoStore.userNickname : userInfo?.userNickname"
-						:gender="isSelf ? userSelfInfoStore.gender : userInfo?.gender"
+						:avatar="isSelf ? userSelfInfoStore.userInfo.avatar : userInfo?.avatar"
+						:username="isSelf ? userSelfInfoStore.userInfo.username : userInfo?.username"
+						:nickname="isSelf ? userSelfInfoStore.userInfo.userNickname : userInfo?.userNickname"
+						:gender="isSelf ? userSelfInfoStore.userInfo.gender : userInfo?.gender"
 						:to="isSelf ? `/settings/profile` : undefined"
 						size="huge"
 						center
 					>
 						<template #description>
-							{{ isSelf ? userSelfInfoStore.signature : userInfo?.signature }}
+							{{ isSelf ? userSelfInfoStore.userInfo.signature : userInfo?.signature }}
 						</template>
 					</UserContent>
 					<div class="actions">

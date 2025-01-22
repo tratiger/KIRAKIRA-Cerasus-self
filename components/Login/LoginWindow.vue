@@ -642,12 +642,12 @@
 						<div class="line"></div>
 					</div>
 					<div class="avatar">
-						<NuxtImg v-if="selfUserInfoStore.userAvatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userAvatar" alt="avatar" />
+						<NuxtImg v-if="selfUserInfoStore.userInfo.avatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userInfo.avatar" alt="avatar" />
 						<Icon v-else name="person" />
 					</div>
 					<div ref="loginAnimationText" class="texts">
 						<div class="welcome">{{ t.loginwindow.login_welcome }}</div>
-						<div class="name">{{ selfUserInfoStore.userNickname }}</div>
+						<div class="name">{{ selfUserInfoStore.userInfo.userNickname }}</div>
 					</div>
 				</div>
 			</Comp>

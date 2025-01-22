@@ -87,7 +87,7 @@
 	 * 修改 Email
 	 */
 	async function updateUserEmail() {
-		const oldEmail = selfUserInfoStore.userEmail ?? "";
+		const oldEmail = selfUserInfoStore.userInfo.email ?? "";
 		if (!newEmail.value || !changeEmailPassword.value || !changeEmailVerificationCode.value) {
 			useToast("必填项不能为空！", "warning", 5000); // TODO: 使用多语言
 			return;
@@ -99,7 +99,7 @@
 		isChangingEmail.value = true;
 		const passwordHash = await generateHash(changeEmailPassword.value);
 		const updateUserEmailRequest: UpdateUserEmailRequestDto = {
-			uid: selfUserInfoStore.uid ?? 0,
+			uid: selfUserInfoStore.userInfo.uid ?? -1,
 			oldEmail,
 			newEmail: newEmail.value,
 			passwordHash,
@@ -333,7 +333,7 @@
 		// TODO: 使用多语言
 		// 此处也许没必要使用多语言。
 		const backupCodeAndRecoveryCode = `BACKUP CODE:\n${displayBackupCode.value}\n\nRECOVERY CODE:\n${recoveryCode.value}`;
-		const filename = `KIRAKIRA TOTP CODE ${selfUserInfoStore.username} (UID ${selfUserInfoStore.uid}) ${new Date().getTime()}`;
+		const filename = `KIRAKIRA TOTP CODE ${selfUserInfoStore.userInfo.username} (UID ${selfUserInfoStore.userInfo.uid}) ${new Date().getTime()}`;
 		downloadTxtFileFromString(backupCodeAndRecoveryCode, filename);
 	}
 
@@ -409,7 +409,7 @@
 			<SettingsChipItem
 				icon="email"
 				trailingIcon="edit"
-				:details="t.current_email + t.colon + selfUserInfoStore.userEmail"
+				:details="t.current_email + t.colon + selfUserInfoStore.userInfo.email"
 				@trailingIconClick="showChangeEmail = true"
 			>{{ t.email_address }}</SettingsChipItem>
 		</section>
@@ -557,7 +557,7 @@
 		<!-- TODO: 使用多语言 -->
 		<Modal v-model="showCreateEmail2FAModel" title="确认开启邮箱验证" icon="lock">
 			<div>
-				<p>你注册时使用的邮箱是{{ t.colon + selfUserInfoStore.userEmail }}</p>
+				<p>你注册时使用的邮箱是{{ t.colon + selfUserInfoStore.userInfo.email }}</p>
 				<p>请确保该邮箱仍在使用。</p>
 			</div>
 			<template #footer-right>

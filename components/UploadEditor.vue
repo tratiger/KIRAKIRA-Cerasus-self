@@ -170,7 +170,7 @@
 			useToast("视频没有上传完成", "error"); // TODO: 使用多语言
 			return;
 		}
-		const uid = useSelfUserInfoStore().uid;
+		const uid = useSelfUserInfoStore().userInfo.uid;
 		if (!uid) {
 			useToast("未登录用户不能上传", "error"); // TODO: 使用多语言
 			return;

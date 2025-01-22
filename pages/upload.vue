@@ -14,7 +14,7 @@
 	 */
 	async function uploaded(fileList: File[]) {
 		// DELETE ME: 改判定仅测试阶段使用
-		if (selfUserInfoStore.role !== "admin") {
+		if (selfUserInfoStore.userInfo.role !== "admin") {
 			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
 			return;
 		}
@@ -71,7 +71,7 @@
 		const input = e.target as HTMLInputElement;
 		const files = getValidFiles(input.files);
 		// DELETE ME: 改判定仅测试阶段使用
-		if (selfUserInfoStore.role !== "admin") {
+		if (selfUserInfoStore.userInfo.role !== "admin") {
 			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
 			return;
 		}
