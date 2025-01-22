@@ -391,7 +391,7 @@
 			>
 
 				<div class="main left">
-					<!-- 登录 Login -->
+					<!-- 登录 其一 Login #1 -->
 					<div class="login1">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<form class="form">
@@ -429,6 +429,7 @@
 						</div>
 					</div>
 
+					<!-- 登录 其二点一 Login #2.1 -->
 					<div class="login2-2fa">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<span>你开启了 2FA，因此需要提供验证码。<br />若验证设备不可用，请使用备用码或恢复码登录。</span>
@@ -442,7 +443,7 @@
 								placeholder="验证码"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
@@ -454,6 +455,7 @@
 							<Button>需要帮助？</Button>
 						</div>
 					</div>
+					<!-- 登录 其二点二 Login #2.2 -->
 					<div class="login2-email">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<span>你开启了邮箱 2FA，我们已经向你的邮箱发送了一封包含验证码的邮件。<br />若未收到验证码，请检查垃圾邮件。</span>
@@ -464,7 +466,7 @@
 								placeholder="验证码"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
