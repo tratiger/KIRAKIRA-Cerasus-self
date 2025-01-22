@@ -72,9 +72,8 @@
 			await getUserInfo();
 	});
 
-	// 生命周期钩子
-	// mounted 时获取用户信息
-	onMounted(async () => { await getUserInfo(); });
+	// 获取用户信息
+	onMounted(async () => await getUserInfo());
 </script>
 
 <template>

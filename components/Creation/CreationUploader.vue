@@ -27,7 +27,7 @@
 	}
 
 	/**
-	 * 关注用户
+	 * 关注上传者。
 	 */
 	async function followingUploader() {
 		isFollowingUploader.value = true;

@@ -20,6 +20,7 @@ export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> =>
 /**
  * 根据视频 ID (KVID) 获取视频的数据
  * @param getVideoByKvidRequest 从视频 ID 获取视频的请求参数
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 视频页面需要的响应
  */
 export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetVideoByKvidResponseDto> => {

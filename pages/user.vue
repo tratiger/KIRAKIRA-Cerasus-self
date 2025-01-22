@@ -32,51 +32,72 @@
 
 	const userSelfInfoStore = useSelfUserInfoStore();
 
-	const isSelf = ref(false);
-	const isFollowed = ref(false); // TODO
+	const isSelf = ref(false); // 当前页面是否是自己
+	const isFollowing = ref(false); // 当前页面中的用户是否已经关注
+	const isFollowingUser = ref(false); // 是否正在发送关注用户的请求
+	const userInfo = ref<GetUserInfoByUidResponseDto["result"]>(); // 用户信息（并非自己的用户信息）
 	const actionMenu = ref<FlyoutModel>();
-	const userInfo = ref<GetUserInfoByUidResponseDto["result"]>();
-
-	const urlUid = ref();
-	// SSR
-	urlUid.value = currentUserUid();
-	// CSR
-	const nuxtApp = useNuxtApp();
-	nuxtApp.hook("page:finish", () => {
-		urlUid.value = currentUserUid();
-	});
-
-	watch(urlUid, fetchUserData, { deep: false });
-
-	const selfUid = computed(() => userSelfInfoStore.userInfo.uid);
-	watch(selfUid, fetchUserData, { deep: false });
-
 	const currentTab = computed(() => currentUserTab());
 
-	/** fetch the user profile data */
+	const urlUid = ref(); // URL 中的 UID
+	urlUid.value = currentUserUid(); // SSR
+	const nuxtApp = useNuxtApp();
+	nuxtApp.hook("page:finish", () => {
+		urlUid.value = currentUserUid(); // CSR
+	});
+	
+	const selfUid = computed(() => userSelfInfoStore.userInfo.uid); // 自己的 UID（如果已经登陆）
+
+	/**
+	 * 关注当前 URL 所对应的用户。
+	 */
+	async function followingUser() {
+		isFollowingUser.value = true;
+		try {
+			const followingUploaderRequest: FollowingUploaderRequestDto = {
+				followingUid: urlUid.value ?? -1,
+			};
+			const { data } = await api.feed.followingUploader(followingUploaderRequest);
+			if (data.value?.success) {
+				isFollowing.value = true;
+				// TODO: 使用多语言
+				useToast("关注成功", "success");
+			} else
+				// TODO: 使用多语言
+				useToast("关注失败，请刷新页面后重试", "error", 5000);
+		} catch (error) {
+			// TODO: 使用多语言
+			useToast("关注用户时出错，请刷新页面后重试", "error", 5000);
+			console.error("ERROR", "关注用户时出错：", error);
+		}
+		isFollowingUser.value = false;
+	}
+
+	/**
+	 * fetch user profile data
+	*/
 	async function fetchUserData() {
-		if (userSelfInfoStore.isLogined && urlUid.value === userSelfInfoStore.userInfo.uid) {
+		if (urlUid.value === userSelfInfoStore.userInfo.uid)
 			isSelf.value = true;
-			await api.user.getSelfUserInfo(); // 获取当前登录用户的用户信息
-		} else {
+		else {
 			isSelf.value = false;
 			const getUserInfoByUidRequest: GetUserInfoByUidRequestDto = {
 				uid: urlUid.value,
 			};
-			const userInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest); // 获取当前 URL 指向的用户的信息
-			if (userInfoResult.success)
+			const headerCookie = useRequestHeaders(["cookie"]);
+			const userInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest, headerCookie);
+			if (userInfoResult.success) {
+				isFollowing.value = !!userInfoResult.result?.isFollowing;
 				userInfo.value = userInfoResult.result;
+			}
 		}
 	}
 
-	fetchUserData();
+	await fetchUserData();
+	watch(() => [urlUid.value, selfUid.value], fetchUserData);
 
 	const titleAffixString = t.user_page.title_affix; // HACK: Bypass "A composable that requires access to the Nuxt instance was called outside of a plugin."
-
 	const titleUserNickname = computed(() => isSelf.value ? userSelfInfoStore.userInfo.userNickname ? titleAffixString(userSelfInfoStore.userInfo.userNickname) : "" : userInfo.value?.userNickname ? titleAffixString(userInfo.value?.userNickname) : "");
-
-	// const titleUserName = computed(() => isSelf.value ? "aaa" : "bbb");
-
 	useHead({ title: titleUserNickname });
 </script>
 
@@ -110,9 +131,9 @@
 							<MenuItem icon="block">{{ t.add_to_blocklist }}</MenuItem>
 						</Menu>
 						<div v-if="!isSelf" class="follow-button">
-							<Button v-if="!isFollowed" icon="add" @click="isFollowed = true">{{ t.follow_verb }}</Button>
-							<!-- TODO: !user.isFollowed -->
-							<Button v-else icon="check" @click="isFollowed = false">{{ t.following }}</Button>
+							<Button v-if="!isFollowing" icon="add" :disabled="isFollowingUser" :loading="isFollowingUser" @click="followingUser">{{ t.follow_verb }}</Button>
+							<!-- TODO: !user.isFollowing -->
+							<Button v-else icon="check" disabled>{{ t.following }}</Button>
 						</div>
 						<Button v-if="isSelf">{{ t.manage_content }}</Button>
 					</div>

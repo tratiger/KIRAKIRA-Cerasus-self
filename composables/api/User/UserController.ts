@@ -91,27 +91,55 @@ export const updateOrCreateUserInfo = async (updateOrCreateUserInfoRequest: Upda
  */
 export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto): Promise<GetSelfUserInfoResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	const selfUserInfo = await POST(`${USER_API_URI}/self`, getSelfUserInfoRequest, { credentials: "include" }) as GetSelfUserInfoResponseDto;
-	const selfUserInfoResult = selfUserInfo.result;
-	if (selfUserInfo.success && selfUserInfoResult) {
+	const { data } = await useFetch<GetSelfUserInfoResponseDto>(
+		`${USER_API_URI}/self`,
+		{
+			method: "POST",
+			body: { ...getSelfUserInfoRequest },
+			credentials: "include",
+		},
+	);
+	const selfUserInfoResult = data.value?.result;
+	if (data.value?.success && selfUserInfoResult) {
 		const appSettings = useAppSettingsStore();
 		const selfUserInfoStore = useSelfUserInfoStore();
 		appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
 		selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
 		selfUserInfoStore.isLogined = true;
-		selfUserInfoStore.userInfo = selfUserInfo.result ?? { };
+		selfUserInfoStore.userInfo = data.value.result ?? { };
 	} else
 		await userLogout();
-	return selfUserInfo;
+	return data.value as GetSelfUserInfoResponseDto;
 };
 
 /**
  * 通过传入的 UID 获取一个用户的信息（已启用服务端渲染）
  * @param getUserInfoByUidRequest 传入的 UID
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  */
-export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidRequestDto): Promise<GetUserInfoByUidResponseDto> => {
-	const { data: result } = await useFetch(`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
-	return result.value as GetUserInfoByUidResponseDto;
+export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetUserInfoByUidResponseDto> => {
+	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	// const result = await GET(
+	// 	`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`,
+	// 	{
+	// 		credentials: "include",
+	// 	},
+	// 	{
+	// 		Cookie: headerCookie?.cookie ?? "",
+	// 	},
+	// ) as GetUserInfoByUidResponseDto;
+	// return result;
+
+	const result = await $fetch<GetUserInfoByUidResponseDto>(
+		`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`,
+		{
+			credentials: "include",
+			headers: headerCookie,
+			cache: "no-cache",
+		},
+	);
+	return result;
 };
 
 /**
@@ -121,10 +149,12 @@ export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidReque
 export const checkUserToken = async (): Promise<CheckUserTokenResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const result = await GET(`${USER_API_URI}/check`, { credentials: "include" }) as CheckUserTokenResponseDto;
-	if (environment.client && result && (!result.success || !result.userTokenOk)) {
-		const selfUserInfoStore = useSelfUserInfoStore();
+	
+	const selfUserInfoStore = useSelfUserInfoStore();
+	if (result.success && result.userTokenOk)
+		selfUserInfoStore.isLogined = true;
+	if (environment.client && result && (!result.success || !result.userTokenOk))
 		selfUserInfoStore.isEffectiveCheckOnce = true;
-	}
 	return result;
 };
 
@@ -309,7 +339,7 @@ export const reactivateUserByUID = async (reactivateUserByUIDRequest: Reactivate
 
 /**
  * 获取所有被封禁用户的信息
- * @param headerCookie  从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 获取所有被封禁用户的信息的请求响应
  */
 export const getBlockedUser = async (headerCookie: { cookie?: string | undefined }): Promise<GetBlockedUserResponseDto> => {
@@ -445,7 +475,7 @@ export const deleteTotpByVerificationCode = async (deleteTotpAuthenticatorByTotp
 
 /**
  * 用户创建 Email 身份验证器
- * @param headerCookie
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户创建 Email 身份验证器的请求响应
  */
 export const createEmail2FA = async (headerCookie: { cookie?: string | undefined }): Promise<CreateUserEmailAuthenticatorResponseDto> => {
@@ -486,7 +516,7 @@ export const sendDeleteUserEmailAuthenticatorVerificationCode = async (sendDelet
 /**
  * 用户删除 Email 2FA
  * @param deleteUserEmailAuthenticatorRequest 用户删除 Email 2FA 的请求载荷
- * @param headerCookie
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户删除 Email 2FA 的请求响应
  */
 export const deleteEmail2FA = async (deleteUserEmailAuthenticatorRequest: DeleteUserEmailAuthenticatorRequestDto, headerCookie: { cookie?: string | undefined }): Promise<DeleteUserEmailAuthenticatorResponseDto> => {
