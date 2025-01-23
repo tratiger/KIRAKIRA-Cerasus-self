@@ -74,6 +74,32 @@
 	}
 
 	/**
+	 * 取关当前 URL 所对应的用户。
+	 */
+	async function unfollowingUser() {
+		isFollowing.value = false;
+		try {
+			const unfollowingUploaderRequest: UnfollowingUploaderRequestDto = {
+				unfollowingUid: urlUid.value ?? -1,
+			};
+			const { data } = await api.feed.unfollowingUploader(unfollowingUploaderRequest);
+			if (data.value?.success)
+				// TODO: 使用多语言
+				useToast("取消关注成功", "warning", 5000);
+			else {
+				isFollowing.value = true;
+				// TODO: 使用多语言
+				useToast("取消关注失败，请刷新页面后重试", "error", 5000);
+			}
+		} catch (error) {
+			isFollowing.value = true;
+			// TODO: 使用多语言
+			useToast("取消关注用户时出错，请刷新页面后重试", "error", 5000);
+			console.error("ERROR", "取消关注用户时出错：", error);
+		}
+	}
+
+	/**
 	 * fetch user profile data
 	*/
 	async function fetchUserData() {
@@ -127,6 +153,8 @@
 							<MenuItem icon="badge">{{ t.modify_memo }}</MenuItem>
 							<MenuItem icon="groups">{{ t.add_to_group }}</MenuItem>
 							<hr />
+							<!-- TODO: 使用多语言 -->
+							<MenuItem v-if="isFollowing" icon="close" @click="unfollowingUser">取消关注</MenuItem>
 							<MenuItem v-tooltip:x="'老铁们，给我举报他！'" icon="flag">{{ t.report }}</MenuItem>
 							<MenuItem icon="block">{{ t.add_to_blocklist }}</MenuItem>
 						</Menu>
