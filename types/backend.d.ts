@@ -23,5 +23,5 @@ declare global {
 	// VideoTagControllerDto
 	export type { CreateVideoTagRequestDto, GetVideoTagByTagIdRequestDto, VideoTag } from "api/VideoTag/VideoTagControllerDto";
 	// FeedControllerDto
-	export type { FollowingUploaderRequestDto } from "api/Feed/FeedControllerDto";
+	export type { UnfollowingUploaderRequestDto, FollowingUploaderRequestDto } from "api/Feed/FeedControllerDto";
 }
