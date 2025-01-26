@@ -20,7 +20,7 @@ export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> =>
 /**
  * 根据视频 ID (KVID) 检验视频是否存在
  * @param CheckVideoExistRequestDto 视频 ID (KVID)
- * @returns 视频是否存在的响应 
+ * @returns 视频是否存在的响应
  */
 export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoExistRequestDto): Promise<CheckVideoExistResponseDto> => {
 	if (CheckVideoExistRequest && CheckVideoExistRequest.videoId) {
@@ -31,7 +31,7 @@ export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoEx
 			return { success: false, message: "视频不存在", exist: false };
 	} else
 		return { success: false, message: "未提供 KVID", exist: false };
-}
+};
 
 /**
  * 根据视频 ID (KVID) 获取视频的数据

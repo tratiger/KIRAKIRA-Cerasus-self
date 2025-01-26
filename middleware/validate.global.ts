@@ -112,7 +112,7 @@ async function getUserInfo(uid?: string) {
 		const uidNumber = Number(uidBigInt);
 		if (uidNumber.toString().includes("e")) return new Error(`你输入的 UID: ${uidBigInt} 超出琪露诺能理解的数值范围`);
 		const userInfoResult = await api.user.userExistsCheckByUID({ uid: uidNumber }); // TODO: UID 最好使用 string 或 bigint 存储，不要用 number 存储。
-		if (userInfoResult.success) return uidBigInt;
+		if (userInfoResult.success && userInfoResult.exists) return uidBigInt;
 		else return new Error(`你输入的 UID: ${uidBigInt} 用户不存在`);
 	}
 	// 未指定 UID，打开自己的用户主页。

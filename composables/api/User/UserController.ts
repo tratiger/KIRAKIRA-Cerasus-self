@@ -8,7 +8,7 @@ import type {
 	RequestSendChangeEmailVerificationCodeResponseDto, RequestSendVerificationCodeRequestDto,
 	RequestSendVerificationCodeResponseDto, UpdateOrCreateUserInfoResponseDto, UpdateOrCreateUserSettingsRequestDto,
 	UpdateOrCreateUserSettingsResponseDto, UpdateUserEmailRequestDto, UpdateUserEmailResponseDto,
-	UserExistsCheckRequestDto, UserExistsCheckResponseDto, UserLoginRequestDto,
+	UserEmailExistsCheckRequestDto, UserEmailExistsCheckResponseDto, UserLoginRequestDto,
 	UserLoginResponseDto, UserRegistrationRequestDto, UserRegistrationResponseDto,
 	RequestSendChangePasswordVerificationCodeResponseDto, UpdateUserPasswordRequestDto,
 	UpdateUserPasswordResponseDto, UserLogoutResponseDto, CheckUsernameResponseDto,
@@ -63,8 +63,8 @@ export const login = async (userLoginRequest: UserLoginRequestDto): Promise<User
  * @param userExistsCheckRequest 验证用户邮箱是否存在提交的参数
  * @returns 验证用户邮箱是否已经存在的返回参数
  */
-export const userExistsCheck = async (userExistsCheckRequest: UserExistsCheckRequestDto): Promise<UserExistsCheckResponseDto> => {
-	return await GET(`${USER_API_URI}/existsCheck?email=${userExistsCheckRequest.email}`) as UserExistsCheckResponseDto;
+export const userExistsCheck = async (userExistsCheckRequest: UserEmailExistsCheckRequestDto): Promise<UserEmailExistsCheckResponseDto> => {
+	return await GET(`${USER_API_URI}/existsCheck?email=${userExistsCheckRequest.email}`) as UserEmailExistsCheckResponseDto;
 };
 
 /**
@@ -135,7 +135,7 @@ export const userExistsCheckByUID = async (UserExistsCheckByUIDRequest: UserExis
 		return result.value as UserExistsCheckByUIDResponseDto;
 	}
 	return { success: false, message: "未传入 UID", exists: false };
-}
+};
 
 /**
  * 校验用户 token 是否合法，同时可以验证用户是否已经登录
