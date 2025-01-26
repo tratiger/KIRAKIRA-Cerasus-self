@@ -31,6 +31,8 @@ import type {
 	SendDeleteUserEmailAuthenticatorVerificationCodeRequestDto,
 	SendDeleteUserEmailAuthenticatorVerificationCodeResponseDto,
 	CheckUserHave2FARequestDto,
+	UserExistsCheckByUIDRequestDto,
+	UserExistsCheckByUIDResponseDto,
 } from "./UserControllerDto";
 
 const BACK_END_URI = environment.backendUri;
@@ -122,6 +124,18 @@ export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidReque
 	const { data: result } = await useFetch(`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
 	return result.value as GetUserInfoByUidResponseDto;
 };
+
+/**
+ * 通过传入的 UID 检验一个用户是否存在
+ * @param UserExistsCheckByUIDRequest 传入的 UID
+ */
+export const userExistsCheckByUID = async (UserExistsCheckByUIDRequest: UserExistsCheckByUIDRequestDto): Promise<UserExistsCheckByUIDResponseDto> => {
+	if (UserExistsCheckByUIDRequest && UserExistsCheckByUIDRequest.uid) {
+		const { data: result } = await useFetch(`${USER_API_URI}/existsCheckByUID?uid=${UserExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
+		return result.value as UserExistsCheckByUIDResponseDto;
+	}
+	return { success: false, message: "未传入 UID", exists: false };
+}
 
 /**
  * 校验用户 token 是否合法，同时可以验证用户是否已经登录

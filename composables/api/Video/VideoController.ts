@@ -1,6 +1,6 @@
 import * as tus from "tus-js-client";
 import { GET, POST, DELETE, uploadFile2CloudflareImages } from "../Common";
-import type { ApprovePendingReviewVideoRequestDto, ApprovePendingReviewVideoResponseDto, DeleteVideoRequestDto, DeleteVideoResponseDto, GetVideoByKvidRequestDto, GetVideoByKvidResponseDto, GetVideoByUidRequestDto, GetVideoByUidResponseDto, GetVideoCoverUploadSignedUrlResponseDto, PendingReviewVideoResponseDto, SearchVideoByVideoTagIdRequestDto, SearchVideoByVideoTagIdResponseDto, ThumbVideoResponseDto, UploadVideoRequestDto, UploadVideoResponseDto } from "./VideoControllerDto";
+import type { ApprovePendingReviewVideoRequestDto, ApprovePendingReviewVideoResponseDto, CheckVideoExistRequestDto, CheckVideoExistResponseDto, DeleteVideoRequestDto, DeleteVideoResponseDto, GetVideoByKvidRequestDto, GetVideoByKvidResponseDto, GetVideoByUidRequestDto, GetVideoByUidResponseDto, GetVideoCoverUploadSignedUrlResponseDto, PendingReviewVideoResponseDto, SearchVideoByVideoTagIdRequestDto, SearchVideoByVideoTagIdResponseDto, ThumbVideoResponseDto, UploadVideoRequestDto, UploadVideoResponseDto } from "./VideoControllerDto";
 
 const BACK_END_URI = environment.backendUri;
 const VIDEO_API_URI = `${BACK_END_URI}video`;
@@ -16,6 +16,22 @@ export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> =>
 	else
 		return { success: false, videosCount: 0, videos: [], message: "获取首页视频失败" };
 };
+
+/**
+ * 根据视频 ID (KVID) 检验视频是否存在
+ * @param CheckVideoExistRequestDto 视频 ID (KVID)
+ * @returns 视频是否存在的响应 
+ */
+export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoExistRequestDto): Promise<CheckVideoExistResponseDto> => {
+	if (CheckVideoExistRequest && CheckVideoExistRequest.videoId) {
+		const { data: result } = await useFetch<CheckVideoExistResponseDto>(`${VIDEO_API_URI}/exists?videoId=${CheckVideoExistRequest.videoId}`, { credentials: "include" });
+		if (result.value)
+			return { success: true, message: "视频存在", exist: true };
+		else
+			return { success: false, message: "视频不存在", exist: false };
+	} else
+		return { success: false, message: "未提供 KVID", exist: false };
+}
 
 /**
  * 根据视频 ID (KVID) 获取视频的数据
