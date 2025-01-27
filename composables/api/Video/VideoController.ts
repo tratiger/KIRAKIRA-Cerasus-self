@@ -26,7 +26,7 @@ export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoEx
 	if (CheckVideoExistRequest && CheckVideoExistRequest.videoId) {
 		const { data: result } = await useFetch<CheckVideoExistResponseDto>(`${VIDEO_API_URI}/exists?videoId=${CheckVideoExistRequest.videoId}`, { credentials: "include" });
 		if (result.value)
-			return { success: true, message: "视频存在", exist: true };
+			return result.value;
 		else
 			return { success: false, message: "视频不存在", exist: false };
 	} else

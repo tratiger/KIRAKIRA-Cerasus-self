@@ -131,7 +131,7 @@ export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidReque
  */
 export const userExistsCheckByUID = async (UserExistsCheckByUIDRequest: UserExistsCheckByUIDRequestDto): Promise<UserExistsCheckByUIDResponseDto> => {
 	if (UserExistsCheckByUIDRequest && UserExistsCheckByUIDRequest.uid) {
-		const { data: result } = await useFetch(`${USER_API_URI}/existsCheckByUID?uid=${UserExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
+		const { data: result } = await useFetch(`${USER_API_URI}/exists?uid=${UserExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
 		return result.value as UserExistsCheckByUIDResponseDto;
 	}
 	return { success: false, message: "未传入 UID", exists: false };
