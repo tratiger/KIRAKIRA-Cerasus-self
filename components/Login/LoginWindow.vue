@@ -168,7 +168,7 @@
 						currentPage.value = "login2-email";
 				} else
 					currentPage.value = "login2-2fa";
-				
+
 			else
 				await loginUser();
 		} catch (error) {
@@ -264,7 +264,7 @@
 		}
 		isCheckingEmail.value = true;
 		if (email.value && password.value) {
-			const userExistsCheckRequest: UserExistsCheckRequestDto = { email: email.value };
+			const userExistsCheckRequest: UserEmailExistsCheckRequestDto = { email: email.value };
 			const checkInvitationCodeRequestDto: CheckInvitationCodeRequestDto = {
 				invitationCode: invitationCode.value,
 			};

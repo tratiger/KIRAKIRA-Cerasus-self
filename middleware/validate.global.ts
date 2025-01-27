@@ -82,11 +82,11 @@ async function checkKvid(kvidString: string): Promise<true | Error> {
 			const kvidBigInt = BigInt(match[0]);
 			const kvidNumber = Number(kvidBigInt);
 			if (kvidNumber.toString().includes("e")) return new Error(`你输入的 KVID: ${kvidNumber} 超出琪露诺能理解的数值范围`);
-			const getVideoByKvidRequest: GetVideoByKvidRequestDto = {
+			const getVideoByKvidRequest: CheckVideoExistRequestDto = {
 				videoId: kvidNumber,
 			};
-			const videoInfoResult = await api.video.getVideoByKvid(getVideoByKvidRequest); // TODO: getVideoByKvid 是一个相对来说比较重的获取全部视频数据的 API，应该新建一个轻量一些的校验视频是否存在的 API
-			if (videoInfoResult.success && videoInfoResult.video)
+			const videoInfoResult = await api.video.checkVideoExistByKvid(getVideoByKvidRequest);
+			if (videoInfoResult.success && videoInfoResult.exist)
 				return true;
 			else
 				return new Error("你输入的 KVID 不存在");
@@ -111,8 +111,8 @@ async function getUserInfo(uid?: string) {
 		} catch { return new Error(`你输入的 UID: ${uid} 不合法`); }
 		const uidNumber = Number(uidBigInt);
 		if (uidNumber.toString().includes("e")) return new Error(`你输入的 UID: ${uidBigInt} 超出琪露诺能理解的数值范围`);
-		const userInfoResult = await api.user.getUserInfo({ uid: uidNumber }); // TODO: UID 最好使用 string 或 bigint 存储，不要用 number 存储。
-		if (userInfoResult.success) return uidBigInt;
+		const userInfoResult = await api.user.userExistsCheckByUID({ uid: uidNumber }); // TODO: UID 最好使用 string 或 bigint 存储，不要用 number 存储。
+		if (userInfoResult.success && userInfoResult.exists) return uidBigInt;
 		else return new Error(`你输入的 UID: ${uidBigInt} 用户不存在`);
 	}
 	// 未指定 UID，打开自己的用户主页。

@@ -8,7 +8,7 @@ import type {
 	RequestSendChangeEmailVerificationCodeResponseDto, RequestSendVerificationCodeRequestDto,
 	RequestSendVerificationCodeResponseDto, UpdateOrCreateUserInfoResponseDto, UpdateOrCreateUserSettingsRequestDto,
 	UpdateOrCreateUserSettingsResponseDto, UpdateUserEmailRequestDto, UpdateUserEmailResponseDto,
-	UserExistsCheckRequestDto, UserExistsCheckResponseDto, UserLoginRequestDto,
+	UserEmailExistsCheckRequestDto, UserEmailExistsCheckResponseDto, UserLoginRequestDto,
 	UserLoginResponseDto, UserRegistrationRequestDto, UserRegistrationResponseDto,
 	RequestSendChangePasswordVerificationCodeResponseDto, UpdateUserPasswordRequestDto,
 	UpdateUserPasswordResponseDto, UserLogoutResponseDto, CheckUsernameResponseDto,
@@ -31,6 +31,8 @@ import type {
 	SendDeleteUserEmailAuthenticatorVerificationCodeRequestDto,
 	SendDeleteUserEmailAuthenticatorVerificationCodeResponseDto,
 	CheckUserHave2FARequestDto,
+	UserExistsCheckByUIDRequestDto,
+	UserExistsCheckByUIDResponseDto,
 } from "./UserControllerDto";
 
 const BACK_END_URI = environment.backendUri;
@@ -61,8 +63,8 @@ export const login = async (userLoginRequest: UserLoginRequestDto): Promise<User
  * @param userExistsCheckRequest 验证用户邮箱是否存在提交的参数
  * @returns 验证用户邮箱是否已经存在的返回参数
  */
-export const userExistsCheck = async (userExistsCheckRequest: UserExistsCheckRequestDto): Promise<UserExistsCheckResponseDto> => {
-	return await GET(`${USER_API_URI}/existsCheck?email=${userExistsCheckRequest.email}`) as UserExistsCheckResponseDto;
+export const userExistsCheck = async (userExistsCheckRequest: UserEmailExistsCheckRequestDto): Promise<UserEmailExistsCheckResponseDto> => {
+	return await GET(`${USER_API_URI}/existsCheck?email=${userExistsCheckRequest.email}`) as UserEmailExistsCheckResponseDto;
 };
 
 /**
@@ -140,6 +142,18 @@ export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidReque
 		},
 	);
 	return result;
+};
+
+/**
+ * 通过传入的 UID 检验一个用户是否存在
+ * @param UserExistsCheckByUIDRequest 传入的 UID
+ */
+export const userExistsCheckByUID = async (UserExistsCheckByUIDRequest: UserExistsCheckByUIDRequestDto): Promise<UserExistsCheckByUIDResponseDto> => {
+	if (UserExistsCheckByUIDRequest && UserExistsCheckByUIDRequest.uid) {
+		const { data: result } = await useFetch(`${USER_API_URI}/exists?uid=${UserExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
+		return result.value as UserExistsCheckByUIDResponseDto;
+	}
+	return { success: false, message: "未传入 UID", exists: false };
 };
 
 /**
