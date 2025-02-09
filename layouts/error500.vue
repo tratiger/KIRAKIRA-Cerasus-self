@@ -10,7 +10,7 @@
 	const is500 = computed(() => +props.statusCode === 500);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.roles.includes("administrator"));
 </script>
 
 <template>

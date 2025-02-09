@@ -20,7 +20,7 @@ export const useSelfUserInfoStore = defineStore("user-info", {
 		/** 当前用户的注册时间 */
 		userCreateDateTime: 0,
 		/** 当前用户的角色 */
-		role: "user",
+		roles: ["user"],
 		/** 当前登录的用户用户名。 */
 		username: "",
 		/** 当前登录的用户昵称 */
