@@ -31,7 +31,7 @@ $emoji-fonts: "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", "Segoe
 $pan-unicode-fonts: "MiSans L3", SimSun-ExtB, SimSun-ExtG, "BabelStone Han", "BabelStone Han BMP", "BabelStone Han SIP", "BabelStone Han TIP", HanaMinA, HanaMinB, Jigmo, Jigmo2, Jigmo3;
 /// 回退字体顺序：英语字体、CJK 字体、无衬线体通用字体族、绘文字字体、CJK 大字符集字体。
 $fallback-fonts: sans-serif, $emoji-fonts, $pan-unicode-fonts;
-/// 英语字体：SF Pro for Safari / Firefox、SF Pro for Chromium、Inter 可变、SF Pro、Segoe UI 可变、Segoe UI、Roboto Flex、Roboto、Noto Sans。\
+/// 英语字体：SF Pro for Safari / Firefox、SF Pro for Chromium、Inter 可变、Inter、Segoe UI 可变（Text）、Segoe UI、Roboto Flex、Roboto 可变或普通、Noto Sans 可变或普通。\
 /// Droid Sans、Open Sans、Tahoma、Geneva、Verdana、Helvetica Neue、Helvetica、Arial 为非现代字体，不应继续使用。\
 /// 注意：英语、越南语、印尼语等非中日韩语言会沿用简体中文字体。\
 /// 注意：我们听说在远东地区，当那里的人们在 Windows Vista / 7 中使用 Windows 经典主题时，默认字体会显示为如此古老而又复古的光栅字体宋体或明体，这简直糟透了。噢天呐，看在上帝的份上，千万不要使用 system-ui 通用字体族，否则整个界面就会变得和珍妮婶婶做的苹果派一样烂了，真是该死。因此我们决定，为了保证网站的一致性体验，我们不能将用户甩出复印机与窗口，我们必须将 system-ui 从字体堆栈中踢出去！见 https://github.com/twbs/bootstrap/issues/22328 和 https://github.com/w3c/csswg-drafts/issues/3658 。
@@ -53,7 +53,7 @@ $korean-fonts: $english-fonts, map.get($source-han-sans-fonts, korean), map.get(
 /// 英语徽标字体：Montserrat、SF Pro Display、英语字体。
 /// 原计划后置回退字体，但会使用微软正黑显示所有汉字字符，故暂时移除。
 $english-logo-fonts: Montserrat, $english-fonts;
-/// 等宽字体：Cascadia Code、Cascadia Mono、JetBrains Mono、Fira Code、Fira Mono、Roboto Mono、Consolas、SF Mono。
+/// 等宽字体：Cascadia Code、Cascadia Mono、JetBrains Mono、Fira Code、Fira Mono、Roboto Mono、Consolas。
 $monospace-fonts: "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", Consolas, monospace;
 // #endregion
 
