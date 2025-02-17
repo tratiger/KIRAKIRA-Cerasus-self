@@ -42,10 +42,6 @@
 		"prepare": "husky",
 		"commit": "git-cz -a"
 	},
-	"browserslist": [
-		"Edge >= 129",
-		"Chrome >= 129"
-	],
 	"lint-staged": {
 		"*.{html,vue,css,sass,scss}": [
 			"stylelint --fix",
