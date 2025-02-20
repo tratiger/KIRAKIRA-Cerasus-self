@@ -24,6 +24,7 @@
 
 	const draggingVertical = ref(false);
 	const draggingHorizontal = ref(false);
+	const mouseHovering = ref(false);
 
 	const trackVertical = ref<HTMLDivElement>();
 	const thumbVertical = ref<HTMLDivElement>();
@@ -111,20 +112,36 @@
 	}
 
 	/**
-	 * 准备倒计时隐藏垂直滚动条。
+	 * 鼠标进入滚动条区域。
 	 */
-	function readyToHideVertical() {
+	function onBarPointerEnter(e: PointerEvent) {
+		pointerType.value = e.pointerType;
+		if (pointerType.value !== "mouse") return;
+		mouseHovering.value = true;
 		clearTimeout(hideVerticalTimeout.value);
-		hideVerticalTimeout.value = setTimeout(() => {
-			showVertical.value = false;
-		}, WAITING);
+		clearTimeout(hideHorizontalTimeout.value);
+		if (scrollableVertical.value) showVertical.value = true;
+		if (scrollableHorizontal.value) showHorizontal.value = true;
 	}
 
 	/**
-	 * 准备倒计时隐藏水平滚动条。
+	 * 鼠标离开滚动条区域。
 	 */
-	function readyToHideHorizontal() {
+	function onBarPointerLeave() {
+		if (pointerType.value !== "mouse") return;
+		mouseHovering.value = false;
+		hideAll();
+	}
+
+	/**
+	 * 准备倒计时隐藏滚动条。
+	 */
+	function hideAll() {
+		clearTimeout(hideVerticalTimeout.value);
 		clearTimeout(hideHorizontalTimeout.value);
+		hideVerticalTimeout.value = setTimeout(() => {
+			showVertical.value = false;
+		}, WAITING);
 		hideHorizontalTimeout.value = setTimeout(() => {
 			showHorizontal.value = false;
 		}, WAITING);
@@ -135,10 +152,9 @@
 	 */
 	function onScrollChange() {
 		updateScrollPercentage();
-		showVertical.value = true;
-		readyToHideVertical();
-		showHorizontal.value = true;
-		readyToHideHorizontal();
+		if (scrollableVertical.value) showVertical.value = true;
+		if (scrollableHorizontal.value) showHorizontal.value = true;
+		if (!mouseHovering.value && !draggingHorizontal.value && !draggingHorizontal.value) hideAll();
 	}
 
 	/**
@@ -162,7 +178,7 @@
 
 		function onThumbVerticalUp() {
 			draggingVertical.value = false;
-			readyToHideVertical();
+			if (!mouseHovering.value) hideAll();
 			document.removeEventListener("pointermove", changeValue);
 			document.removeEventListener("lostpointercapture", onThumbVerticalUp);
 			document.removeEventListener("pointerup", onThumbVerticalUp);
@@ -194,7 +210,7 @@
 
 		function onThumbHorizontalUp() {
 			draggingHorizontal.value = false;
-			readyToHideHorizontal();
+			if (!mouseHovering.value) hideAll();
 			document.removeEventListener("pointermove", changeValue);
 			document.removeEventListener("lostpointercapture", onThumbHorizontalUp);
 			document.removeEventListener("pointerup", onThumbHorizontalUp);
@@ -245,9 +261,13 @@
 		scrollerEl.value.scrollTo({ left: scrollWidth * scrollPercentage, behavior: "smooth" });
 	}
 
+	function onResize() {
+		pointerType.value = isMobile() ? "touch" : "mouse";
+		onScrollChange();
+	}
+
 	onMounted(() => {
-		if (!isMobile()) pointerType.value = "mouse";
-		useResizeObserver(contentEl, onScrollChange);
+		useResizeObserver(contentEl, onResize);
 	});
 </script>
 
@@ -255,7 +275,7 @@
 	<Comp
 		:class="{
 			dragging: draggingVertical || draggingHorizontal,
-			touch: pointerType === 'touch',
+			touch: pointerType !== 'mouse',
 			mouse: pointerType === 'mouse',
 			'scrollable-both': scrollableVertical && scrollableHorizontal,
 		}"
@@ -270,7 +290,7 @@
 				<slot></slot>
 			</div>
 		</div>
-		<div v-show="scrollableVertical" class="bar vertical" :class="{ show: showVertical, dragging: draggingVertical }">
+		<div role="scrollbar" class="bar vertical" :class="{ show: showVertical, dragging: draggingVertical }" @pointerenter="onBarPointerEnter" @pointerleave="onBarPointerLeave">
 			<div ref="trackVertical" class="track" @pointerdown="onTrackVerticalDown">
 				<div
 					ref="thumbVertical"
@@ -288,7 +308,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-show="scrollableHorizontal" class="bar horizontal" :class="{ show: showHorizontal, dragging: draggingHorizontal }">
+		<div class="bar horizontal" :class="{ show: showHorizontal, dragging: draggingHorizontal }" @pointerenter="onBarPointerEnter" @pointerleave="onBarPointerLeave">
 			<div ref="trackHorizontal" class="track" @pointerdown="onTrackHorizontalDown">
 				<div
 					ref="thumbHorizontal"
@@ -351,6 +371,7 @@
 		position: absolute;
 		z-index: 29;
 		opacity: 0;
+		visibility: hidden;
 		cursor: default;
 		user-select: none;
 		touch-action: none;
@@ -375,6 +396,7 @@
 				&.dragging {
 					width: $mouse-size-dragging;
 					opacity: 1;
+					visibility: visible;
 				}
 			}
 
@@ -407,6 +429,7 @@
 				&.dragging {
 					height: $mouse-size-dragging;
 					opacity: 1;
+					visibility: visible;
 				}
 			}
 
@@ -432,6 +455,7 @@
 
 		&.show {
 			opacity: 1;
+			visibility: visible;
 		}
 	}
 
