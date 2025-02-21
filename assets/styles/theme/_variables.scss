@@ -14,7 +14,7 @@ $fallback-transitions: all $ease-out-expo 250ms, color $ease-out-expo 100ms, fil
 /// 优先使用“思源黑体”系列字体以提供一致的体验。\
 /// lang 附标将自动切换区域字形，因此无需担心字形不匹配的问题。除了每个地区的字体家族样式那里都会写一大堆“思源黑体”系列字体之外。\
 /// 顺序：Adobe 语言特定版本可变字体、Google 语言特定版本可变或普通字体、Adobe 语言特定版本普通字体。\
-/// 仅安装地区子集版本字体会不断触发回退，去除地区子集版本字体。
+/// 仅安装地区子集版本字体会不断触发回退，故去除地区子集版本字体。
 $source-han-sans-fonts: (
 	simplified-chinese: ("Source Han Sans SC VF", "Noto Sans CJK SC", "Source Han Sans SC"),
 	traditional-chinese-taiwan: ("Source Han Sans TC VF", "Noto Sans CJK TC", "Source Han Sans TC"),
@@ -23,11 +23,11 @@ $source-han-sans-fonts: (
 	korean: ("Source Han Sans K VF", "Noto Sans CJK KR", "Source Han Sans K"),
 );
 $source-han-sans-fonts: map.set($source-han-sans-fonts, merged, map.values($source-han-sans-fonts));
-/// Emoji / 绘文字字体。
+/// 绘文字字体。
 $emoji-fonts: "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", "Segoe UI Emoji", "Segoe UI Symbol", emoji;
-/// 泛 Unicode 字体
+/// 泛 Unicode 字体。
 $pan-unicode-fonts: "MiSans L3", SimSun-ExtB, SimSun-ExtG, "BabelStone Han", "BabelStone Han BMP", "BabelStone Han SIP", "BabelStone Han TIP", HanaMinA, HanaMinB, Jigmo, Jigmo2, Jigmo3, Unifont, "Unifont Upper";
-/// 回退字体顺序：英语字体、CJK 字体、无衬线体通用字体族、表情符号字体、CJK 大字符集字体。
+/// 回退字体顺序：英语字体、CJK 字体、无衬线体通用字体族、绘文字字体、泛 Unicode 字体。
 $fallback-fonts: sans-serif, $emoji-fonts, $pan-unicode-fonts;
 /// 英语字体。\
 /// Droid Sans、Open Sans、Tahoma、Geneva、Verdana、Helvetica Neue、Helvetica、Arial 为非现代字体，不应继续使用。\
@@ -47,8 +47,7 @@ $japanese-fonts: $english-fonts, map.get($source-han-sans-fonts, japanese), map.
 /// 韩语字体。\
 /// 苹果韩语字体对汉字的支持有限，不断触发回退的体验很糟糕，故设为思源黑体优先。
 $korean-fonts: $english-fonts, map.get($source-han-sans-fonts, korean), map.get($source-han-sans-fonts, merged), "Apple SD Gothic Neo", "Malgun Gothic", $fallback-fonts;
-/// 英语徽标字体。\
-/// 原计划后置回退字体，但会使用微软正黑显示所有汉字字符，故移除。
+/// 英语徽标字体。
 $english-logo-fonts: Montserrat, $english-fonts;
 /// 等宽字体。
 $monospace-fonts: "Cascadia Code", "Cascadia Mono", "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
