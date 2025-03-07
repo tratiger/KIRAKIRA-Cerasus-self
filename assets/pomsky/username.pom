@@ -25,4 +25,4 @@ let excludes = [
 	'𠑗𤈎𧺯𠓲𤦼𣟃𦡦𤯒'  # 因 Unicode 官方疏忽而产生的同抽象构形汉字
 ];
 
-(!>> excludes) includes+
+^ (!>> ' ') (!>> excludes) (includes | ' ' (!>> ' '))+ (!<< ' ') $
