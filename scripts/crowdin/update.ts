@@ -9,8 +9,8 @@ const SOURCE_LANGUAGE = "English";
 
 async function updateFile(projectId: number, fileName: string, fileContent: string) {
 	const filesResponse = await sourceFilesApi.listProjectFiles(projectId);
-	const files = filesResponse.data.map(file => file.data);
-	const file = files.find(file => file.name === fileName);
+	const files = filesResponse.data.flatMap(file => file.data);
+	const file = files.find(file => file.name === fileName && file.path.includes("KIRAKIRA-Cerasus"));
 	if (!file) throw new Error(`Could not find file ${fileName}`);
 
 	const storageResponse = await uploadStorageApi.addStorage(fileName, fileContent);
