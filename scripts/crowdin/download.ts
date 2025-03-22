@@ -46,14 +46,16 @@ async function mergeFolders(sourceFolder: string, targetFolder: string) {
 	for (const file of files) {
 		const sourcePath = join(sourceFolder, file);
 		const targetPath = join(targetFolder, file);
+		if (!existsSync(sourcePath)) continue;
 		const stats = await stat(sourcePath);
 
-		if (stats.isFile())
+		if (stats.isFile()) {
+			if (!existsSync(sourcePath)) continue;
 			await copyFile(sourcePath, targetPath);
-		else if (stats.isDirectory()) {
+		} else if (stats.isDirectory()) {
 			if (!existsSync(targetPath))
 				await mkdir(targetPath, { recursive: true });
-			mergeFolders(sourcePath, targetPath);
+			await mergeFolders(sourcePath, targetPath);
 		}
 	}
 }
