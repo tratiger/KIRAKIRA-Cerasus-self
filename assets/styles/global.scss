@@ -89,6 +89,7 @@ body {
 	margin: 0;
 	padding: 0;
 	color: c(text-color);
+	line-height: 1.4;
 	background-color: c(main-bg);
 	transition: background-color $ease-out-max 250ms;
 }
