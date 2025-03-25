@@ -38,7 +38,7 @@
 	const htmlTitle = computed(() => title.value + " - " + settingsString);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.roles.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
 

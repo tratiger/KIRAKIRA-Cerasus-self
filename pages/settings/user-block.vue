@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.roles.includes("administrator"));
 
 	const showBlockUserAlert = ref(false);
 	const isOpeningBlockUserAlert = ref(false);
@@ -91,7 +91,7 @@
 				(to: unknown) => {
 					// WARN: 此处需要重新创建 Store
 					const selfUserInfoStore = useSelfUserInfoStore();
-					if (selfUserInfoStore.role !== "admin")
+					if (!selfUserInfoStore.roles.includes("administrator"))
 						return navigate("/settings/appearance");
 
 					if (to && typeof to === "object" && "path" in to && to.path !== "/settings/user-block")
