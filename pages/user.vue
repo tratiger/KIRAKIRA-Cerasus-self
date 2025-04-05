@@ -85,7 +85,7 @@
 			const { data } = await api.feed.unfollowingUploader(unfollowingUploaderRequest);
 			if (data.value?.success)
 				// TODO: 使用多语言
-				useToast("取消关注成功", "warning", 5000);
+				useToast("取消关注成功", "success", 5000);
 			else {
 				isFollowing.value = true;
 				// TODO: 使用多语言
