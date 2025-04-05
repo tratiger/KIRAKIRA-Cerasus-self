@@ -163,7 +163,10 @@
 		&.v-enter-from,
 		&.v-leave-to {
 			translate: 0 20px;
-			opacity: 0;
+
+			:slotted(> *) {
+				opacity: 0;
+			}
 		}
 
 		@include not-mobile {

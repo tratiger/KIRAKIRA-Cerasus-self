@@ -43,7 +43,7 @@
 
 	const userSelfInfoStore = useSelfUserInfoStore();
 	const isSelfComment = computed(() => props.uid === userSelfInfoStore.userInfo.uid); // 这条评论是否是自己发送的
-	const isAdmin = computed(() => userSelfInfoStore.userInfo.role === "admin"); // 当前登录用户是否是管理员
+	const isAdmin = computed(() => userSelfInfoStore.userInfo.roles?.includes("administrator")); // 用户是否是管理员
 
 	/**
 	 * 点击加分、减分按钮事件。

@@ -380,7 +380,7 @@ export default {
 		username_requirements: "Must be unique. @:user.nickname_requirements",
 		username_requirements_unique: "Username must be unique.",
 		nickname: "Nickname",
-		nickname_requirements: '1~20 characters, including only numbers, upper & lower case Latin letters, Vietnamese letters, CJK characters, common Hiragana/Katakana, modern Hangul syllables, special symbols "-", "_".',
+		nickname_requirements: '1~20 characters, including only numbers, upper & lower case Latin letters, Vietnamese letters, CJK characters, common Hiragana/Katakana, modern Hangul syllables, special symbols "-", "_", non leading, trailing, continuous spaces.',
 		username_nickname_requirements: "Usernames and nicknames must be @:user.nickname_requirements",
 		bio: "Bio",
 		gender: "Gender",

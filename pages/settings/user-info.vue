@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.userInfo.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 
 	const isOnlyShowUserInfoUpdatedAfterReview = ref(false); // 是否只展示在上一次审核通过后修改了用户信息的用户
 	const users = ref<AdminGetUserInfoResponseDto>(); // 用户信息
@@ -133,7 +133,7 @@
 				(to: unknown) => {
 					// WARN: 此处需要重新创建 Store
 					const selfUserInfoStore = useSelfUserInfoStore();
-					if (selfUserInfoStore.userInfo.role !== "admin")
+					if (!selfUserInfoStore.userInfo.roles?.includes("administrator"))
 						return navigate("/settings/appearance");
 
 					if (to && typeof to === "object" && "path" in to && to.path !== "/settings/user-info")
@@ -227,7 +227,7 @@
 					<div class="icons">
 						<Icon v-if="user.gender === 'male' " name="male" class="male" />
 						<Icon v-else-if="user.gender === 'female'" name="female" class="female" />
-						<Icon v-if="user.role === 'admin' " name="build_circle" class="admin" />
+						<Icon v-if="user.roles?.includes('administrator')" name="build_circle" class="admin" />
 					</div>
 				</div>
 			</SettingsChipItem>
@@ -249,7 +249,7 @@
 					<div class="icons">
 						<Icon v-if="user.gender === 'male' " name="male" class="male" />
 						<Icon v-else-if="user.gender === 'female'" name="female" class="female" />
-						<Icon v-if="user.role === 'admin' " name="build_circle" class="admin" />
+						<Icon v-if="user.roles?.includes('administrator')" name="build_circle" class="admin" />
 					</div>
 				</div>
 			</SettingsChipItem>
