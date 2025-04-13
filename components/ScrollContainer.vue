@@ -120,8 +120,8 @@
 		mouseHovering.value = true;
 		clearTimeout(hideVerticalTimeout.value);
 		clearTimeout(hideHorizontalTimeout.value);
-		if (scrollableVertical.value) showVertical.value = true;
-		if (scrollableHorizontal.value) showHorizontal.value = true;
+		showVertical.value = scrollableVertical.value;
+		showHorizontal.value = scrollableHorizontal.value;
 	}
 
 	/**
@@ -152,8 +152,8 @@
 	 */
 	function onScrollChange() {
 		updateScrollPercentage();
-		if (scrollableVertical.value) showVertical.value = true;
-		if (scrollableHorizontal.value) showHorizontal.value = true;
+		showVertical.value = scrollableVertical.value;
+		showHorizontal.value = scrollableHorizontal.value;
 		if (!mouseHovering.value && !draggingHorizontal.value && !draggingHorizontal.value) hideAll();
 	}
 
