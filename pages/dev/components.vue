@@ -108,6 +108,8 @@
 			</Segmented>
 			<div class="buttons">
 				<Button class="test-button" @click="onClickButton">{{ isClicked ? "我被单击了 呜呜呜~" : "主要按钮" }}</Button>
+				<Button class="test-button" severity="warning">警告按钮</Button>
+				<Button class="test-button" severity="danger">危险按钮</Button>
 				<Button disabled>主要按钮被禁用</Button>
 				<Button @click="showConfetti">{{ t.confetti }}</Button>
 				<Button icon="send">{{ t.send }}</Button>

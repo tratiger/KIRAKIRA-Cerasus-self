@@ -10,7 +10,7 @@
 
 	const icon = computed(() => ({
 		info: "info",
-		warning: "exclamation",
+		warning: "exclamation_circle",
 	}[props.type]));
 </script>
 
