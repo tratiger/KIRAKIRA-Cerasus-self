@@ -103,13 +103,13 @@
 		:aria-valuemin="min"
 		:aria-valuemax="max"
 		aria-orientation="horizontal"
+		@pointerdown="onTrackDown"
+		@contextmenu="onLongPress"
 	>
-		<div class="track" @pointerdown="onTrackDown" @contextmenu="onLongPress">
-			<div class="value-container">
-				<div class="value">{{ displayValue }}</div>
-				<div class="value passed"></div>
-				<div class="value value-on">{{ displayValue }}</div>
-			</div>
+		<div class="value-container">
+			<div class="value">{{ displayValue }}</div>
+			<div class="value passed"></div>
+			<div class="value value-on">{{ displayValue }}</div>
 		</div>
 	</Comp>
 </template>
@@ -118,21 +118,15 @@
 	$track-thickness: 32px;
 
 	:comp {
-		--value: 0;
-		position: relative;
-		touch-action: none;
-	}
-
-	.track {
 		@include round-large;
 		@include dropdown-flyouts;
 		@include acrylic-background;
+		--value: 0;
 		position: relative;
-		width: 100%;
 		height: $track-thickness;
-		margin: 0;
 		overflow: clip;
 		cursor: pointer;
+		touch-action: none;
 	}
 
 	.value-container {
@@ -147,9 +141,9 @@
 		align-items: center;
 		padding-left: 20px;
 		color: c(accent);
-		transition: none;
-		pointer-events: none;
 		font-variant-numeric: tabular-nums;
+		pointer-events: none;
+		transition: none;
 
 		html.dark & {
 			color: white;
