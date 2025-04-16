@@ -36,6 +36,88 @@ KIRAKIRA 的前端
  </picture>
 </a>
 
+## 架构图
+
+```mermaid
+
+flowchart TD
+    %% 核心应用
+    NuxtApp["Nuxt 3 应用"]:::frontend
+
+    %% 表现层
+    subgraph "表现层"
+        Pages["页面和路由"]:::presentation
+        UIComponents["界面组件"]:::presentation
+    end
+
+    %% 业务逻辑层
+    subgraph "业务逻辑层"
+        ComposablesStores["组合式函数和状态库"]:::business
+        Modules["模块"]:::business
+        PluginsProviders["插件和供给"]:::business
+    end
+
+    %% 工具类函数和国际化
+    subgraph "工具类函数和国际化"
+        AssetsStyling["资产和样式"]:::utilities
+        Internationalization["国际化"]:::utilities
+    end
+
+    %% 服务器和环境设置
+    subgraph "服务器和环境设置"
+        ServerEnv["服务器和配置文件"]:::server
+    end
+
+    %% 外部系统
+    subgraph "外部系统"
+        Backend["KIRAKIRA-Rosales 后端"]:::external
+        CloudflareImages["Cloudflare 图片"]:::external
+        CloudflareStream["Cloudflare 流媒体"]:::external
+    end
+
+    %% Connections between layers
+    NuxtApp -->|"路由"| Pages
+    NuxtApp -->|"渲染"| UIComponents
+    Modules -->|"影响"| NuxtApp
+    PluginsProviders -->|"中间件"| NuxtApp
+    ComposablesStores -->|"获取接口"| Backend
+    PluginsProviders -->|"整合"| CloudflareImages
+    PluginsProviders -->|"整合"| CloudflareStream
+    UIComponents -->|"指令绑定"| PluginsProviders
+    AssetsStyling -->|"妆饰"| UIComponents
+    Internationalization -->|"翻译"| UIComponents
+    ComposablesStores -->|"状态同步"| UIComponents
+    Modules -->|"扩展"| PluginsProviders
+    ServerEnv -->|"配置"| NuxtApp
+
+    %% Class definitions with colors
+    classDef frontend fill:#f9c,stroke:#333,stroke-width:2px;
+    classDef presentation fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef business fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef utilities fill:#ffb,stroke:#333,stroke-width:2px;
+    classDef server fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef external fill:#bef,stroke:#333,stroke-width:2px;
+
+    %% Click Events
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/nuxt.config.ts"
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/app.vue"
+    click Pages "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/pages"
+    click UIComponents "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/components"
+    click Modules "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/modules"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/composables"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/stores/app-settings.ts"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/assets"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/helpers"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/utils"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/plugins"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/providers/nuxt-image"
+    click Internationalization "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/locales"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/server"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/tsconfig.json"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/.npmrc"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/pnpm-lock.yaml"
+```
+
 ## Nuxt 3
 
 首先，Nuxt 读作 **/nʌkst/**（

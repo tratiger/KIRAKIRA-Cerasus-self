@@ -36,6 +36,88 @@ Front-end
  </picture>
 </a>
 
+## Architecture Diagram
+
+```mermaid
+
+flowchart TD
+    %% Core Application
+    NuxtApp["Nuxt 3 Application"]:::frontend
+
+    %% Presentation Layer
+    subgraph "Presentation Layer"
+        Pages["Pages & Routing"]:::presentation
+        UIComponents["UI Components"]:::presentation
+    end
+
+    %% Business Logic Layer
+    subgraph "Business Logic Layer"
+        ComposablesStores["Composables & Stores"]:::business
+        Modules["Modules"]:::business
+        PluginsProviders["Plugins & Providers"]:::business
+    end
+
+    %% Utilities & Internationalization
+    subgraph "Utilities & Internationalization"
+        AssetsStyling["Assets & Styling"]:::utilities
+        Internationalization["Internationalization"]:::utilities
+    end
+
+    %% Server & Environment Setup
+    subgraph "Server & Environment Setup"
+        ServerEnv["Server & Config Files"]:::server
+    end
+
+    %% External Systems
+    subgraph "External Systems"
+        Backend["KIRAKIRA-Rosales Backend"]:::external
+        CloudflareImages["Cloudflare Images"]:::external
+        CloudflareStream["Cloudflare Stream"]:::external
+    end
+
+    %% Connections between layers
+    NuxtApp -->|"routing"| Pages
+    NuxtApp -->|"render"| UIComponents
+    Modules -->|"affects"| NuxtApp
+    PluginsProviders -->|"middleware"| NuxtApp
+    ComposablesStores -->|"fetch_API"| Backend
+    PluginsProviders -->|"integrates"| CloudflareImages
+    PluginsProviders -->|"integrates"| CloudflareStream
+    UIComponents -->|"directive_binding"| PluginsProviders
+    AssetsStyling -->|"styles"| UIComponents
+    Internationalization -->|"translations"| UIComponents
+    ComposablesStores -->|"state_sync"| UIComponents
+    Modules -->|"extends"| PluginsProviders
+    ServerEnv -->|"configures"| NuxtApp
+
+    %% Class definitions with colors
+    classDef frontend fill:#f9c,stroke:#333,stroke-width:2px;
+    classDef presentation fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef business fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef utilities fill:#ffb,stroke:#333,stroke-width:2px;
+    classDef server fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef external fill:#bef,stroke:#333,stroke-width:2px;
+
+    %% Click Events
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/nuxt.config.ts"
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/app.vue"
+    click Pages "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/pages"
+    click UIComponents "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/components"
+    click Modules "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/modules"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/composables"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/stores/app-settings.ts"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/assets"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/helpers"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/utils"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/plugins"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/providers/nuxt-image"
+    click Internationalization "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/locales"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/server"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/tsconfig.json"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/.npmrc"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/pnpm-lock.yaml"
+```
+
 ## Nuxt 3
 
 Firstly, Nuxt is pronounced as **/nʌkst/** \*lol\*
