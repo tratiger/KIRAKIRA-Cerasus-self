@@ -241,6 +241,7 @@ export default defineNuxtConfig({
 
 	svgSprite: {
 		input: "~/assets/icons",
+		iconsPath: false,
 	},
 
 	imports: {
@@ -295,7 +296,12 @@ export default defineNuxtConfig({
 
 	robots: {
 		credits: false,
-		disallow: ["/search/", "/dev/", "/settings/", "/welcome/"],
+		disallow: [
+			"/dev",
+			"/settings",
+			"/welcome",
+			"/search",
+		],
 	},
 
 	compatibilityDate: "2024-08-25",
