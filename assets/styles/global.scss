@@ -126,13 +126,14 @@ iframe.noscript-mask {
 			@include square(96px);
 			@include circle;
 			@include button-shadow;
-			color: white;
-			font-size: 48px;
+			@include grid-center;
 			background-color: c(accent);
 
 			&::after {
-				content: "↻";
+				@include square(48px);
+				content: "";
 				display: block;
+				background-image: url("/prior/static/icons/refresh.svg");
 				animation: noscript-refresh-rotation 1s linear infinite paused;
 			}
 

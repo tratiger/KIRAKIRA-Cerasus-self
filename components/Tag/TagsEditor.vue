@@ -119,7 +119,7 @@
 	 */
 	function normalizeTags(tags?: string[]) {
 		tags ??= [...tagsWithKey.values()];
-		return arrayToRemoveDuplicates(tags.map(normalizeTag).filter(tag => tag));
+		return arrayToRemoveDuplicates(tags.map(normalizeTag).filter(Boolean));
 	}
 
 	/**

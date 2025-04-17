@@ -34,7 +34,7 @@ export function getRoutePath({
  */
 export function getLocaleRouteSlug(route?: Route | string) {
 	if (typeof route !== "string") route = getRoutePath({ route });
-	return route.split("/").filter(i => i);
+	return route.split("/").filter(Boolean);
 }
 
 /**

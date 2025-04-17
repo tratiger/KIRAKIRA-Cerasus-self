@@ -6,13 +6,13 @@ settings:
 
 patchedDependencies:
   '@vue/runtime-core@3.4.38':
-    hash: ztp3ypobxivfcwxmduyuuyw4ty
+    hash: 3075e5d1b32b35e69d86a75bdf62605f8693e336f4ed555e85512998a44e1180
     path: patches/@vue__runtime-core@3.4.38.patch
   lottie-web@5.12.2:
-    hash: i2gspqsoejhklw4cdx6nsmskse
+    hash: dce2b3cd192e5440201f3531c4089faeec9ac9683b12b0687951bd1e90fb8d2d
     path: patches/lottie-web@5.12.2.patch
   shaka-player@4.10.11:
-    hash: esbfiv7wd6h4uv7wutau3yg46u
+    hash: 144eccb81b9d7e8c916e005cf73def88011ba32127305a5e335500d213553c27
     path: patches/shaka-player@4.10.11.patch
 
 importers:
@@ -78,7 +78,7 @@ importers:
         version: 0.12.0
       lottie-web:
         specifier: ^5.12.2
-        version: 5.12.2(patch_hash=i2gspqsoejhklw4cdx6nsmskse)
+        version: 5.12.2(patch_hash=dce2b3cd192e5440201f3531c4089faeec9ac9683b12b0687951bd1e90fb8d2d)
       mediainfo.js:
         specifier: ^0.3.2
         version: 0.3.2
@@ -99,7 +99,7 @@ importers:
         version: 3.4.1(vue@3.4.38(typescript@5.5.4))
       shaka-player:
         specifier: ^4.10.11
-        version: 4.10.11(patch_hash=esbfiv7wd6h4uv7wutau3yg46u)
+        version: 4.10.11(patch_hash=144eccb81b9d7e8c916e005cf73def88011ba32127305a5e335500d213553c27)
       tus-js-client:
         specifier: ^4.1.0
         version: 4.1.0
@@ -8114,7 +8114,7 @@ snapshots:
     dependencies:
       '@vue/shared': 3.4.38
 
-  '@vue/runtime-core@3.4.38(patch_hash=ztp3ypobxivfcwxmduyuuyw4ty)':
+  '@vue/runtime-core@3.4.38(patch_hash=3075e5d1b32b35e69d86a75bdf62605f8693e336f4ed555e85512998a44e1180)':
     dependencies:
       '@vue/reactivity': 3.4.38
       '@vue/shared': 3.4.38
@@ -8122,7 +8122,7 @@ snapshots:
   '@vue/runtime-dom@3.4.38':
     dependencies:
       '@vue/reactivity': 3.4.38
-      '@vue/runtime-core': 3.4.38(patch_hash=ztp3ypobxivfcwxmduyuuyw4ty)
+      '@vue/runtime-core': 3.4.38(patch_hash=3075e5d1b32b35e69d86a75bdf62605f8693e336f4ed555e85512998a44e1180)
       '@vue/shared': 3.4.38
       csstype: 3.1.3
 
@@ -10257,7 +10257,7 @@ snapshots:
 
   longest@2.0.1: {}
 
-  lottie-web@5.12.2(patch_hash=i2gspqsoejhklw4cdx6nsmskse): {}
+  lottie-web@5.12.2(patch_hash=dce2b3cd192e5440201f3531c4089faeec9ac9683b12b0687951bd1e90fb8d2d): {}
 
   lower-case@2.0.2:
     dependencies:
@@ -12019,7 +12019,7 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  shaka-player@4.10.11(patch_hash=esbfiv7wd6h4uv7wutau3yg46u):
+  shaka-player@4.10.11(patch_hash=144eccb81b9d7e8c916e005cf73def88011ba32127305a5e335500d213553c27):
     dependencies:
       eme-encryption-scheme-polyfill: 2.1.5
 
