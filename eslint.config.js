@@ -47,22 +47,22 @@ export default [
 		files: ["**/*.{js,jsx,ts,tsx,vue}"],
 		rules: {
 			"@stylistic/indent": ["error", "tab", {
-				SwitchCase: 1,
-				flatTernaryExpressions: true,
-				ignoredNodes: [
+				"SwitchCase": 1,
+				"flatTernaryExpressions": true,
+				"ignoredNodes": [
 					"Program > .body",
 					"TSFunctionType *", // stylistic typescript indent bug
 					"TSMappedType *", // stylistic typescript indent bug
 				],
-				ignoreComments: true,
+				"ignoreComments": true,
 			}],
 			"@stylistic/linebreak-style": ["error", "unix"],
-			"@stylistic/quotes": ["error", "double", { avoidEscape: true }],
+			"@stylistic/quotes": ["error", "double", { "avoidEscape": true }],
 			"@stylistic/semi": ["error", "always"],
 			"@stylistic/array-bracket-spacing": ["error", "never"],
-			"@stylistic/brace-style": ["error", "1tbs", { allowSingleLine: true }],
+			"@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 			"@stylistic/comma-dangle": ["error", "always-multiline"],
-			"@stylistic/comma-spacing": ["error", { before: false, after: true }],
+			"@stylistic/comma-spacing": ["error", { "before": false, "after": true }],
 			"@stylistic/comma-style": ["error", "last"],
 			"@stylistic/eol-last": "error",
 			"default-case": "error",
@@ -73,10 +73,10 @@ export default [
 			"no-var": "error",
 			"no-unused-vars": "off",
 			"@stylistic/no-tabs": "off",
-			"no-empty": ["error", { allowEmptyCatch: true }],
-			"no-constant-condition": ["error", { checkLoops: false }],
-			"eqeqeq": ["error", "always", { null: "ignore" }],
-			"prefer-const": ["error", { destructuring: "all" }],
+			"no-empty": ["error", { "allowEmptyCatch": true }],
+			"no-constant-condition": ["error", { "checkLoops": false }],
+			"eqeqeq": ["error", "always", { "null": "ignore" }],
+			"prefer-const": ["error", { "destructuring": "all" }],
 			"for-direction": "error",
 			"getter-return": "error",
 			"no-compare-neg-zero": "error",
@@ -84,7 +84,7 @@ export default [
 			"@stylistic/no-extra-semi": "error",
 			"no-irregular-whitespace": "error",
 			"no-unreachable": "warn",
-			"use-isnan": "error",
+			"use-isnan": ["error", { "enforceForSwitchCase": true, "enforceForIndexOf": true }],
 			"valid-typeof": "error",
 			"curly": ["error", "multi"],
 			"no-lonely-if": "off",
@@ -103,9 +103,9 @@ export default [
 			"@stylistic/semi-spacing": "error",
 			"@stylistic/semi-style": ["error", "last"],
 			"@stylistic/space-before-function-paren": ["error", {
-				anonymous: "always",
-				named: "never",
-				asyncArrow: "always",
+				"anonymous": "always",
+				"named": "never",
+				"asyncArrow": "always",
 			}],
 			"@stylistic/space-infix-ops": "error",
 			"@stylistic/space-in-parens": ["error", "never"],
@@ -130,13 +130,13 @@ export default [
 			"no-undef": "off", // 这波 nuxt 的锅。
 			"@stylistic/multiline-ternary": "off",
 			"@stylistic/operator-linebreak": "off",
-			"@stylistic/no-trailing-spaces": ["error", { skipBlankLines: true }],
+			"@stylistic/no-trailing-spaces": ["error", { "skipBlankLines": true }],
 			"one-var": "off",
 			"@stylistic/arrow-parens": ["error", "as-needed"],
 			"camelcase": "off",
 			"@stylistic/spaced-comment": ["error", "always", {
-				exceptions: ["+", "-", "*", "/"],
-				markers: ["/", "!", "@", "#", "#region", "#endregion"],
+				"exceptions": ["+", "-", "*", "/"],
+				"markers": ["/", "!", "@", "#", "#region", "#endregion"],
 			}],
 			"radix": "error", // parseInt 必须要指明是十进制。
 			"no-self-assign": "off",
@@ -146,67 +146,81 @@ export default [
 			"no-empty-function": "off",
 			"require-jsdoc": "off", // 两个 JSDoc 相关的规则已被 ESLint 弃用了。
 			"valid-jsdoc": ["off", {
-				requireReturn: false,
-				requireParamType: false, // TypeScript 不需要 JSDoc 的 type。
-				requireReturnType: false,
+				"requireReturn": false,
+				"requireParamType": false, // TypeScript 不需要 JSDoc 的 type。
+				"requireReturnType": false,
 			}],
 			"no-inner-declarations": "warn",
 			"no-unmodified-loop-condition": "off",
 			"no-return-assign": "off",
 			"no-redeclare": "off",
 			"@stylistic/no-mixed-operators": "off",
-			"@stylistic/no-extra-parens": ["error", "all", { ignoreJSX: "multi-line" }],
-			"no-void": ["off", { allowAsStatement: true }], // 我就是要使用 void。
+			"@stylistic/no-extra-parens": ["error", "all", { "ignoreJSX": "multi-line", "conditionalAssign": false }],
+			"no-void": ["off", { "allowAsStatement": true }], // 我就是要使用 void。
 			"no-labels": "off",
 			"default-case-last": "off",
 			"no-useless-constructor": "off", // private constructor() { } 你跟我说无用？
-			"@stylistic/no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0, maxBOF: 0 }],
+			"@stylistic/no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
 			"no-unused-expressions": ["error", {
-				allowShortCircuit: true,
-				allowTernary: true,
-				allowTaggedTemplates: true,
-				enforceForJSX: true,
+				"allowShortCircuit": true,
+				"allowTernary": true,
+				"allowTaggedTemplates": true,
+				"enforceForJSX": true,
 			}],
 			"@stylistic/max-statements-per-line": "off",
-			// "no-useless-assignment": "error",
+			// "no-useless-assignment": "error", // 不支持 Vue 模板变量引用。
 			"no-control-regex": "off",
-			"import/order": "off", // 与 VSCode 内置导入排序特性打架。
+			"prefer-numeric-literals": "error",
+			"import/order": ["warn", {
+				"alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": false },
+				"named": true,
+			}],
 			"import/first": "off", // 与 Vue 特性冲突。
 			"import/named": "off", // 与 TypeScript 特性冲突。
 			"import/no-named-as-default": "off", // 似乎与文件命名方式有点出入。
 			"import/no-named-as-default-member": "off", // 某些库在导出成员时用 TS 命名空间欺诈。
 			"n/no-callback-literal": "off", // 这是啥？
-			"unicorn/escape-case": "off", // 暂时禁用，待修复。
-			"unicorn/number-literal-case": "off", // 同上，你真的觉得大写很好看吗？
+			"unicorn/escape-case": ["error", "lowercase"],
+			"unicorn/number-literal-case": ["error", { "hexadecimalValue": "lowercase" }],
+			"unicorn/prefer-code-point": "error",
+			"unicorn/better-regex": "off",
+			"unicorn/consistent-empty-array-spread": "error",
+			"unicorn/consistent-existence-index-check": "error",
+			"unicorn/explicit-length-check": "error",
+			"unicorn/no-array-push-push": "error",
+			"unicorn/no-console-spaces": "error",
+			"unicorn/no-document-cookie": "error",
+			"unicorn/prefer-string-replace-all": "error",
+			"unicorn/no-useless-length-check": "error",
 			"@typescript-eslint/no-unused-vars": ["warn", { // 非要使用未使用变量，前面加下划线。
-				argsIgnorePattern: "^_",
-				varsIgnorePattern: "^_|^props$|^emits$",
-				caughtErrorsIgnorePattern: "^_",
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_|^props$|^emits$",
+				"caughtErrorsIgnorePattern": "^_",
 			}],
 			"no-unused-private-class-members": "warn",
-			"@typescript-eslint/no-inferrable-types": ["error", { ignoreParameters: true, ignoreProperties: true }],
+			"@typescript-eslint/no-inferrable-types": ["error", { "ignoreParameters": true, "ignoreProperties": true }],
 			"@typescript-eslint/no-non-null-assertion": "off",
 			"@typescript-eslint/triple-slash-reference": "off",
 			"@typescript-eslint/ban-ts-comment": "off",
 			"@typescript-eslint/ban-types": "off",
 			"@typescript-eslint/no-namespace": "off",
-			"@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "as" }],
+			"@typescript-eslint/consistent-type-assertions": ["error", { "assertionStyle": "as" }],
 			"@typescript-eslint/no-confusing-non-null-assertion": "error",
 			"@typescript-eslint/no-duplicate-enum-values": "error",
 			"@typescript-eslint/no-empty-interface": "off",
 			"@stylistic/member-delimiter-style": ["error", {
-				multiline: {
-					delimiter: "semi",
-					requireLast: true,
+				"multiline": {
+					"delimiter": "semi",
+					"requireLast": true,
 				},
-				singleline: {
-					delimiter: "semi",
-					requireLast: false,
+				"singleline": {
+					"delimiter": "semi",
+					"requireLast": false,
 				},
 			}],
 			"@typescript-eslint/no-explicit-any": "error",
 			"@typescript-eslint/no-use-before-define": ["warn", {
-				functions: false,
+				"functions": false,
 			}],
 			"@typescript-eslint/no-empty-function": "off",
 			"@typescript-eslint/no-redeclare": "warn",
@@ -235,40 +249,40 @@ export default [
 			"@typescript-eslint/no-unnecessary-template-expression": "error",
 			"@typescript-eslint/no-unnecessary-qualifier": "off", // 开启后，某些包含复杂类型的特殊文件会把 eslint 弄崩。
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": "error",
-			"@typescript-eslint/no-unnecessary-condition": ["off", { allowConstantLoopConditions: true }],
+			"@typescript-eslint/no-unnecessary-condition": ["off", { "allowConstantLoopConditions": true }],
 			"@typescript-eslint/no-empty-object-type": "off",
 			"react-refresh/only-export-components": [
 				"off",
-				{ allowConstantExport: true },
+				{ "allowConstantExport": true },
 			],
 			"@typescript-eslint/no-unsafe-function-type": "off",
 			"@typescript-eslint/no-unused-expressions": ["error", {
-				allowShortCircuit: true,
-				allowTernary: true,
-				enforceForJSX: true,
+				"allowShortCircuit": true,
+				"allowTernary": true,
+				"enforceForJSX": true,
 			}],
 			// "@typescript-eslint/prefer-readonly-parameter-types": "error",
 			"@typescript-eslint/prefer-reduce-type-parameter": "error",
 			"vue/html-indent": ["error", "tab"],
 			"vue/script-indent": ["error", "tab", {
-				baseIndent: 1,
-				switchCase: 1,
+				"baseIndent": 1,
+				"switchCase": 1,
 			}],
 			"vue/html-self-closing": ["error", {
-				html: {
-					void: "always",
-					normal: "any",
-					component: "always",
+				"html": {
+					"void": "always",
+					"normal": "any",
+					"component": "always",
 				},
-				svg: "always",
-				math: "always",
+				"svg": "always",
+				"math": "always",
 			}],
 			"vue/no-export-in-script-setup": "error",
 			"vue/no-duplicate-attributes": "error",
 			"vue/no-reserved-component-names": "error",
 			"vue/no-use-v-if-with-v-for": "error",
 			"vue/no-v-text-v-html-on-component": "error",
-			"vue/html-quotes": ["error", "double", { avoidEscape: true }],
+			"vue/html-quotes": ["error", "double", { "avoidEscape": true }],
 			"vue/component-definition-name-casing": ["error", "PascalCase"],
 			"vue/no-multi-spaces": "error",
 			"vue/no-spaces-around-equal-signs-in-attribute": "error",
@@ -276,8 +290,8 @@ export default [
 			"vue/v-slot-style": "error",
 			"vue/html-closing-bracket-spacing": "error",
 			"vue/html-closing-bracket-newline": ["error", {
-				singleline: "never",
-				multiline: "always",
+				"singleline": "never",
+				"multiline": "always",
 			}],
 			"vue/no-v-html": "error",
 			"vue/this-in-template": ["error", "never"],
@@ -285,14 +299,14 @@ export default [
 			"vue/array-bracket-spacing": ["error", "never"],
 			"vue/arrow-spacing": "error",
 			"vue/block-spacing": "error",
-			"vue/brace-style": ["error", "1tbs", { allowSingleLine: true }],
+			"vue/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
 			"vue/comma-dangle": ["error", "always-multiline"],
-			"vue/comma-spacing": ["error", { before: false, after: true }],
+			"vue/comma-spacing": ["error", { "before": false, "after": true }],
 			"vue/comma-style": ["error", "last"],
 			"vue/dot-location": ["error", "property"],
 			"vue/dot-notation": ["error"],
 			"vue/func-call-spacing": ["error", "never"],
-			"vue/eqeqeq": ["error", "always", { null: "ignore" }],
+			"vue/eqeqeq": ["error", "always", { "null": "ignore" }],
 			"vue/no-irregular-whitespace": "error",
 			"vue/no-loss-of-precision": "error",
 			"vue/no-useless-concat": "error",
@@ -314,38 +328,38 @@ export default [
 			"vue/no-v-model-argument": "off",
 			"vue/require-typed-ref": "error",
 			"vue/block-lang": ["error", {
-				script: {
-					lang: ["ts", "tsx"],
+				"script": {
+					"lang": ["ts", "tsx"],
 				},
-				style: {
-					lang: "scss",
+				"style": {
+					"lang": "scss",
 				},
-				i18n: {
-					lang: "json5",
+				"i18n": {
+					"lang": "json5",
 				},
 			}],
 			"vue/block-tag-newline": ["error", {
-				singleline: "always",
-				multiline: "always",
-				maxEmptyLines: 0,
+				"singleline": "always",
+				"multiline": "always",
+				"maxEmptyLines": 0,
 			}],
 			"vue/define-macros-order": ["off", { // 与 typescript 冲突了。
-				order: ["defineProps", "defineEmits"],
+				"order": ["defineProps", "defineEmits"],
 			}],
 			"vue/component-options-name-casing": ["error", "PascalCase"],
 			"vue/next-tick-style": ["error", "promise"],
 			"vue/padding-line-between-blocks": ["error", "always"],
 			"vue/component-tags-order": ["error", {
-				order: ["docs", ["script:not([setup])", "script[setup]"], "template", "i18n", "style[scoped]", "style[module]", "style:not([scoped]):not([module])"],
+				"order": ["docs", ["script:not([setup])", "script[setup]"], "template", "i18n", "style[scoped]", "style[module]", "style:not([scoped]):not([module])"],
 			}],
 			"vue/no-multiple-template-root": "off",
 			"vue/multiline-html-element-content-newline": "off",
 			"vue/no-template-shadow": "off",
-			"vue/no-mutating-props": ["off", { shallowOnly: false }],
+			"vue/no-mutating-props": ["off", { "shallowOnly": false }],
 			"vue/no-deprecated-filter": "off", // 我要按位或，不是要什么过滤器。
 			"vue/no-dupe-keys": "off",
 			"vue/no-v-for-template-key": "off", // 官方说明：它会和 vue/no-v-for-template-key-on-child 规则打架。
-			"vue/v-on-event-hyphenation": ["error", "never", { autofix: true }],
+			"vue/v-on-event-hyphenation": ["error", "never", { "autofix": true }],
 			"no-restricted-properties": ["error", {
 				object: "arguments",
 				property: "callee",
@@ -389,9 +403,18 @@ export default [
 				property: "__defineSetter__",
 				message: "Please use Object.defineProperty instead.",
 			}, {
+				property: "__lookupGetter__",
+				message: "Please use Object.getOwnPropertyDescriptor instead.",
+			}, {
+				property: "__lookupSetter__",
+				message: "Please use Object.getOwnPropertyDescriptor instead.",
+			}, {
+				property: "__proto__",
+				message: "Please use Object.getPrototypeOf instead.",
+			}, {
 				object: "Math",
 				property: "pow",
-				message: "Use the exponentiation operator (**) instead.",
+				message: "Please use the exponentiation operator (**) instead.",
 			}],
 			"no-restricted-globals": ["error", {
 				name: "arguments",
@@ -405,6 +428,9 @@ export default [
 			}, {
 				name: "addEventListener",
 				message: "Please use window.addEventListener instead.",
+			}, {
+				name: "removeEventListener",
+				message: "Please use window.removeEventListener instead.",
 			}, {
 				name: "innerHeight",
 				message: "Please use window.innerHeight instead.",
@@ -420,6 +446,12 @@ export default [
 			}, {
 				name: "open",
 				message: "Please use window.open instead.",
+			}, {
+				name: "matchMedia",
+				message: "Please use window.matchMedia instead.",
+			}, {
+				name: "print",
+				message: "Please use window.print instead.",
 			}, /* {
 				name: "Number",
 				message: "Use + instead.",
