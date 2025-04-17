@@ -98,7 +98,7 @@ export function switchLanguage(lang: string) {
 		const pushRoute = () => { useRouter().push(lang + getRoutePath()); };
 		if (!document.startViewTransition) {
 			pushRoute();
-			element.animate([
+			document.body.animate([
 				{ filter: "blur(10px)" },
 				{ filter: "blur(0)" },
 			], { duration: 500, easing: eases.easeOutSmooth });

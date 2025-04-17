@@ -201,6 +201,14 @@
 		&.transparent {
 			background: none;
 		}
+
+		.stop-animation > & {
+			&,
+			* {
+				transition: none !important;
+				animation: none !important;
+			}
+		}
 	}
 
 	nav {

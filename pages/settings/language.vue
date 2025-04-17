@@ -44,11 +44,9 @@
 		animation: none !important;
 
 		@media not (prefers-reduced-motion: reduce) {
-			:not(.stop-animation) > & {
-				@for $i from 1 through $length {
-					> :nth-child(#{$i}) {
-						animation: scale-in 600ms (100ms * ($i - 1)) $ease-out-smooth backwards;
-					}
+			@for $i from 1 through $length {
+				> :nth-child(#{$i}) {
+					animation: scale-in 600ms (100ms * ($i - 1)) $ease-out-smooth backwards;
 				}
 			}
 		}
@@ -59,11 +57,9 @@
 		animation: none !important;
 
 		@media not (prefers-reduced-motion: reduce) {
-			:not(.stop-animation) > & {
-				@for $i from 1 through $length {
-					> :nth-child(#{$i}) {
-						animation: float-left 1s (100ms * ($i - 1)) $ease-out-smooth backwards;
-					}
+			@for $i from 1 through $length {
+				> :nth-child(#{$i}) {
+					animation: float-left 1s (100ms * ($i - 1)) $ease-out-smooth backwards;
 				}
 			}
 		}
