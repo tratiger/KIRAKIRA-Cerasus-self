@@ -362,7 +362,6 @@ export default {
 		username_requirements: "Harus unik. @:user.nickname_requirements",
 		username_requirements_unique: "Nama pengguna harus unik.",
 		nickname: "Nama Panggilan",
-		nickname_requirements: "1~20 karakter, sertakan hanya angka, upper & lower case huruf Latin, huruf Vietnam, karakter CJK, Hiragana/Katakana umum, suku kata Hangul modern, simbol spesial \"-\", \"_\".",
 		username_nickname_requirements: "Nama Pengguna dan Nama Panggilan harus @:user.nickname_requirements",
 		bio: "Bio",
 		gender: "Gender",

@@ -190,7 +190,7 @@ export default {
 			send_as_creator: "创作者专属渐变",
 		},
 		list: {
-			loading: "弹幕装填中⋯⋯",
+			loading: "全舰弹幕装填中⋯⋯",
 			thead: {
 				time: "时间",
 				content: "内容",
@@ -384,7 +384,7 @@ export default {
 		username_requirements: "不允许重名。@:user.nickname_requirements",
 		username_requirements_unique: "用户名不允许重名。",
 		nickname: "昵称",
-		nickname_requirements: "1~20个字符，仅可包含数字、大小写拉丁字母、越南语字母、汉字、常用平/片假名、现代谚文音节、特殊符号 ｢-｣ ｢_｣。",
+		nickname_requirements: "1~20个字符，仅可包含数字、大小写拉丁字母、越南语字母、汉字、常用平/片假名、现代谚文音节、特殊符号 ｢-｣ ｢_｣ 以及非前导尾随连续空格。",
 		username_nickname_requirements: "用户名和昵称必须为@:user.nickname_requirements",
 		bio: "个性签名",
 		gender: "性别",
@@ -492,4 +492,5 @@ export default {
 		invalid: "邀请码无效",
 	},
 	version: "版本",
+	announcement: "目前网站仍然处于早期的公测中，由于用户数量增长速度远超预期，站娘已暂停发放邀请码，请不要一直私聊啦！\n上传、关注等功能也因为还在开发中暂时无法开放。但是我们可能会不定期上传一些视频喔～\n非常感谢大家对我们的网站能有如此高的热情，但是我们团队所有人都是在业余时间才能开发的，因此速度较为缓慢，希望大家谅解，谢谢啦！❤️\n也欢迎有开发或者社区管理能力的人前来联系{webmistress}～",
 } as const satisfies LocaleIdentifiers;

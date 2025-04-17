@@ -162,9 +162,19 @@ export default {
 		},
 		error: {
 			getDanmaku: "Nhận danh sách Danmaku thất bại",
+			loadMedia: "Không tải được đa phương tiện",
 		},
-		playlist: {},
-		playback_order: {},
+		playlist: {
+			add_to_playlist: "Thêm vào Danh sách phát",
+			remove_from_playlist: "Xóa khỏi Danh sách phát",
+		},
+		playback_order: {
+			_: "Thứ tự phát",
+			sequential: "Theo thứ tự",
+			repeat_all: "Lặp lại tất cả",
+			repeat_one: "Lặp lại một lần",
+			shuffle: "Xáo trộn",
+		},
 	},
 	danmaku: {
 		_: "Danmaku",
@@ -374,7 +384,7 @@ export default {
 		username_requirements: "Phải là tên độc lập duy nhất. @:user.nickname_requirements",
 		username_requirements_unique: "Tên người dùng phải là duy nhất.",
 		nickname: "Biệt danh",
-		nickname_requirements: "1~20 ký tự, chỉ bao gồm số, chữ cái Latin in hoa và thường, chữ cái tiếng Việt, chữ CJK, chữ Hiragana/Katakana thông dụng, âm tiết Hangul hiện đại, ký hiệu đặc biệt \"-\", \"_\".",
+		nickname_requirements: "1~20 ký tự, chỉ bao gồm số, chữ cái Latin in hoa và thường, chữ cái tiếng Việt, chữ CJK, chữ Hiragana/Katakana thông dụng, âm tiết Hangul hiện đại, ký hiệu đặc biệt \"-\", \"_\", không có khoảng trắng đầu, cuối, liên tục.",
 		username_nickname_requirements: "Tên người dùng và biệt danh phải là @:user.nickname_requirements",
 		bio: "Giới thiệu",
 		gender: "Giới tính",

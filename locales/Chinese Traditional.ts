@@ -93,6 +93,7 @@ export default {
 	account: "帳戶",
 	profile: {
 		_: "資料",
+		edit: "編輯個人資料",
 		edit_banner: "點擊更換封面",
 		edit_avatar: "點擊更換頭像",
 	},
@@ -161,9 +162,19 @@ export default {
 		},
 		error: {
 			getDanmaku: "獲取彈幕列表失敗",
+			loadMedia: "無法加載媒體",
 		},
-		playlist: {},
-		playback_order: {},
+		playlist: {
+			add_to_playlist: "加至播放清單",
+			remove_from_playlist: "從播放清單移除",
+		},
+		playback_order: {
+			_: "播放次序",
+			sequential: "順序播放",
+			repeat_all: "列表循環",
+			repeat_one: "重複播放",
+			shuffle: "隨機播放",
+		},
 	},
 	danmaku: {
 		_: "彈幕",
@@ -297,6 +308,7 @@ export default {
 		failed: "複製失敗！",
 	},
 	pin: "置頂",
+	pinned: "已釘選",
 	unpin: "取消置頂",
 	report: "投訴",
 	original: "原創",
@@ -372,7 +384,6 @@ export default {
 		username_requirements: "不可重名。@:user.nickname_requirements",
 		username_requirements_unique: "使用者名稱不可重複。",
 		nickname: "暱稱",
-		nickname_requirements: "1～20個字元，只可包含數字、大小寫拉丁字母、越南語字母、漢字、常用平／片假名、現代諺文音節、特殊符號「-」、「_」。",
 		username_nickname_requirements: "使用者名稱及暱稱必須為@:user.nickname_requirements",
 		bio: "個性簽名",
 		gender: "性別",

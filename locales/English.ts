@@ -488,4 +488,5 @@ export default {
 		invalid: "Invalid Invitation Code",
 	},
 	version: "Version",
+	announcement: "At present, the website is still in its early beta stage. Due to the much faster than expected growth in user numbers, the webmistress has temporarily suspended the distribution of invitation codes. Please do not continue to chat privately!\nThe upload and follow features are also temporarily unavailable due to under construction. But we may upload some videos from time to time~\nThank you very much for your high enthusiasm for our website. However, all members of our team develop it in their spare time, so the speed is relatively slow. We hope you can understand. Thank you! ❤️\nPeople with development or community management skills are also welcome to contact the {webmistress}~",
 } as const;

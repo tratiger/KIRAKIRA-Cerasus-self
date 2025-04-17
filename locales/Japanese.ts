@@ -93,6 +93,7 @@ export default {
 	account: "アカウント",
 	profile: {
 		_: "プロフィール",
+		edit: "プロフィールを編集",
 		edit_banner: "バナー画像の変更",
 		edit_avatar: "プロフィールアイコンの変更",
 	},
@@ -161,9 +162,19 @@ export default {
 		},
 		error: {
 			getDanmaku: "弾幕リストの取得に失敗しました。",
+			loadMedia: "メディアの読み込みに失敗しました",
 		},
-		playlist: {},
-		playback_order: {},
+		playlist: {
+			add_to_playlist: "再生リストに追加",
+			remove_from_playlist: "再生リストから削除",
+		},
+		playback_order: {
+			_: "再生順",
+			sequential: "順次に再生",
+			repeat_all: "リピート再生：すべて",
+			repeat_one: "リピート再生：１つだけ",
+			shuffle: "シャフル再生",
+		},
 	},
 	danmaku: {
 		_: "弾幕",
@@ -297,6 +308,7 @@ export default {
 		failed: "コピー失敗！",
 	},
 	pin: "固定",
+	pinned: "固定",
 	unpin: "固定解除",
 	report: "通報",
 	original: "自作",
@@ -372,7 +384,7 @@ export default {
 		username_requirements: "一意である必要があります。　@:user.nickname_requirements",
 		username_requirements_unique: "ユーザー名は一意である必要があります。",
 		nickname: "ニックネーム",
-		nickname_requirements: "1~20文字、半角英数字とベトナム文字、CJK統合漢字、ひらがな、カタカナ、ハングル、そして記号の「-」、「_」のみ使用できます。",
+		nickname_requirements: "1〜20文字、数字、大文字および小文字、ベトナム文字、CJK文字 一般的な平仮名/カタカナ、現代のハングル音節、特殊記号「-」、「_」、ノンリード、追跡、連続的なスペース。",
 		username_nickname_requirements: "ユーザー名とニックネームは　@:user.nickname_requirements　のルールに従う必要があります。",
 		bio: "自己紹介",
 		gender: "性別",

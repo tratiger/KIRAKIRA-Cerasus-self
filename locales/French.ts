@@ -93,6 +93,7 @@ export default {
 	account: "Compte",
 	profile: {
 		_: "Profils",
+		edit: "Modifier le profil",
 		edit_banner: "Modifier La Bannière",
 		edit_avatar: "Modifier l’avatar",
 	},
@@ -161,9 +162,19 @@ export default {
 		},
 		error: {
 			getDanmaku: "Impossible d'obtenir la liste de danmaku",
+			loadMedia: "Échec de lecture du média",
 		},
-		playlist: {},
-		playback_order: {},
+		playlist: {
+			add_to_playlist: "Ajouter à la playlist",
+			remove_from_playlist: "Supprimer de la Playlist",
+		},
+		playback_order: {
+			_: "Ordre de lecture",
+			sequential: "Séquentielle",
+			repeat_all: "Tout répéter",
+			repeat_one: "Répéter une fois",
+			shuffle: "Aléatoire",
+		},
 	},
 	danmaku: {
 		_: "Danmaku | Danmakus",
@@ -297,6 +308,7 @@ export default {
 		failed: "Échec de la copie !",
 	},
 	pin: "Épingler",
+	pinned: "Épinglé",
 	unpin: "Désépingler",
 	report: "Signaler",
 	original: "Originale",
@@ -372,7 +384,7 @@ export default {
 		username_requirements: "Doit être unique. @:user.nickname_requirements",
 		username_requirements_unique: "Un nom d'utilisateur doit être unique.",
 		nickname: "Surnom",
-		nickname_requirements: "1 à 20 caractères, comprenant uniquement des chiffres, des lettres latines majuscules et minuscules, des lettres vietnamiennes, des caractères CJK, des Hiragana/Katakana courants, des syllabes Hangul modernes, des symboles spéciaux « - », « _ ».",
+		nickname_requirements: "1~20 caractères, incluant uniquement des chiffres, des lettres latines majuscules et minuscules, des lettres vietnamiennes, des caractères CJK, commune Hiragana/Katakana, syllabes Hangul modernes, symboles spéciaux \"-\", \"_\", non leading, trailing, continuous espaces.",
 		username_nickname_requirements: "Les noms d'utilisateur et les surnoms doivent être @:user.nickname_requirements",
 		bio: "Bio",
 		gender: "Genre",
@@ -479,4 +491,6 @@ export default {
 		_: "Code d'invitation",
 		invalid: "Le code d'invidation est invalide",
 	},
+	version: "Version",
+	announcement: "À l'heure actuelle, le site est encore en phase de bêta. En raison de la croissance beaucoup plus rapide que prévu du nombre d'utilisateurs, la webmestre a temporairement suspendu la distribution des codes d'invitation. Veuillez ne pas continuer à discuter en privé!\nLes fonctionnalités de téléchargement et de suivi sont également temporairement indisponibles en raison de la construction. Mais nous pouvons télécharger quelques vidéos de temps en temps~\nMerci beaucoup pour votre grand enthousiasme pour notre site Web. Cependant, tous les membres de notre équipe le développent dans leur temps libre, donc la vitesse est relativement lente. Nous espérons que vous pouvez comprendre. Merci! ❤️\nLes personnes ayant des compétences en développement ou en gestion de la communauté sont également les bienvenus pour contacter l' {webmistress}~",
 } as const satisfies LocaleIdentifiers;
