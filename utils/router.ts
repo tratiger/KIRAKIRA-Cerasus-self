@@ -94,7 +94,7 @@ export function switchLanguage(lang: string) {
 		const element = document.querySelector(".settings") ?? document.body;
 		const routerView = element.querySelector(".router-view");
 		routerView?.classList.add("stop-animation");
-		const pushRoute = () => useRouter().push(lang + getRoutePath());
+		const pushRoute = () => { useRouter().push(lang + getRoutePath()); };
 		if (!document.startViewTransition)
 			element.animate([
 				{ filter: "blur(10px)" },
