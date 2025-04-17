@@ -36,6 +36,15 @@
 		// 基于前端运行时的版本号可以自动识别，后端和编译时的版本号只能委屈你自己手打了。
 	];
 
+	const versionTag = (gitBranch && gitCommit ? {
+		branch: gitBranch,
+		commit: gitCommit.slice(0, 7),
+	} : {
+		code: "Frontend Development Mode",
+		...isLocalBackend.value && { commit: "Local Backend" },
+	}) satisfies Record<DeclaredIcons, string | false>;
+	console.log(" isLocalBackend", isLocalBackend.value);
+
 	const sloganLines = computed(() => t.about.slogan.toString().split("\n"));
 	const remainingClick = ref(4);
 
@@ -76,22 +85,9 @@
 					<p class="slogan"><span>{{ sloganLines[0] }}</span><span><b>{{ sloganLines[1] }}</b></span></p>
 				</div>
 				<div class="version">
-					<template v-if="gitBranch && gitCommit">
-						<div>
-							<Icon name="branch" /><span>{{ gitBranch }}</span>
-						</div>
-						<div>
-							<Icon name="commit" /><span>{{ gitCommit.slice(0, 7) }}</span>
-						</div>
-					</template>
-					<template v-else>
-						<div>
-							<Icon name="code" /><span>Frontend Development Mode</span>
-						</div>
-						<div v-if="isLocalBackend">
-							<Icon name="server" /><span>Local Backend</span>
-						</div>
-					</template>
+					<div v-for="(value, icon) in versionTag" :key="icon">
+						<Icon v-if="value" :name="icon" /><span>{{ value }}</span>
+					</div>
 				</div>
 			</div>
 		</Contents>
