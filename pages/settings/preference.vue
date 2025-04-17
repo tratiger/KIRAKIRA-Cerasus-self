@@ -44,19 +44,24 @@
 
 		<Subheader icon="placeholder">专注模式</Subheader>
 		<section list>
-			<ToggleSwitch v-model="focusMode.noSearchRecommendations" v-ripple value="noSearchRecommendations">禁用搜索推荐</ToggleSwitch>
-			<ToggleSwitch v-model="focusMode.noRelatedVideos" v-ripple value="noRelatedVideos">禁用相关视频</ToggleSwitch>
+			<ToggleSwitch v-model="focusMode.noSearchRecommendations" v-ripple value="noSearchRecommendations" icon="placeholder">禁用搜索推荐</ToggleSwitch>
+			<ToggleSwitch v-model="focusMode.noRelatedVideos" v-ripple value="noRelatedVideos" icon="placeholder">禁用相关视频</ToggleSwitch>
 		</section>
 
 		<Subheader icon="placeholder">隐私</Subheader>
 		<section list>
-			<ToggleSwitch v-model="focusMode.noRecentSearch" v-ripple value="noRecentSearch">停止显示搜索历史</ToggleSwitch>
-			<ToggleSwitch v-model="focusMode.noViewHistory" v-ripple value="noViewHistory">停用历史记录</ToggleSwitch>
+			<ToggleSwitch v-model="focusMode.noRecentSearch" v-ripple value="noRecentSearch" icon="placeholder">停止显示搜索历史</ToggleSwitch>
+			<ToggleSwitch v-model="focusMode.noViewHistory" v-ripple value="noViewHistory" icon="placeholder">停用历史记录</ToggleSwitch>
 		</section>
 
 		<Subheader icon="placeholder">新窗口</Subheader>
 		<section list>
 			<ToggleSwitch v-model="appSettings.isOpenVideoInNewTab" icon="placeholder">在新标签页打开视频</ToggleSwitch>
+		</section>
+
+		<Subheader icon="placeholder">头像</Subheader>
+		<section list>
+			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">使用阿卡林游客头像</ToggleSwitch>
 		</section>
 
 		<Subheader icon="placeholder">多设备<!-- TODO: 使用多语言 --></Subheader>

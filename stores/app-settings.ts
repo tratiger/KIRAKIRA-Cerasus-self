@@ -8,6 +8,7 @@ export const useAppSettingsStore = defineStore("app-settings", {
 		exitSettingRoute: "/",
 
 		isOpenVideoInNewTab: false, // 是否在新标签页打开视频
+		akkarinGuestAvatar: false,
 
 		// DELETE: 以下内容已搬迁至 /modules/theme/theme-cookie-binding.ts，不再使用 pinia 储存。
 		// themeType: "system",
