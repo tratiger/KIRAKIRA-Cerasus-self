@@ -91,8 +91,9 @@ export function switchLanguage(lang: string) {
 	const update = () => useRouter().push(lang + getRoutePath());
 	if (environment.server) update();
 	else { // 切换语言动画。
-		const element = document.querySelector(".settings") ?? document.body;
-		const routerView = element.querySelector(".router-view");
+		const settings = document.querySelector(".settings");
+		const element = settings ?? document.body;
+		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
 		routerView?.classList.add("stop-animation");
 		const pushRoute = () => { useRouter().push(lang + getRoutePath()); };
 		if (!document.startViewTransition) {
