@@ -378,6 +378,8 @@
 		background-color: c(accent);
 		transition-duration: 200ms, 300ms, 300ms, 500ms, 500ms;
 		transition-timing-function: $ease-out-expo, $ease-out-circ, $ease-out-circ, $ease-in-out-material-emphasized, $ease-in-out-material-emphasized;
+		transition-delay: 0s, 0s, 0s, 50ms, 50ms;
+		// stylelint-disable-next-line declaration-block-no-redundant-longhand-properties
 		transition-property: scale;
 
 		@container style(--clipped: true) {

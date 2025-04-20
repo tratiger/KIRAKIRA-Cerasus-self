@@ -28,14 +28,15 @@
 		<!-- TODO: 使用多语言 -->
 		<InfoBar type="warning" title="警告">
 			该页面中的某些功能正在开发中，无法按预期工作。
-			<br />
-			1）除 “在新窗口打开视频” 和 “同步外观样式” 外的功能仍在开发中。
-			<br />
-			2）本页面缺乏国际化。
+			<ol>
+				<li>可用功能：在新窗口打开视频、同步外观样式、使用阿卡林游客头像。</li>
+				<li>除上述功能外其它功能都用不了。</li>
+				<li>本页面缺乏国际化。</li>
+			</ol>
 		<!-- TODO: 使用多语言 -->
 		</InfoBar>
 		<Subheader icon="placeholder">流量节省程序模式</Subheader>
-		<!-- 该功能似乎并不一定能实现，正式上线时可暂时不做。 -->
+		<!-- 该功能似乎并容易实现，如不能实现可删除该功能。 -->
 		<section list>
 			<RadioButton v-model="dataSaverMode" v-ripple value="economical" details="不会显示图片，不会自动加载视频。">省流模式</RadioButton>
 			<RadioButton v-model="dataSaverMode" v-ripple value="standard">标准模式</RadioButton>
@@ -48,7 +49,7 @@
 			<ToggleSwitch v-model="focusMode.noRelatedVideos" v-ripple value="noRelatedVideos" icon="placeholder">禁用相关视频</ToggleSwitch>
 		</section>
 
-		<Subheader icon="placeholder">隐私</Subheader>
+		<Subheader icon="shield">隐私</Subheader>
 		<section list>
 			<ToggleSwitch v-model="focusMode.noRecentSearch" v-ripple value="noRecentSearch" icon="placeholder">停止显示搜索历史</ToggleSwitch>
 			<ToggleSwitch v-model="focusMode.noViewHistory" v-ripple value="noViewHistory" icon="placeholder">停用历史记录</ToggleSwitch>
@@ -59,7 +60,7 @@
 			<ToggleSwitch v-model="appSettings.isOpenVideoInNewTab" icon="placeholder">在新标签页打开视频</ToggleSwitch>
 		</section>
 
-		<Subheader icon="placeholder">头像</Subheader>
+		<Subheader icon="person">头像</Subheader>
 		<section list>
 			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">使用阿卡林游客头像</ToggleSwitch>
 		</section>
