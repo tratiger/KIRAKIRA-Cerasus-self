@@ -12,7 +12,34 @@
 		page: +(query.page ?? 1),
 	});
 
-	videos.value = await api.video.getHomePageThumbVideo();
+	/**
+	 * 请求主页视频数据。
+	 */
+	async function fetchHomePageVideoData() {
+		try {
+			videos.value = await api.video.getHomePageThumbVideo();
+		} catch (error) {
+			// TODO: anyting can do if data fetch field in the home page? -add a 'refresh' button?
+			console.error("ERROR", "Unable to fetch home page video data", error);
+			useToast("获取视频数据失败，请刷新页面。", "error", 5000);
+		}
+	}
+
+	/**
+	 * 首页视频的守卫进程。
+	 * 如果首页视频没有数据，则等待三秒后每隔五秒重新请求视频数据，尝试三次。
+	 */
+	function homePageDaemon() {
+		observeEmptyVarbAndRequestData(
+			videos,
+			(value: typeof videos) => value.value?.videos.length === 0,
+			fetchHomePageVideoData,
+			{ delay: 3000, intervalTime: 3000, attempts: 3 },
+		);
+	}
+
+	await fetchHomePageVideoData(); // SSR
+	onMounted(homePageDaemon); // Client Mounted
 
 	const categoryItemCount = ref(0);
 	const pageCount = ref(1);
