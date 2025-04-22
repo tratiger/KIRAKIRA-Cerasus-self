@@ -190,7 +190,7 @@ export default {
 			thead: {
 				time: "Time",
 				content: "Content",
-				sending_time: "Sending Time",
+				send_time: "Send Time",
 			},
 		},
 	},
@@ -281,6 +281,8 @@ export default {
 	selected_item_label: "Selected item is: ",
 	upvote: "Upvote",
 	downvote: "Downvote",
+	like: "Like",
+	dislike: "Dislike",
 	share: "Share",
 	play: "Play",
 	pause: "Pause",
