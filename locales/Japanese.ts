@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "時間",
 				content: "弾幕内容",
-				sending_time: "書込時刻",
+				send_time: "書込時刻",
 			},
 		},
 	},
@@ -285,6 +285,8 @@ export default {
 	selected_item_label: "選択しているアイテムは：",
 	upvote: "高評価",
 	downvote: "低評価",
+	like: "いいね！",
+	dislike: "Dislike",
 	share: "共有",
 	play: "再生",
 	pause: "一時停止",

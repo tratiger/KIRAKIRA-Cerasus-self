@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "Heure",
 				content: "Contenu",
-				sending_time: "Date d'envoi",
+				send_time: "Délai d'envoi",
 			},
 		},
 	},
@@ -285,6 +285,8 @@ export default {
 	selected_item_label: "L'élément sélectionné est : ",
 	upvote: "Vote positif",
 	downvote: "Vote négatif",
+	like: "J'aime",
+	dislike: "Dislike",
 	share: "Partager",
 	play: "Jouer",
 	pause: "Pause",

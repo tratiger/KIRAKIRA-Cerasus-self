@@ -176,7 +176,7 @@ export default {
 			thead: {
 				time: "Waktu",
 				content: "Konten",
-				sending_time: "Memberikan Waktu",
+				send_time: "Memberikan Waktu",
 			},
 		},
 	},

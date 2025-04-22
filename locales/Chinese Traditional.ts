@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "時間",
 				content: "內容",
-				sending_time: "發送時間",
+				send_time: "發送時間",
 			},
 		},
 	},

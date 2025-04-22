@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "時間",
 				content: "內容",
-				sending_time: "送出時間",
+				send_time: "送出時間",
 			},
 		},
 	},
@@ -362,7 +362,7 @@ export default {
 		login_welcome: "歡迎返嚟",
 		login_to_forgot: "我唔記得密碼",
 		login_to_register: "未有帳戶？註冊",
-		register_to_login: "有咗帳戶？登入",
+		register_to_login: "有帳戶？登入",
 		forgot_to_login: "我記得密碼喇",
 		forgot_title: "唔記得密碼",
 		reset_title: "重設密碼",
@@ -384,6 +384,7 @@ export default {
 		username_requirements: "唔得重名。@:user.nickname_requirements",
 		username_requirements_unique: "用戶名冇得重複。",
 		nickname: "暱稱",
+		nickname_requirements: "1~20個字元，淨係可以包括數字、大細楷拉丁字母、越南文字母、中日韓文字、常用平/片假名、現代諺文音節、特殊符號「-」、「_」以及開頭、結尾同埋中間都唔可以有連續嘅空格。",
 		username_nickname_requirements: "用戶名同暱稱必須為@:user.nickname_requirements",
 		bio: "自述",
 		gender: "性別",
@@ -491,4 +492,5 @@ export default {
 		invalid: "邀請碼無效",
 	},
 	version: "版本",
+	announcement: "而家個網站仲喺早期測試階段。事關用戶人數增長快過預期好多，所以網娘暫時停止派發邀請碼。請唔好再DM問喇！\n上載同埋跟蹤功能因爲仲整緊，所以暫時用唔到。不過我哋可能會間唔中upload啲片上嚟～\n好多謝大家咁踴躍支持我哋個網站。之不過，我哋成個團隊都係用工餘時間開發，所以進度比較慢。希望大家可以體諒。唔該晒！❤️\n歡迎有開發抑或社羣管理技能嘅人聯絡{webmistress}～",
 } as const satisfies LocaleIdentifiers;

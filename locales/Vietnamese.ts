@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "Mốc thời gian",
 				content: "Nội dung",
-				sending_time: "Thời gian gửi",
+				send_time: "Thời gian gửi",
 			},
 		},
 	},
@@ -285,6 +285,8 @@ export default {
 	selected_item_label: "Đang chọn: ",
 	upvote: "Thích",
 	downvote: "Không thích",
+	like: "Thích",
+	dislike: "Không thích",
 	share: "Chia sẻ",
 	play: "Phát",
 	pause: "Dừng",
@@ -492,4 +494,5 @@ export default {
 		invalid: "Mã mời không hợp lệ",
 	},
 	version: "Phiên bản",
+	announcement: "Hiện tại, trang web vẫn đang trong giai đoạn beta sớm. Do số lượng người dùng tăng nhanh hơn dự kiến, nên quản trị viên web đã tạm thời ngừng phân phối mã mời. Vui lòng không tiếp tục trò chuyện riêng tư!\nCác tính năng tải lên và theo dõi cũng tạm thời không khả dụng do đang trong quá trình xây dựng. Nhưng chúng tôi có thể tải lên một số video theo thời gian~\nCảm ơn bạn rất nhiều vì sự nhiệt tình của bạn đối với trang web của chúng tôi. Tuy nhiên, tất cả các thành viên trong nhóm của chúng tôi đều phát triển trang web trong thời gian rảnh rỗi của họ, vì vậy tốc độ tương đối chậm. Chúng tôi hy vọng bạn có thể thông cảm. Cảm ơn bạn! ❤️\nNhững người có kỹ năng phát triển/lập trình hoặc quản lý cộng đồng cũng được chào đón liên hệ với {webmistress}~",
 } as const satisfies LocaleIdentifiers;

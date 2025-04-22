@@ -194,7 +194,7 @@ export default {
 			thead: {
 				time: "时间",
 				content: "内容",
-				sending_time: "发送时间",
+				send_time: "发送时间",
 			},
 		},
 	},
@@ -285,6 +285,8 @@ export default {
 	selected_item_label: "选中项为：",
 	upvote: "加分",
 	downvote: "减分",
+	like: "喜欢",
+	dislike: "不喜欢",
 	share: "分享",
 	play: "播放",
 	pause: "暂停",
