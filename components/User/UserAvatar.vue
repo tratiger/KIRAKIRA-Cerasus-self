@@ -134,5 +134,9 @@
 			position: absolute;
 			z-index: 3;
 		}
+
+		.icon[aria-label="akkarin"] {
+			font-size: var(--size);
+		}
 	}
 </style>
