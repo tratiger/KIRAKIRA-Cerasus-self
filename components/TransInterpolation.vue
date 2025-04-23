@@ -45,9 +45,9 @@
 
 	function interpose<T, TSeparator>(array: T[], separators: (index: number, previous: T, array: T[]) => TSeparator | TSeparator[]): (T | TSeparator)[];
 	function interpose<T, TSeparator>(array: T[], ...separators: TSeparator[]): (T | TSeparator)[];
-	function interpose(array, ...separators: unknown) {
+	function interpose<T>(array: T[], ...separators: unknown[]) {
 		const getSeparators = separators.length === 1 && typeof separators[0] === "function" ? separators[0] as Function : undefined;
-		return array.reduce((result, current, index) => (result.push(...[...index ? getSeparators ? wrapIfNotArray(getSeparators(index, current, array)) : separators : [], current]), result), []);
+		return array.reduce((result, current, index) => (result.push(...[...index ? getSeparators ? wrapIfNotArray(getSeparators(index, current, array)) : separators : [], current]), result), [] as T[]);
 	};
 
 	export default defineComponent({
@@ -56,7 +56,7 @@
 			 * i18n 键，必须以 `t.` 开头。
 			 */
 			i18nKey: {
-				type: String,
+				type: Function as never as PropType<string & Function>,
 				required: true,
 			},
 		},
@@ -64,7 +64,7 @@
 			const interpolations = this.$slots;
 			const keys = Object.keys(interpolations);
 			const withInterpolations = arrayMapObject(keys, (key, index) => [key, encodeKeyToTag(index)] as const);
-			const translatedString = this.i18nKey(withInterpolations).toString();
+			const translatedString: string = this.i18nKey(withInterpolations).toString();
 			const lines = translatedString.split("\n");
 			const split = interpose(lines
 				.map((line, lineIndex) => line
@@ -75,9 +75,9 @@
 						if (index == null) return "";
 						const key = keys[index];
 						let node = interpolations[key];
-						return node();
+						return node?.();
 					}),
-				), i => <br key={i} />);
+				), i => <br key={`br-${i}`} />);
 			return split;
 		},
 	});

@@ -24,6 +24,9 @@
 		{ name: t.platform.tiktok, logo: "tiktok", privacy: "public" },
 		{ name: t.platform.pixiv, logo: "pixiv", privacy: "public" },
 		{ name: t.platform.github, logo: "github", privacy: "public" },
+		{ name: t.platform.bluesky, logo: "bluesky", privacy: "public" },
+		{ name: t.platform.kwai, logo: "kwai", privacy: "public" },
+		{ name: t.platform.rednote, logo: "rednote", privacy: "public" },
 		// { name: "电话号码", icon: "phone", privacy: "private" },
 	]);
 
@@ -44,7 +47,7 @@
 <template>
 	<div>
 		<InfoBar type="warning" title="警告">
-			该页面中的某些功能正在开发中，无法按预期工作。
+			该页面中的某些功能正在开发中，无法如期工作。
 		<!-- TODO: 使用多语言 -->
 		</InfoBar>
 
