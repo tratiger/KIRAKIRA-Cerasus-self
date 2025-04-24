@@ -1,16 +1,20 @@
 // env
-import globals from "globals";
 // extends
 import eslint from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
-import tseslint from "typescript-eslint";
+import importPlugin from "eslint-plugin-import";
+import unicorn from "eslint-plugin-unicorn";
 import pluginVue from "eslint-plugin-vue";
+// plugins
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
 	...pluginVue.configs["flat/essential"],
+	importPlugin.flatConfigs.warnings,
 	stylistic.configs.customize({
 		indent: "tab",
 		quotes: "double",
@@ -27,6 +31,7 @@ export default [
 		// ↑ Legacy ESLint configuration backup
 		plugins: {
 			"typescript-eslint": tseslint.plugin,
+			unicorn,
 		},
 		languageOptions: {
 			parserOptions: {
@@ -349,7 +354,7 @@ export default [
 			"vue/component-options-name-casing": ["error", "PascalCase"],
 			"vue/next-tick-style": ["error", "promise"],
 			"vue/padding-line-between-blocks": ["error", "always"],
-			"vue/component-tags-order": ["error", {
+			"vue/block-order": ["error", {
 				"order": ["docs", ["script:not([setup])", "script[setup]"], "template", "i18n", "style[scoped]", "style[module]", "style:not([scoped]):not([module])"],
 			}],
 			"vue/no-multiple-template-root": "off",
@@ -469,6 +474,7 @@ export default [
 		files: ["*.config.{js,ts}"],
 		rules: {
 			"@stylistic/quote-props": "off",
+			"import/order": "off",
 		},
 	},
 	{

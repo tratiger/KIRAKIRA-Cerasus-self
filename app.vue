@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import "css-doodle";
-	import manifest from "public/manifest.json";
 	import { useDynamicLayout } from "helpers/page-transition";
+	import manifest from "public/manifest.json";
 
 	const homepage = "https://kirakira.moe/";
 	const { locale } = useI18n();
