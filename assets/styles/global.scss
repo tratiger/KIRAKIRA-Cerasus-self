@@ -246,6 +246,12 @@ img.jipt-loader-logo {
 	color: var(--icon-color) !important;
 }
 
+// 保持 Crowdin 语境翻译文本高亮可被选择和点击。
+// stylelint-disable-next-line selector-class-pattern
+.crowdin_phrase {
+	pointer-events: auto;
+}
+
 @layer base {
 	#popovers > * {
 		position: fixed;
