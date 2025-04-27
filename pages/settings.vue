@@ -68,7 +68,7 @@
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
 			{ id: "account-linking", icon: "groups" },
-			{ id: "blocklist", icon: "block" },
+			{ id: "block_and_hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],
 		general: [
@@ -98,7 +98,7 @@
 			const curPage = currentSettingsPage();
 			if (settings.general.findIndex(({ id }) => id === curPage) === -1)
 				navigate("/settings/appearance");
-			useToast("你已成功登出！", "success"); // TODO: 使用多语言
+			useToast(t.toast.logout_success, "success");
 			useEvent("user:login", false);
 		}
 	}
@@ -130,7 +130,7 @@
 							</template>
 							<Subheader icon="apps">{{ t.settings.app }}</Subheader>
 							<TabItem v-for="setting in settings.general" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
-							<!-- TODO: 使用多语言 -->
+							<!-- DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。 -->
 							<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
 							<template v-if="isAdmin">
 								<TabItem v-for="setting in settings.admin" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>

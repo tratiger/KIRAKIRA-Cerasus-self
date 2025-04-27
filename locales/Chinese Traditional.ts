@@ -5,7 +5,6 @@ import type { LocaleIdentifiers } from "./types";
 export default {
 	colon: "：",
 	semicolon: "；",
-	caesura: "、",
 	home: "首頁",
 	category: {
 		_: "分區",
@@ -35,18 +34,6 @@ export default {
 		yellow: "紗路黃",
 		cyan: "麻耶青",
 		red: "小惠紅",
-	},
-	language: {
-		_: "語言",
-		zhs: "簡體中文",
-		zht: "繁體中文",
-		en: "英語",
-		ja: "日語",
-		ko: "韓語",
-		vi: "越南語",
-		id: "印尼語",
-		fr: "法語",
-		yue: "粵語",
 	},
 	background: {
 		_: "背景",
@@ -88,6 +75,7 @@ export default {
 		search: "搜尋設定",
 		user: "使用者設定",
 		app: "程式設定",
+		security: {},
 	},
 	dashboard: "數據",
 	account: "帳戶",
@@ -121,16 +109,11 @@ export default {
 		hint: "密碼提示",
 	},
 	account_linking: "關聯社群平臺",
-	blocklist: {
-		_: "黑名單",
-		ban: {
-			_: "封禁",
+	block_and_hide: {
+		block: {
 			description: "不想與其交流的使用者，其將被禁止與你互動。",
 		},
-		hide: {
-			_: "隱藏",
-			description: "不想看到的用戶，其將會從你的視角消失（除非你主動進入其個人主頁）。",
-		},
+		hide: {},
 		tag: {
 			description: "使用標籤來隱藏不想看到的內容。",
 		},
@@ -244,7 +227,6 @@ export default {
 	keyword: "關鍵字",
 	email: "電子郵件",
 	email_address: "電子信箱",
-	authenticator: "身分驗證器",
 	current_email: "當前郵箱",
 	modification_date: "修改日期",
 	addition_date: "添加日期",
@@ -275,9 +257,6 @@ export default {
 	},
 	messages: "訊息",
 	notification: "通知",
-	pleaseLogin: "請登入",
-	login: "登入",
-	logout: "登出",
 	register: "註冊",
 	verification_code: "驗證碼",
 	current_page_label: "第{0}頁，共{1}頁",
@@ -302,11 +281,7 @@ export default {
 	mention: "提及",
 	more: "更多",
 	delete: "刪除",
-	copy: {
-		_: "複製",
-		success: "已複製～",
-		failed: "複製失敗！",
-	},
+	copy: "複製",
 	pin: "置頂",
 	pinned: "已釘選",
 	unpin: "取消置頂",
@@ -361,7 +336,6 @@ export default {
 	loginwindow: {
 		login_welcome: "歡迎回家",
 		login_to_forgot: "我忘記了密碼",
-		login_to_register: "我沒有帳戶？註冊",
 		register_to_login: "我已有帳戶？登入",
 		forgot_to_login: "我想起來密碼了",
 		forgot_title: "忘記密碼",
@@ -399,8 +373,7 @@ export default {
 	components_test_page: "元件測試頁面",
 	view_cover: "查看封面",
 	watch_later: "稍後觀看",
-	download_video: "下載影片",
-	report_creation: "稿件投訴",
+	download: "下載",
 	format: {
 		_: "格式",
 		bold: "加粗",
@@ -428,7 +401,6 @@ export default {
 		title_affix: "{0}的個人主頁",
 	},
 	manage_content: "稿件管理",
-	add_to_blocklist: "加入黑名單",
 	platform: {
 		twitter: "Twitter",
 		qq: "QQ",
@@ -440,7 +412,9 @@ export default {
 		weibo: "新浪微博",
 		tieba: "百度貼吧",
 		cloudmusic: "網易雲音樂",
-		discord: "Discord",
+		discord: {
+			_: "Discord",
+		},
 		telegram: "Telegram",
 		midishow: "MidiShow",
 		linkedin: "LinkedIn",
@@ -464,16 +438,21 @@ export default {
 	page_not_found_info: "你似乎來到了一個很新的頁面",
 	click_to_refresh: "重新整理",
 	toast: {
-		finish: "操作成功完成",
-		unsupported_file: "不支援上傳所選檔！",
 		no_cover: "請上傳封面！",
 		login_failed: "登入失敗！使用者名稱或密碼錯誤。",
 		password_mismatch: "兩次輸入密碼不一致！",
-		copied: "已複製！",
+		copied: "已複製～",
 		modification_failed: "修改失敗！",
 		failed_to_disable_cookies: "禁用Cookie失敗！",
 		duplicate_tag: "標籤重複！",
 		no_language_selected: "請先選擇語言！",
+	},
+	validation: {
+		required: {},
+		failed: {},
+		invalid_format: {},
+		too_long: {},
+		duplicate: {},
 	},
 	confirm: {
 		cancel_upload: "確定要取消本次上傳嗎？",
@@ -491,4 +470,14 @@ export default {
 		invalid: "無效的邀請碼",
 	},
 	version: "版本",
+	announcement: {},
+	under_construction: {},
+	severity: {},
+	http_status_code: {},
+	two_factor_authentication: {
+		add_totp: {},
+		remove_totp: {},
+		enable_email: {},
+		disable_email: {},
+	},
 } as const satisfies LocaleIdentifiers;

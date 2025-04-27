@@ -5,7 +5,6 @@ import type { LocaleIdentifiers } from "./types";
 export default {
 	colon: "：",
 	semicolon: "；",
-	caesura: "、",
 	home: "主頁",
 	category: {
 		_: "分區",
@@ -36,18 +35,7 @@ export default {
 		cyan: "麻耶青",
 		red: "小惠紅",
 	},
-	language: {
-		_: "語言",
-		zhs: "簡體中文",
-		zht: "繁體中文",
-		en: "英語",
-		ja: "日語",
-		ko: "韓語",
-		vi: "越南語",
-		id: "印尼語",
-		fr: "法語",
-		yue: "廣東話",
-	},
+	language: "語言",
 	background: {
 		_: "背景",
 		animated: "動態背景",
@@ -88,6 +76,7 @@ export default {
 		search: "搵設定",
 		user: "用家設定",
 		app: "程式設定",
+		security: {},
 	},
 	dashboard: "儀表盤",
 	account: "帳戶",
@@ -121,15 +110,12 @@ export default {
 		hint: "密碼提醒",
 	},
 	account_linking: "關連社交媒體",
-	blocklist: {
-		_: "黑名單",
-		ban: {
-			_: "封鎖",
+	block_and_hide: {
+		block: {
 			description: "呢度可以擺啲你唔鍾意嘅人，佢哋唔會過嚟煩你。",
 		},
 		hide: {
 			_: "隱藏",
-			description: "唔想見到嘅人，會從你嘅視角消失（除非你主動入去佢哋嘅個人主頁）。",
 		},
 		tag: {
 			description: "使用標籤匹配唔想見到嘅內容。",
@@ -244,7 +230,7 @@ export default {
 	keyword: "關鍵字",
 	email: "電郵",
 	email_address: "電郵",
-	authenticator: "身份驗證器",
+	totp_verification_code: "驗證碼",
 	current_email: "當前電郵",
 	modification_date: "修改日期",
 	addition_date: "添加日期",
@@ -277,7 +263,6 @@ export default {
 	notification: "通知",
 	pleaseLogin: "請登入",
 	login: "登入",
-	logout: "登出",
 	register: "註冊",
 	verification_code: "驗證碼",
 	current_page_label: "第{0}頁，共{1}頁",
@@ -302,11 +287,7 @@ export default {
 	mention: "提及",
 	more: "更多",
 	delete: "剷走",
-	copy: {
-		_: "複製",
-		success: "複製咗喇 ~",
-		failed: "大鑊，複製唔到！",
-	},
+	copy: "複製",
 	pin: "固定",
 	pinned: "固定咗",
 	unpin: "唔好固定",
@@ -361,7 +342,6 @@ export default {
 	loginwindow: {
 		login_welcome: "歡迎返嚟",
 		login_to_forgot: "我唔記得密碼",
-		login_to_register: "未有帳戶？註冊",
 		register_to_login: "有帳戶？登入",
 		forgot_to_login: "我記得密碼喇",
 		forgot_title: "唔記得密碼",
@@ -400,8 +380,7 @@ export default {
 	components_test_page: "元件測試頁面",
 	view_cover: "睇吓封面",
 	watch_later: "陣間至睇",
-	download_video: "單撈條片",
-	report_creation: "作品投訴",
+	download: "下載",
 	format: {
 		_: "格式",
 		bold: "粗體",
@@ -429,7 +408,6 @@ export default {
 		title_affix: "{0}嘅個人主頁",
 	},
 	manage_content: "投稿管理",
-	add_to_blocklist: "加入黑名單",
 	platform: {
 		twitter: "Twitter",
 		qq: "QQ",
@@ -441,7 +419,10 @@ export default {
 		weibo: "新浪微博",
 		tieba: "百度貼吧",
 		cloudmusic: "網易雲音樂",
-		discord: "Discord",
+		discord: {
+			_: "Discord",
+			server: "Discord伺服器",
+		},
 		telegram: "Telegram",
 		midishow: "MidiShow",
 		linkedin: "LinkedIn",
@@ -450,6 +431,8 @@ export default {
 		tiktok: "抖音",
 		pixiv: "Pixiv",
 		github: "GitHub",
+		bluesky: "Bluesky",
+		rednote: "小紅書",
 	},
 	modify_memo: "修改備註",
 	add_to_group: "加入分組",
@@ -465,16 +448,22 @@ export default {
 	page_not_found_info: "得個吉頁面",
 	click_to_refresh: "撳低重新整理",
 	toast: {
-		finish: "操作成功攪掂",
-		unsupported_file: "上載所揀選嘅檔案唔支援！",
+		finish: "操作成功攪掂~",
 		no_cover: "請上載封面！",
 		login_failed: "登入失敗！用戶名或密碼錯誤。",
 		password_mismatch: "兩次輸入嘅密碼唔同！",
-		copied: "複製咗喇！",
+		copied: "複製咗喇~",
 		modification_failed: "修改失敗！",
 		failed_to_disable_cookies: "停用唔到Cookie！",
 		duplicate_tag: "標籤重複咗！",
 		no_language_selected: "唔該揀返個語言先！",
+	},
+	validation: {
+		required: {},
+		failed: {},
+		invalid_format: {},
+		too_long: {},
+		duplicate: {},
 	},
 	confirm: {
 		cancel_upload: "你係咪要取消呢次嘅upload呀？",
@@ -492,5 +481,20 @@ export default {
 		invalid: "邀請碼無效",
 	},
 	version: "版本",
-	announcement: "而家個網站仲喺早期測試階段。事關用戶人數增長快過預期好多，所以網娘暫時停止派發邀請碼。請唔好再DM問喇！\n上載同埋跟蹤功能因爲仲整緊，所以暫時用唔到。不過我哋可能會間唔中upload啲片上嚟～\n好多謝大家咁踴躍支持我哋個網站。之不過，我哋成個團隊都係用工餘時間開發，所以進度比較慢。希望大家可以體諒。唔該晒！❤️\n歡迎有開發抑或社羣管理技能嘅人聯絡{webmistress}～",
+	announcement: {
+		_: "公告",
+	},
+	under_construction: {},
+	severity: {
+		warning: "警告",
+		error: "錯誤",
+	},
+	need_help: "需要協助？",
+	http_status_code: {},
+	two_factor_authentication: {
+		add_totp: {},
+		remove_totp: {},
+		enable_email: {},
+		disable_email: {},
+	},
 } as const satisfies LocaleIdentifiers;

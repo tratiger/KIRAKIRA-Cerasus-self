@@ -5,7 +5,6 @@ import type { LocaleIdentifiers } from "./types";
 export default {
 	colon: ": ",
 	semicolon: "; ",
-	caesura: ", ",
 	home: "Beranda",
 	category: {
 		_: "Kategori",
@@ -31,18 +30,6 @@ export default {
 		blue: "Biru Chino",
 		purple: "Ungu Rize",
 		green: "Hijau Chiya",
-	},
-	language: {
-		_: "Bahasa",
-		zhs: "Bahasa Cina (Sederhana)",
-		zht: "Bahasa Cina (Tradisional)",
-		en: "Bahasa Inggris",
-		ja: "Bahasa Jepang",
-		ko: "Bahasa Korea",
-		vi: "Bahasa Vietnam",
-		id: "Bahasa Indonesia",
-		fr: "Bahasa Perancis",
-		yue: "Bahasa Kanton",
 	},
 	background: {
 		_: "Latar",
@@ -82,6 +69,7 @@ export default {
 		search: "Cari Pengaturan",
 		user: "Pengaturan Pengguna",
 		app: "Pengaturan Aplikasi",
+		security: {},
 	},
 	dashboard: "Dasbor",
 	account: "Akun",
@@ -114,25 +102,12 @@ export default {
 		hint: "Petunjuk Password",
 	},
 	account_linking: "Penautan Akun",
-	blocklist: {
-		_: "Daftar Blokir",
-		ban: {
-			_: "Ban",
-			description: "Pengguna yang Tidak ingin Kamu izinkan berinteraksi dengan Kamu.",
-		},
-		hide: {
-			_: "Sembunyikan",
-			description: "Pengguna yang tidak ingin Anda lihat mana yang akan dihilangkan (kecuali kalau kamu langsung masuk ke halaman penggunanya).",
-		},
-		tag: {
-			description: "Gunakan tag untuk menyembunyikan konten yang tidak ingin dilihat.",
-		},
-		keyword: {
-			description: "Gunakan kata kunci untuk menyembunyikan konten yang tidak ingin dilihat.",
-		},
-		regexp: {
-			description: "Gunakan ekspresi reguler untuk menyembunyikan konten yang tidak ingin Anda lihat.",
-		},
+	block_and_hide: {
+		block: {},
+		hide: {},
+		tag: {},
+		keyword: {},
+		regexp: {},
 	},
 	player: {
 		_: "Player",
@@ -224,7 +199,6 @@ export default {
 	keyword: "Kata Kunci",
 	email: "Email",
 	email_address: "Email",
-	authenticator: "Pengautentik",
 	current_email: "Email Saat Ini",
 	modification_date: "Modifikasi",
 	addition_date: "Tanggal Penambahan",
@@ -255,9 +229,6 @@ export default {
 	},
 	messages: "Pesan",
 	notification: "Notifikasi",
-	pleaseLogin: "Silahkan Login",
-	login: "Masuk",
-	logout: "Keluar",
 	register: "Daftar",
 	verification_code: "Verifikasi kode",
 	current_page_label: "Halaman ke {0} dari {1}",
@@ -281,11 +252,7 @@ export default {
 	reply: "Balas",
 	more: "Lainnya",
 	delete: "Hapus",
-	copy: {
-		_: "Salin",
-		success: "Tersalin~",
-		failed: "Gagal Menyalin!",
-	},
+	copy: "Salin",
 	pin: "Pin",
 	unpin: "Hapus Pin",
 	report: "Laporkan",
@@ -339,7 +306,6 @@ export default {
 	loginwindow: {
 		login_welcome: "Selamat Datang!",
 		login_to_forgot: "Lupa password",
-		login_to_register: "Saya belum punya akun",
 		register_to_login: "Daftar",
 		forgot_to_login: "Saya punya akun",
 		forgot_title: "Lupa",
@@ -377,8 +343,6 @@ export default {
 	components_test_page: "Halaman Uji Komponen",
 	view_cover: "Lihat Sampul",
 	watch_later: "Tonton Nanti",
-	download_video: "Download Video",
-	report_creation: "Lapor",
 	format: {
 		_: "Format",
 		bold: "Bold",
@@ -406,7 +370,6 @@ export default {
 		title_affix: "{0} Laman Pengguna",
 	},
 	manage_content: "Kelola Konten",
-	add_to_blocklist: "Masukan ke Daftar Blokir",
 	platform: {
 		twitter: "Twitter",
 		qq: "QQ",
@@ -418,7 +381,9 @@ export default {
 		weibo: "Weibo",
 		tieba: "Tieba",
 		cloudmusic: "Cloud Music",
-		discord: "Discord",
+		discord: {
+			_: "Discord",
+		},
 		telegram: "Telegram",
 		midishow: "MidiShow",
 		linkedin: "LinkedIn",
@@ -442,16 +407,21 @@ export default {
 	page_not_found_info: "Kamu sepertinya telah sampai pada halaman yang sangat baru",
 	click_to_refresh: "Klik untuk refresh",
 	toast: {
-		finish: "Operasi Berhasil",
-		unsupported_file: "Mengunggah file yang dipilih tidak didukung!",
 		no_cover: "Silakan unggah sampulnya!",
 		login_failed: "Login gagal! Username atau kata sandi salah.",
 		password_mismatch: "Dua kata sandi yang dimasukkan tidak cocok!",
-		copied: "Disalin!",
+		copied: "Tersalin~",
 		modification_failed: "Modifikasi gagal",
 		failed_to_disable_cookies: "Gagal menonaktifkan cookie!",
 		duplicate_tag: "Duplikat tag!",
 		no_language_selected: "Tolong pilih bahasa dahulu!",
+	},
+	validation: {
+		required: {},
+		failed: {},
+		invalid_format: {},
+		too_long: {},
+		duplicate: {},
 	},
 	confirm: {
 		cancel_upload: "Apakah Anda yakin ingin membatalkan Unggah?",
@@ -467,5 +437,15 @@ export default {
 	invitation_code: {
 		_: "Kode Undangan",
 		invalid: "Kode Undangan Tidak Valid",
+	},
+	announcement: {},
+	under_construction: {},
+	severity: {},
+	http_status_code: {},
+	two_factor_authentication: {
+		add_totp: {},
+		remove_totp: {},
+		enable_email: {},
+		disable_email: {},
 	},
 } as const satisfies LocaleIdentifiers;

@@ -5,13 +5,12 @@
 
 <template>
 	<div>
-		<InfoBar type="warning" title="警告">
-			该页面中的某些功能正在开发中，无法按预期工作。
-		<!-- TODO: 使用多语言 -->
+		<InfoBar type="warning" :title="t.severity.warning">
+			{{ t.under_construction.page }}
 		</InfoBar>
 
-		<Subheader icon="block">{{ t.blocklist.ban }}</Subheader>
-		<span>{{ t.blocklist.ban.description }}</span>
+		<Subheader icon="block">{{ t.block_and_hide.block }}</Subheader>
+		<span>{{ t.block_and_hide.block.description }}</span>
 		<section>
 			<SettingsChipItem icon="placeholder" :details="t.addition_date + t.colon" trailingIcon="delete" @trailingIconClick="remove">user</SettingsChipItem>
 		</section>
@@ -20,8 +19,8 @@
 			<Button icon="add">{{ t.step.add }}</Button>
 		</div>
 
-		<Subheader icon="visibility_off">{{ t.blocklist.hide }}</Subheader>
-		<span>{{ t.blocklist.hide.description }}</span>
+		<Subheader icon="visibility_off">{{ t.block_and_hide.hide }}</Subheader>
+		<span>{{ t.block_and_hide.hide.description }}</span>
 		<section>
 			<SettingsChipItem icon="placeholder" :details="t.addition_date + t.colon" trailingIcon="delete" @trailingIconClick="remove">user</SettingsChipItem>
 		</section>
@@ -33,7 +32,7 @@
 		<hr />
 
 		<Subheader icon="tag">{{ t(2).tag }}</Subheader>
-		<span>{{ t.blocklist.tag.description }}</span>
+		<span>{{ t.block_and_hide.tag.description }}</span>
 		<section>
 			<SettingsChipItem :details="t.addition_date + t.colon" trailingIcon="delete" @trailingIconClick="remove">tag</SettingsChipItem>
 		</section>
@@ -43,7 +42,7 @@
 		</div>
 
 		<Subheader icon="key">{{ t(2).keyword }}</Subheader>
-		<span>{{ t.blocklist.keyword.description }}</span>
+		<span>{{ t.block_and_hide.keyword.description }}</span>
 		<section>
 			<SettingsChipItem :details="t.addition_date + t.colon" trailingIcon="delete" @trailingIconClick="remove">keyword</SettingsChipItem>
 		</section>
@@ -53,7 +52,7 @@
 		</div>
 
 		<Subheader icon="regexp">{{ t.regexp }}</Subheader>
-		<span>{{ t.blocklist.regexp.description }}</span>
+		<span>{{ t.block_and_hide.regexp.description }}</span>
 		<section>
 			<SettingsChipItem :details="t.addition_date + t.colon" trailingIcon="delete" @trailingIconClick="remove">regexp</SettingsChipItem>
 		</section>
