@@ -241,6 +241,11 @@ img.jipt-loader-logo {
 	}
 }
 
+// Crowdin 语境翻译工具右上角关闭按钮默认颜色在深色主题下看不清。
+#jipt-close-btn {
+	color: var(--icon-color) !important;
+}
+
 @layer base {
 	#popovers > * {
 		position: fixed;
