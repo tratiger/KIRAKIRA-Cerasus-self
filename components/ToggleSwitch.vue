@@ -171,8 +171,8 @@
 				&::before {
 					@include square(40px);
 					@include circle;
-					position: absolute;
 					content: "";
+					position: absolute;
 				}
 			}
 
@@ -199,24 +199,18 @@
 				background-color: c(accent-disabled);
 			}
 
-			:comp:not(.on):focus & {
-				@include large-shadow-unchecked-focus;
+			:comp:any-hover &,
+			:comp:not(.on):focus-visible & {
+				@include control-ball-shadow-off-hover;
 			}
 
-			:comp.on:not(.disabled):focus & {
-				@include large-shadow-focus;
+			:comp.on:any-hover &,
+			:comp.on:not(.disabled):focus-visible & {
+				@include control-ball-shadow-hover;
 			}
 
 			:comp:active & {
 				transform: scale(calc(19 / 20));
-			}
-
-			:comp.on:hover:not(:focus) & {
-				@include control-ball-shadow-hover;
-			}
-
-			:comp:hover:not(:focus) & {
-				@include control-ball-shadow-off-hover;
 			}
 		}
 	}
