@@ -209,6 +209,7 @@
 		.titlebar {
 			@include flex-center;
 			justify-content: space-between;
+			height: $titlebar-thickness;
 			background-color: c(main-bg, 45%);
 
 			.title {
