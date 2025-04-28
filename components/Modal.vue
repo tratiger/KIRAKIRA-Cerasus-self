@@ -3,6 +3,8 @@
 </docs>
 
 <script setup lang="ts">
+	import { numbers } from "virtual:scss-var:theme/_variables";
+
 	const props = withDefaults(defineProps<{
 		/** 已打开，单向绑定使用。 */
 		open?: boolean;
@@ -35,6 +37,14 @@
 			modal.value.focus(); // 打开模态时自动聚焦。
 	}, { immediate: true });
 
+	const windowSize = useWindowSize();
+	const isMobile = computed(() => windowSize.width.value <= numbers.mobileMaxWidth);
+
+	watch(isMobile, isMobile => {
+		if (isMobile && modal.value)
+			modal.value.style.translate = "0";
+	}, { immediate: true });
+
 	/**
 	 * 拖拽模态逻辑处理。
 	 * @param e - 指针事件（包括鼠标和触摸）。
@@ -43,13 +53,26 @@
 		if (!modal.value) return;
 		const { pageX: startX, pageY: startY } = e;
 		const { x: originalX, y: originalY } = getTranslate(modal.value);
+		modal.value.style.transition = "none";
+		let mobileNewY = e.pageY - startY + originalY;
 		const pointerMove = (e: PointerEvent) => {
 			if (!modal.value) return;
-			modal.value.style.translate = `${e.pageX - startX + originalX}px ${e.pageY - startY + originalY}px`;
+			if (isMobile.value) {
+				mobileNewY = Math.max(e.pageY - startY + originalY, 0);
+				modal.value.style.translate = `0 ${mobileNewY}px`;
+			} else
+				modal.value.style.translate = `${e.pageX - startX + originalX}px ${e.pageY - startY + originalY}px`;
 		};
 		const pointerUp = (_e: PointerEvent) => {
 			document.removeEventListener("pointermove", pointerMove);
 			document.removeEventListener("pointerup", pointerUp);
+			if (!modal.value) return;
+			modal.value.style.transition = "";
+			if (!isMobile.value) return;
+			if (mobileNewY > modal.value.offsetHeight * 0.25)
+				open.value = false;
+			else
+				modal.value.style.translate = "0";
 		};
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);
@@ -86,31 +109,31 @@
 				aria-modal="true"
 				:aria-label="title"
 			>
-				<div class="body">
-					<div class="titlebar">
-						<div class="title" :class="{ hide: hideTitle }" @pointerdown="onTitleBarDown">
-							<Icon :name="icon" :filled="icon.startsWith('colored-')" @dblclick="open = false" />
-							<span>{{ title }}</span>
-						</div>
-						<button v-if="!hideTitleCloseIcon" class="close-button" :aria-label="t.step.close" @click="open = false">
-							<Icon name="close" />
-						</button>
+				<div class="titlebar">
+					<div class="title" :class="{ hide: hideTitle }" @pointerdown="onTitleBarDown">
+						<Icon :name="icon" :filled="icon.startsWith('colored-')" @dblclick="open = false" />
+						<span>{{ title }}</span>
 					</div>
+					<button v-if="!hideTitleCloseIcon" class="close-button" :aria-label="t.step.close" @click="open = false">
+						<Icon name="close" />
+					</button>
+				</div>
+				<ScrollContainer>
 					<div class="content">
 						<slot><em>This is an empty Modal dialog.</em></slot>
 					</div>
-				</div>
-				<div v-if="!hideFooter" class="footer">
-					<div class="left">
-						<slot name="footer-left"></slot>
+					<div v-if="!hideFooter" class="footer">
+						<div class="left">
+							<slot name="footer-left"></slot>
+						</div>
+						<div class="right">
+							<slot name="footer-right">
+								<Button class="secondary" @click="open = false">{{ t.step.cancel }}</Button>
+								<Button @click="open = false">{{ t.step.ok }}</Button>
+							</slot>
+						</div>
 					</div>
-					<div class="right">
-						<slot name="footer-right">
-							<Button class="secondary" @click="open = false">{{ t.step.cancel }}</Button>
-							<Button @click="open = false">{{ t.step.ok }}</Button>
-						</slot>
-					</div>
-				</div>
+				</ScrollContainer>
 			</Comp>
 		</Transition>
 	</Teleport>
@@ -121,25 +144,50 @@
 	$titlebar-thickness: 48px;
 
 	:comp {
-		@include absolute-center(fixed);
 		@include dropdown-flyouts;
-		@include round-large;
 		@include set-max-size;
 		@include acrylic-background;
 		overflow: clip;
-		transform: translate(-50%, -50%); // TODO: 修改密码模态框出现模糊情况。
-		transform-origin: left top;
 		translate: none;
-		transition: $fallback-transitions, all $ease-out-max 400ms, translate 0s;
+		transition: $fallback-transitions, all $ease-out-max 400ms;
 
-		&.v-leave-active {
-			transition: $fallback-transitions, all $ease-in-smooth 150ms;
+		@include not-mobile {
+			@include absolute-center(fixed, false); // TODO: 修改密码模态框出现模糊情况。
+			@include round-large;
+			transform-origin: top left;
+
+			&.v-enter-from {
+				scale: 1.1;
+				opacity: 0;
+			}
+
+			&.v-leave-to {
+				scale: 0.9;
+				opacity: 0;
+			}
+
+			&.v-leave-active {
+				transition: $fallback-transitions, all $ease-in-smooth 150ms;
+			}
 		}
 
-		&.v-enter-from,
-		&.v-leave-to {
-			scale: 1.1;
-			opacity: 0;
+		@include mobile {
+			top: unset;
+			bottom: 0;
+			width: 100dvw;
+
+			&.v-enter-from,
+			&.v-leave-to {
+				translate: 0 100% !important;
+			}
+
+			&.v-enter-active {
+				transition: $fallback-transitions, all $ease-out-smooth 500ms;
+			}
+
+			&.v-leave-active {
+				transition: $fallback-transitions, all $ease-in-smooth 150ms;
+			}
 		}
 
 		&:not(:focus, :focus-within) {
@@ -158,15 +206,10 @@
 			}
 		}
 
-		.body {
-			@include card-in-card-shadow;
-			background-color: c(main-bg, 45%);
-		}
-
 		.titlebar {
 			@include flex-center;
 			justify-content: space-between;
-			height: $titlebar-thickness;
+			background-color: c(main-bg, 45%);
 
 			.title {
 				display: flex;
@@ -232,15 +275,31 @@
 			}
 		}
 
+		.scroll-container:deep(> .scroller > .content) {
+			max-width: 100dvw;
+			max-height: calc(100dvh - $titlebar-thickness);
+		}
+
 		.content {
+			@include card-in-card-shadow;
 			display: flex;
 			padding: calc($padding / 3) $padding $padding;
+			overflow: scroll;
+			background-color: c(main-bg, 45%);
+
+			@include mobile {
+				padding: 8px 16px 16px;
+			}
 		}
 
 		.footer {
 			@include flex-center;
 			justify-content: space-between;
 			padding: 18px $padding;
+
+			@include mobile {
+				padding: 14px 16px;
+			}
 
 			> * {
 				@include flex-center;
