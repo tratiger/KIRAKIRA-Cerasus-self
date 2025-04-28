@@ -98,8 +98,8 @@
 	watch(() => appSettings.flatAppearanceMode, enabled => {
 		setClassEnabled(document.documentElement, "flat", enabled);
 	});
-	watch(inContextLocalization, translationMode => {
-		if (translationMode && !globalThis.jipt) {
+	watch(inContextLocalization, enableJipt => {
+		if (enableJipt && !globalThis.jipt) {
 			const jiptLoaderLogo = document.createElement("img");
 			jiptLoaderLogo.className = "jipt-loader-logo";
 			jiptLoaderLogo.src = crowdinLogoSvg;
@@ -107,7 +107,7 @@
 			document.getElementById("root")!.hidden = true;
 			setTimeout(() => location.reload(), 250);
 		} else if (globalThis.jipt)
-			globalThis.jipt[translationMode ? "start" : "stop"]();
+			globalThis.jipt[enableJipt ? "start" : "stop"]();
 	});
 
 	const layout = useDynamicLayout();
