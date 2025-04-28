@@ -5,6 +5,8 @@ import type { LocaleIdentifiers } from "./types";
 export default {
 	colon: "：",
 	semicolon: "；",
+	enumerationComma: "、",
+	rangeDash: " ~ ",
 	home: "主頁",
 	category: {
 		_: "分區",
@@ -111,20 +113,22 @@ export default {
 	},
 	account_linking: "關連社交媒體",
 	block_and_hide: {
+		_: "封鎖同隱藏",
 		block: {
+			_: "封鎖",
 			description: "呢度可以擺啲你唔鍾意嘅人，佢哋唔會過嚟煩你。",
 		},
 		hide: {
 			_: "隱藏",
 		},
 		tag: {
-			description: "使用標籤匹配唔想見到嘅內容。",
+			description: "使用標籤隱藏唔想見到嘅內容。",
 		},
 		keyword: {
-			description: "使用關鍵字匹配唔想見到嘅內容。",
+			description: "使用關鍵字隱藏唔想見到嘅內容。",
 		},
 		regexp: {
-			description: "使用正則表達式匹配唔想見到嘅內容。",
+			description: "使用正則表達式隱藏唔想見到嘅內容。",
 		},
 	},
 	player: {
@@ -232,6 +236,8 @@ export default {
 	email_address: "電郵",
 	totp_verification_code: "驗證碼",
 	current_email: "當前電郵",
+	change_email: "變更電郵",
+	new_email: "新電郵",
 	modification_date: "修改日期",
 	addition_date: "添加日期",
 	history: "記錄",
@@ -263,6 +269,7 @@ export default {
 	notification: "通知",
 	pleaseLogin: "請登入",
 	login: "登入",
+	logout: "登出",
 	register: "註冊",
 	verification_code: "驗證碼",
 	current_page_label: "第{0}頁，共{1}頁",
@@ -287,6 +294,7 @@ export default {
 	mention: "提及",
 	more: "更多",
 	delete: "剷走",
+	remove: "移除",
 	copy: "複製",
 	pin: "固定",
 	pinned: "固定咗",
@@ -342,7 +350,8 @@ export default {
 	loginwindow: {
 		login_welcome: "歡迎返嚟",
 		login_to_forgot: "我唔記得密碼",
-		register_to_login: "有帳戶？登入",
+		login_to_register: "我未有帳戶？註冊",
+		register_to_login: "我有咗帳戶？登入",
 		forgot_to_login: "我記得密碼喇",
 		forgot_title: "唔記得密碼",
 		reset_title: "重設密碼",
@@ -408,6 +417,7 @@ export default {
 		title_affix: "{0}嘅個人主頁",
 	},
 	manage_content: "投稿管理",
+	block_user: "封鎖用戶",
 	platform: {
 		twitter: "Twitter",
 		qq: "QQ",
@@ -432,6 +442,7 @@ export default {
 		pixiv: "Pixiv",
 		github: "GitHub",
 		bluesky: "Bluesky",
+		kwai: "快手",
 		rednote: "小紅書",
 	},
 	modify_memo: "修改備註",
@@ -448,7 +459,7 @@ export default {
 	page_not_found_info: "得個吉頁面",
 	click_to_refresh: "撳低重新整理",
 	toast: {
-		finish: "操作成功攪掂~",
+		finish: "攪掂晒~",
 		no_cover: "請上載封面！",
 		login_failed: "登入失敗！用戶名或密碼錯誤。",
 		password_mismatch: "兩次輸入嘅密碼唔同！",
@@ -469,6 +480,7 @@ export default {
 		cancel_upload: "你係咪要取消呢次嘅upload呀？",
 	},
 	current_time: "現在時間",
+	translating: "翻譯緊⋯⋯",
 	set_as_default: "設做預設值",
 	advanced_search: "進階搵嘢",
 	total: "合共",
@@ -497,4 +509,6 @@ export default {
 		enable_email: {},
 		disable_email: {},
 	},
+	enable: "啓用",
+	disable: "停用",
 } as const satisfies LocaleIdentifiers;

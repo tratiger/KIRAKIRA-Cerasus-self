@@ -367,7 +367,7 @@ export default {
 		register_email_sent_info: "我们已向你的邮箱中发送了验证码，请在此输入验证码。\n如未收到，你可以重新发送。",
 		forgot_info: "请在此输入你的邮箱，\n我们将会给你的邮箱发送一封邮件，请点击邮件中的链接重置密码。",
 		reset_successful_info: "验证成功！\n请输入并务必牢记你的新密码。",
-		login_totp_info: "账号已启用双重验证，请输入动态令牌以继续。\n如果不能访问你的身份验证设备，请使用备份码或恢复码登录。\n注意：使用恢复码登录后，你的账户将禁用双重验证。",
+		login_totp_info: "账号已启用双重验证，请输入动态令牌以继续。\n如果不能访问你的身份验证设备，请使用备份码或恢复码登录。\n注意：使用恢复码登录后，你的账号将禁用双重验证。",
 		login_email_info: "邮箱双重验证已在账号上启用，验证码已发送到你的邮箱。\n若未收到验证码，请检查垃圾邮件。",
 	},
 	unselected: {
@@ -552,7 +552,7 @@ export default {
 	},
 	current_time: "现在时间",
 	improve_translation: "改进翻译",
-	translating: "正在翻译…",
+	translating: "正在翻译⋯⋯",
 	set_as_default: "设为默认",
 	unset_as_default: "取消设为默认",
 	advanced_search: "高级搜索",
