@@ -5,8 +5,7 @@
 	import manifest from "public/manifest.json";
 
 	const homepage = "https://kirakira.moe/";
-	const { locale, onLanguageSwitched } = useI18n();
-	console.log(" onLanguageSwitched", onLanguageSwitched);
+	const { locale } = useI18n();
 	const appSettings = useAppSettingsStore();
 	const inContextLocalization = isInContextLocalization();
 
@@ -99,8 +98,8 @@
 	watch(() => appSettings.flatAppearanceMode, enabled => {
 		setClassEnabled(document.documentElement, "flat", enabled);
 	});
-	watch(inContextLocalization, transitionMode => {
-		if (transitionMode && !globalThis.jipt) {
+	watch(inContextLocalization, translationMode => {
+		if (translationMode && !globalThis.jipt) {
 			const jiptLoaderLogo = document.createElement("img");
 			jiptLoaderLogo.className = "jipt-loader-logo";
 			jiptLoaderLogo.src = crowdinLogoSvg;
@@ -108,7 +107,7 @@
 			document.getElementById("root")!.hidden = true;
 			setTimeout(() => location.reload(), 250);
 		} else if (globalThis.jipt)
-			globalThis.jipt[transitionMode ? "start" : "stop"]();
+			globalThis.jipt[translationMode ? "start" : "stop"]();
 	});
 
 	const layout = useDynamicLayout();
