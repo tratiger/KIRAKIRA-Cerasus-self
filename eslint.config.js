@@ -256,10 +256,6 @@ export default [
 			"@typescript-eslint/no-unnecessary-parameter-property-assignment": "error",
 			"@typescript-eslint/no-unnecessary-condition": ["off", { "allowConstantLoopConditions": true }],
 			"@typescript-eslint/no-empty-object-type": "off",
-			"react-refresh/only-export-components": [
-				"off",
-				{ "allowConstantExport": true },
-			],
 			"@typescript-eslint/no-unsafe-function-type": "off",
 			"@typescript-eslint/no-unused-expressions": ["error", {
 				"allowShortCircuit": true,
@@ -482,7 +478,7 @@ export default [
 		rules: {
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-unused-vars": "off",
-			"no-var": "off", // You must declare variables in `globalThis` with `var` (Do not use `let` or `const`). See: https://stackoverflow.com/a/69429093/19553213
+			"no-var": "off", // 在 globalThis 中声明成员时必须要用 var（不能使用 let 或 const）！参见：https://stackoverflow.com/a/69429093/19553213
 		},
 	},
 	{
