@@ -35,8 +35,8 @@
 	 */
 	function onChange() {
 		if (!radio.value) return;
-		model.value = radio.value.value as T;
-		emits("change", { value: radio.value.value as T, checked: true });
+		model.value = radio.value.value;
+		emits("change", { value: radio.value.value, checked: true });
 	}
 
 	// 如果单选框勾选情况与 prop 不同，就强制使其相同。
@@ -81,8 +81,8 @@
 			break;
 		}
 		thatComponent.focus();
-		model.value = radio.value as T;
-		emits("change", { value: radio.value as T, checked: true });
+		model.value = radio.value;
+		emits("change", { value: radio.value, checked: true });
 	}
 </script>
 
@@ -220,11 +220,13 @@
 		@include circle;
 		animation: pressing-back $duration-half $ease-in alternate 2;
 
-		:comp:focus & {
+		:comp:any-hover &,
+		:comp:focus-visible & {
 			@include large-shadow-unchecked-focus;
 		}
 
-		:comp:focus input:checked + & {
+		:comp:any-hover input:checked + &,
+		:comp:focus-visible input:checked + & {
 			@include large-shadow-focus;
 		}
 	}

@@ -47,7 +47,7 @@
 			else arrayRemoveAllItem(modelValue, props.value);
 		model.value = modelValue;
 		single.value = nextChecked;
-		emits("change", { value: checkbox.value.value as T, checkState: nextState, checked: nextChecked });
+		emits("change", { value: checkbox.value.value, checkState: nextState, checked: nextChecked });
 	}
 
 	// 如果复选框勾选情况与 prop 不同，就强制使其相同。
@@ -136,9 +136,9 @@
 		align-items: center;
 		cursor: pointer;
 
-		&:any-hover {
-			--color: #{c(accent-hover)};
-		}
+		// &:any-hover {
+		// 	--color: #{c(accent-hover)};
+		// }
 
 		&:active {
 			--color: #{c(accent-pressed)};
@@ -183,11 +183,11 @@
 		.check-symbol {
 			width: 12px;
 			height: 6px;
+			translate: 0 -1px;
 			opacity: 1;
 			animation:
 				check-symbol-resize $duration-half $duration-half $ease-out-max backwards,
 				cut-in $duration-half step-start;
-			translate: 0 -1px;
 
 			@media (prefers-reduced-motion: reduce) {
 				animation: check-symbol-resize 0s $ease-out-max backwards;
@@ -216,15 +216,15 @@
 	}
 
 	.check-symbol {
-		animation: check-symbol-resize-back $duration-half $ease-out-max reverse backwards;
 		rotate: -50grad;
+		animation: check-symbol-resize-back $duration-half $ease-out-max reverse backwards;
 
 		&::before,
 		&::after {
 			@extend %round-linecap;
+			content: "";
 			position: absolute;
 			display: block;
-			content: "";
 		}
 
 		&::before {
@@ -273,11 +273,15 @@
 		@include circle;
 		animation: pressing-back $duration-half $ease-in alternate 2;
 
-		:comp:focus & {
+		:comp:any-hover &,
+		:comp:focus-visible & {
 			@include large-shadow-unchecked-focus;
 		}
 
-		:comp.checked:focus & {
+		:comp:any-hover input:checked + &,
+		:comp:any-hover input:indeterminate + &,
+		:comp:focus-visible input:checked + &,
+		:comp:focus-visible input:indeterminate + & {
 			@include large-shadow-focus;
 		}
 	}

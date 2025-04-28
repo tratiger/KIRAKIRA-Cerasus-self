@@ -62,15 +62,15 @@
 // #region 中性色
 /// 控制球阴影 关闭
 @mixin control-ball-shadow-off {
-	box-shadow: 0 1px 6px c(accent-shadow, 70%);
+	box-shadow: 0 2px 4px c(accent-shadow, 50%), 0 0 2px c(accent-shadow, 25%);
 }
 
 @mixin control-ball-shadow-off-disabled {
-	box-shadow: 0 1px 6px c(black, 10%);
+	box-shadow: 0 2px 4px c(black, 10%);
 }
 
 @mixin control-ball-shadow-off-hover {
-	box-shadow: 0 1px 10px 2px c(text-color, 20%);
+	box-shadow: 0 4px 8px c(accent-shadow, 50%), 0 0 4px c(accent-shadow, 25%), 0 0 0 10px c(gray-40, 50%);
 }
 
 @mixin page-normal {
@@ -88,7 +88,7 @@
 
 @mixin large-shadow-unchecked-focus {
 	// box-shadow: 0 4px 4px c(unchecked, 30%), 0 0 0 10px c(unchecked-focus, 50%);
-	box-shadow: 0 1px 6px c(accent-shadow, 30%), 0 0 0 10px c(gray-40, 50%);
+	box-shadow: 0 2px 4px c(accent-shadow, 50%), 0 0 0 10px c(gray-40, 50%);
 }
 
 @mixin button-shadow-unchecked-focus-only {
@@ -144,7 +144,7 @@
 }
 
 @mixin large-shadow-focus {
-	box-shadow: 0 1px 6px c(accent, 30%), 0 0 0 10px c(accent-focus, 50%);
+	box-shadow: 0 2px 4px c(accent, 50%), 0 0 0 10px c(accent-focus, 50%);
 }
 
 @mixin button-shadow-focus-only {
@@ -183,15 +183,15 @@
 
 /// 控制球阴影
 @mixin control-ball-shadow {
-	box-shadow: 0 1px 6px c(accent, 80%);
+	box-shadow: 0 2px 4px c(accent, 50%), 0 0 2px c(accent, 35%);
 }
 
 @mixin control-ball-shadow-disabled {
-	box-shadow: 0 1px 6px c(accent-disabled, 80%);
+	box-shadow: 0 2px 4px c(accent-disabled, 80%);
 }
 
 @mixin control-ball-shadow-hover {
-	box-shadow: 0 1px 10px 2px c(accent-hover);
+	box-shadow: 0 4px 8px c(accent, 50%), 0 0 4px c(accent, 35%), 0 0 0 10px c(accent-focus, 50%);
 }
 
 @mixin page-active {

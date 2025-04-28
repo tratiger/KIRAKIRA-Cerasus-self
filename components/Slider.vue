@@ -384,8 +384,9 @@
 			}
 		}
 
-		:comp:focus & {
-			@include large-shadow-focus;
+		:comp:any-hover &,
+		:comp:focus-visible & {
+			@include control-ball-shadow-hover;
 		}
 	}
 
