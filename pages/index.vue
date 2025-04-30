@@ -39,7 +39,7 @@
 		<InfoBar :title="t.announcement" lite>
 			<TransInterpolation :i18nKey="t.announcement.homepage">
 				<template #discord-server>
-					<a href="https://aira.cafe" target="_blank">{{ t.platform.discord.server }}</a>
+					<a href="https://discord.gg/uVd9ZJzEy7" target="_blank">{{ t.platform.discord.server }}</a>
 				</template>
 			</TransInterpolation>
 		</InfoBar>
