@@ -22,9 +22,8 @@ KIRAKIRA 的前端
 
 **简体中文** | [English](README_en-US.md)
 
-[点击此处前往 Figma 设计文稿 >](https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1)
-
-[![Discord Server][discord-server-shield]][discord-server-url]
+[![Figma 设计文稿][figma-design-shield]](figma-design-url)
+[![Discord 服务器][discord-server-shield]][discord-server-url]
 
 ## 标星历史
 
@@ -117,6 +116,8 @@ flowchart TD
     click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/.npmrc"
     click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/pnpm-lock.yaml"
 ```
+
+想了解更多？[阅读 Wiki][deepwiki-url]！
 
 ## Nuxt 3
 
@@ -420,7 +421,7 @@ $t(variable)
 <td>位置参数</td>
 <td>
 
-```typescript
+```typescripthttps://img.shields.io
 t.welcome("hello", "world")
 ```
 
@@ -643,6 +644,10 @@ button:any-hover {
 * **语句末尾**加分号
 * **Vue API 风格：**<wbr />组合式
 
+## 贡献者
+
+[![Contributors](https://contrib.rocks/image?repo=KIRAKIRA-DOUGA/KIRAKIRA-Cerasus)](https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus/graphs/contributors)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [state-shield]: https://img.shields.io/badge/STATE-ALPHA-red?style=flat-square
@@ -674,8 +679,11 @@ button:any-hover {
 [id-translation-url]: https://crowdin.com/project/kirakira/id
 [fr-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=Français&style=flat-square&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
 [fr-translation-url]: https://crowdin.com/project/kirakira/fr
-[yue-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=粵語&style=flat-square&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
+[yue-translation-shield]: /badge/dynamic/json?color=blue&label=粵語&style=flat-square&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
 [yue-translation-url]: https://crowdin.com/project/kirakira/yue
 
+[figma-design-shield]: https://img.shields.io/badge/设计文稿-white?style=for-the-badge&logo=figma&logoColor=white&label=figma&labelColor=F24E1E
+[figma-design-url]: https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1
 [discord-server-shield]: https://dcbadge.limes.pink/api/server/https://discord.gg/uVd9ZJzEy7
 [discord-server-url]: https://discord.gg/uVd9ZJzEy7
+[deepwiki-url]: https://deepwiki.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus
