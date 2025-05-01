@@ -37,7 +37,6 @@ export default {
 	},
 	background: {
 		_: "背景",
-		animated: "動態背景",
 		custom: "自訂背景",
 		opacity: "不透明度",
 		tint: "著色",

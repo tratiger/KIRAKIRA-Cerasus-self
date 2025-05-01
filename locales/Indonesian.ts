@@ -33,7 +33,6 @@ export default {
 	},
 	background: {
 		_: "Latar",
-		animated: "Latar Belakang Animasi",
 		custom: "Sesuaikan Latar",
 		blur_intensity: "Tingkat Keburaman",
 	},

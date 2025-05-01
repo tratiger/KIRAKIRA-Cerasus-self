@@ -40,7 +40,6 @@ export default {
 	language: "言語",
 	background: {
 		_: "背景",
-		animated: "動く背景",
 		custom: "カスタム背景",
 		opacity: "不透明度",
 		tint: "色合い",
@@ -614,4 +613,5 @@ export default {
 	},
 	enable: "有効にする",
 	disable: "無効",
+	sync_across_devices: "デバイス間で同期",
 } as const satisfies LocaleIdentifiers;

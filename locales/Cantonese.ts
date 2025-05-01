@@ -40,7 +40,6 @@ export default {
 	language: "語言",
 	background: {
 		_: "背景",
-		animated: "動態背景",
 		custom: "自訂背景",
 		opacity: "透光度",
 		tint: "染色",

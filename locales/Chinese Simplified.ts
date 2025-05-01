@@ -40,7 +40,6 @@ export default {
 	language: "语言",
 	background: {
 		_: "背景",
-		animated: "动态背景",
 		custom: "自定义背景",
 		opacity: "不透明度",
 		tint: "着色",
@@ -621,4 +620,5 @@ export default {
 	},
 	enable: "启用",
 	disable: "禁用",
+	sync_across_devices: "在设备之间同步",
 } as const satisfies LocaleIdentifiers;

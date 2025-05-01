@@ -99,11 +99,13 @@
 	$thumb-size: 20px;
 	$focus-ring-thickness: 10px;
 	$icon-size: 20px;
+	$icon-margin-right: 8px;
 
 	@layer props {
 		:comp {
 			/// 图标大小。
 			--icon-size: #{$icon-size};
+			--icon-margin-right: #{$icon-margin-right};
 		}
 	}
 
@@ -113,7 +115,7 @@
 		cursor: pointer;
 
 		> .icon {
-			margin-right: 8px;
+			margin-right: var(--icon-margin-right);
 			color: c(icon-color);
 			font-size: var(--icon-size);
 		}

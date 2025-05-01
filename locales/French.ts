@@ -40,7 +40,6 @@ export default {
 	language: "Langue",
 	background: {
 		_: "Arrière-plan",
-		animated: "Arrière-plan dynamique",
 		custom: "Arrière-plan personnalisé",
 		opacity: "Opacité",
 		tint: "Teinte",
@@ -616,4 +615,5 @@ export default {
 	},
 	enable: "Activer",
 	disable: "Désactiver",
+	sync_across_devices: "Synchroniser entre les appareils",
 } as const satisfies LocaleIdentifiers;

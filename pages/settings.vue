@@ -544,6 +544,11 @@
 				&:any-hover {
 					background-color: c(hover-overlay);
 				}
+
+				&.toggle-switch {
+					--icon-size: 24px;
+					--icon-margin-right: 16px;
+				}
 			}
 
 			&[grid] {

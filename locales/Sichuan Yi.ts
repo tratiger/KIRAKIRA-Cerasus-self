@@ -40,7 +40,6 @@ export default {
 	language: "crwdns3380:0crwdne3380:0",
 	background: {
 		_: "crwdns2254:0crwdne2254:0",
-		animated: "crwdns2256:0crwdne2256:0",
 		custom: "crwdns2258:0crwdne2258:0",
 		opacity: "crwdns2952:0crwdne2952:0",
 		tint: "crwdns2954:0crwdne2954:0",
@@ -621,4 +620,5 @@ export default {
 	},
 	enable: "crwdns3504:0crwdne3504:0",
 	disable: "crwdns3506:0crwdne3506:0",
+	sync_across_devices: "crwdns3554:0crwdne3554:0",
 } as const satisfies LocaleIdentifiers;

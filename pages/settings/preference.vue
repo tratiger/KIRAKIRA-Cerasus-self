@@ -7,19 +7,7 @@
 		noViewHistory: false,
 	});
 
-	const selfUserInfoStore = useSelfUserInfoStore();
 	const appSettings = useAppSettingsStore();
-
-	const useCookieAndLocalStorageOptions = { isWatchCookieRef: true, isSyncSettings: false };
-	// 在 cookie 和 localStorage 中同步的 Cookie，是否开启主题同步
-	const isAllowSyncThemeSettings = useKiraCookie<boolean>(COOKIE_KEY.isAllowSyncThemeSettings, undefined, useCookieAndLocalStorageOptions);
-	watch(isAllowSyncThemeSettings, () => {
-		// 用户选择开启或关闭 isAllowSyncThemeSettings 的时候会载入数据
-		api.user.getUserSettings().then(userSettings => {
-			saveUserSetting2BrowserCookieStore(userSettings);
-			cookieBinding();
-		});
-	});
 </script>
 
 <template>
@@ -58,24 +46,6 @@
 		<Subheader icon="placeholder">新窗口</Subheader>
 		<section list>
 			<ToggleSwitch v-model="appSettings.isOpenVideoInNewTab" icon="placeholder">在新标签页打开视频</ToggleSwitch>
-		</section>
-
-		<Subheader icon="person">头像</Subheader>
-		<section list>
-			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">使用阿卡林游客头像</ToggleSwitch>
-		</section>
-
-		<Subheader icon="placeholder">多设备<!-- TODO: 使用多语言 --></Subheader>
-		<section list>
-			<ToggleSwitch
-				v-model="isAllowSyncThemeSettings"
-				v-ripple
-				:disabled="!selfUserInfoStore.isLogined"
-				icon="palette"
-				details="已登录用户在开启此选项后，除实验性设置外，用户对外观，如：主题、个性色等设置做出的修改，会同步到其他设备。"
-			>
-				同步外观样式<!-- TODO: 使用多语言 -->
-			</ToggleSwitch>
 		</section>
 	</div>
 </template>
