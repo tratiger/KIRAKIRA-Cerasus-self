@@ -3,10 +3,6 @@
 </docs>
 
 <script setup lang="ts">
-	import background from "assets/styles/css-doodles/background.css-doodle";
-
-	const cssDoodle = refComp();
-	const showCssDoodle = computed(() => useAppSettingsStore().showCssDoodle);
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
 	const showDrawer = ref(false);
 	const isCurrentSettings = ref(false);
@@ -20,10 +16,6 @@
 	});
 
 	useListen("app:showDrawer", () => showDrawer.value = true);
-
-	onMounted(() => {
-		setDisplayVisible(cssDoodle.value, showCssDoodle.value);
-	});
 </script>
 
 <template>
@@ -32,9 +24,6 @@
 	</Transition>
 	<div class="viewport">
 		<ClientOnly>
-			<Transition>
-				<CssDoodle v-show="showCssDoodle" ref="cssDoodle" :rule="background" class="background-doodle" />
-			</Transition>
 			<div v-if="backgroundImageSettingsStore.image.data" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
 				<img :src="backgroundImageSettingsStore.image.data" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
 				<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
@@ -108,15 +97,6 @@
 		position: fixed;
 		left: 0;
 		transition: background-color $ease-out-max 250ms;
-	}
-
-	.background-doodle {
-		opacity: 0.3;
-
-		&.v-enter-from,
-		&.v-leave-to {
-			opacity: 0;
-		}
 	}
 
 	.background {

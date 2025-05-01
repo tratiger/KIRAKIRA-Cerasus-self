@@ -133,7 +133,6 @@
 			<ToggleSwitch v-model="toggle">切换开关 {{ toggle ? t.on : t.off }}</ToggleSwitch>
 			<ToggleSwitch disabled>{{ t.disabled }} {{ t.off }}</ToggleSwitch>
 			<ToggleSwitch on disabled>{{ t.disabled }} {{ t.on }}</ToggleSwitch>
-			<ToggleSwitch v-model="useAppSettingsStore().showCssDoodle">{{ t.background.animated }}</ToggleSwitch>
 			<RadioButton v-model="theme" value="light">{{ t.scheme.light }}</RadioButton>
 			<RadioButton v-model="theme" value="dark">{{ t.scheme.dark }}</RadioButton>
 			<RadioButton v-model="theme" value="system">{{ t.scheme.system }}</RadioButton>

@@ -122,7 +122,6 @@
 		"@vueuse/head": "^2.0.0",
 		"@vueuse/nuxt": "^11.0.3",
 		"axios": "^1.7.5",
-		"css-doodle": "0.40.0",
 		"danmaku": "^2.0.6",
 		"gsap": "^3.12.5",
 		"ipx": "^3.0.1",

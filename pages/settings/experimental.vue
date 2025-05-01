@@ -14,7 +14,6 @@
 		</InfoBar>
 		<Subheader icon="palette">{{ t.appearance }}</Subheader>
 		<section list>
-			<ToggleSwitch v-model="useAppSettingsStore().showCssDoodle" v-ripple icon="wallpaper">{{ t.background.animated }}</ToggleSwitch>
 			<ToggleSwitch v-model="cookieSharpAppearanceMode" v-ripple icon="square">{{ t.appearance.sharp_mode }}</ToggleSwitch>
 			<ToggleSwitch v-model="cookieFlatAppearanceMode" v-ripple icon="layers">{{ t.appearance.flat_mode }}</ToggleSwitch>
 		</section>

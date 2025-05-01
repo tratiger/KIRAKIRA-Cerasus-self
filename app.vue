@@ -1,5 +1,4 @@
 <script setup lang="ts">
-	import "css-doodle";
 	import crowdinLogoSvg from "assets/svg/crowdin.svg";
 	import { useDynamicLayout } from "helpers/page-transition";
 	import manifest from "public/manifest.json";

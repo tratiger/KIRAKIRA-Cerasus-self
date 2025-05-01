@@ -36,7 +36,6 @@ export default {
 	language: "Language",
 	background: {
 		_: "Background",
-		animated: "Animated Background",
 		custom: "Custom Background",
 		opacity: "Opacity",
 		tint: "Tint",
@@ -617,4 +616,5 @@ export default {
 	},
 	enable: "Enable",
 	disable: "Disable",
+	sync_across_devices: "Sync Across Devices",
 } as const;

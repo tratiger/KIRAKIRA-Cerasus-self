@@ -61,9 +61,6 @@ importers:
       axios:
         specifier: ^1.7.5
         version: 1.7.5
-      css-doodle:
-        specifier: 0.40.0
-        version: 0.40.0
       danmaku:
         specifier: ^2.0.6
         version: 2.0.6
@@ -2790,9 +2787,6 @@ packages:
     engines: {node: ^14 || ^16 || >=18}
     peerDependencies:
       postcss: ^8.0.9
-
-  css-doodle@0.40.0:
-    resolution: {integrity: sha512-iVeW7O1d5lxmOqUHqTVN1O4iPtoLbUr4RyUG9IHn56vWD2A+Hm80xmcAm1+UmjhV+zLQH172IRWSdEec8cZAXg==}
 
   css-functions-list@3.2.3:
     resolution: {integrity: sha512-IQOkD3hbR5KrN93MtcYuad6YPuTSUhntLHDuLEbFWE+ff2/XSZNdZG+LcbbIW5AXKg/WFIfYItIzVoHngHXZzA==}
@@ -9964,8 +9958,6 @@ snapshots:
   css-declaration-sorter@7.2.0(postcss@8.4.41):
     dependencies:
       postcss: 8.4.41
-
-  css-doodle@0.40.0: {}
 
   css-functions-list@3.2.3: {}
 

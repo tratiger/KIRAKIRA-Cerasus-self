@@ -294,10 +294,6 @@ declare module "*.docs" {
 	const raw: string;
 	export default raw;
 }
-declare module "*.css-doodle" {
-	const raw: string;
-	export default raw;
-}
 
 // get css preprocessor variables
 declare module "virtual:scss-var:*" {

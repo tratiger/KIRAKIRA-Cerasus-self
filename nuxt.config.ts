@@ -3,7 +3,6 @@
 import pomsky from "@pomsky-lang/unplugin";
 import defineAlias from "./helpers/alias";
 import styleResources from "./helpers/style-resources";
-import cssDoodleLoader from "./plugins/vite/css-doodle";
 import docsLoader from "./plugins/vite/docs";
 import vitePluginScssVariables from "./plugins/vite/scss-variables";
 import scssVariablesLoader from "./plugins/vite/scss-variables-loader";
@@ -82,7 +81,6 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [
 			docsLoader(),
-			cssDoodleLoader(),
 			vitePluginScssVariables(),
 			scssVariablesLoader(),
 			pomsky.vite({
