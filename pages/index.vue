@@ -17,7 +17,8 @@
 	 */
 	async function fetchHomePageVideoData() {
 		try {
-			videos.value = await api.video.getHomePageThumbVideo();
+			const headerCookie = useRequestHeaders(["cookie"]);
+			videos.value = await api.video.getHomePageThumbVideo(headerCookie);
 		} catch (error) {
 			// TODO: anyting can do if data fetch field in the home page? -add a 'refresh' button?
 			console.error("ERROR", "Unable to fetch home page video data", error);

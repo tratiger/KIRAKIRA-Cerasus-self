@@ -9,8 +9,10 @@ const VIDEO_API_URI = `${BACK_END_URI}video`;
  * 获取主页中显示的视频
  * @returns 展示视频卡片需要的返回参数
  */
-export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> => {
-	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`);
+export const getHomePageThumbVideo = async (headerCookie: { cookie?: string | undefined }): Promise<ThumbVideoResponseDto> => {
+	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`, { headers: headerCookie, credentials: "include" });
 	if (result.value)
 		return result.value;
 	else
