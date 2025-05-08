@@ -5,6 +5,7 @@ import * as _user from "api/User/UserControllerDto";
 import * as _video from "api/Video/VideoControllerDto";
 import * as _videoTag from "api/VideoTag/VideoTagControllerDto";
 import * as _feed from "api/Feed/FeedControllerDto";
+import * as _block from "api/BlockList/BlockControllerDto";
 
 /*
  * 此处声明与后端 API 相关的全局类型。
@@ -24,4 +25,6 @@ declare global {
 	export type { CreateVideoTagRequestDto, GetVideoTagByTagIdRequestDto, VideoTag } from "api/VideoTag/VideoTagControllerDto";
 	// FeedControllerDto
 	export type { UnfollowingUploaderRequestDto, FollowingUploaderRequestDto } from "api/Feed/FeedControllerDto";
+	// BlockListDto
+	export type { GetBlockListResponseDto, GetBlockListRequestDto } from "api/BlockList/BlockControllerDto";
 }

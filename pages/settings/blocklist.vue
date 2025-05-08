@@ -1,6 +1,29 @@
 <script setup lang="ts">
 	const add = ref("");
 	const remove = useNoop;
+
+	const blockList = ref<GetBlockListResponseDto["result"]>();
+	const blockListPage = ref(0);
+	const blockListPageSize = ref(0);
+
+	async function getBlockList(blockListType: string) {
+		const getBlockListRequest: GetBlockListRequestDto = {
+			type: blockListType,
+			pagination: {
+				page: blockListPage.value,
+				pageSize: blockListPageSize.value,
+			},
+		};
+		const blockListResult = await api.block.getBlockListController(getBlockListRequest);
+		if (blockListResult.success)
+			blockList.value = blockListResult.result;
+		else {
+			console.error("ERROR", `获取 ${blockListType} 类型的黑名单失败`);
+			useToast("获取黑名单失败", "error", 5000);
+		}
+	}
+
+	onMounted(() => getBlockList("block"));
 </script>
 
 <template>
