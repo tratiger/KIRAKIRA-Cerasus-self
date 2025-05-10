@@ -22,7 +22,7 @@
 		else if (localedRoute.startsWith("search")) currentPage.value = "search";
 		else if (localedRoute.startsWith("history")) currentPage.value = "history";
 		else if (localedRoute.startsWith("collections")) currentPage.value = "collections";
-		else if (localedRoute.startsWith("feed")) currentPage.value = "following_feed";
+		else if (localedRoute.startsWith("feed/following")) currentPage.value = "following_feed";
 		else if (localedRoute.startsWith("upload")) currentPage.value = "upload";
 		else currentPage.value = "other";
 	}
