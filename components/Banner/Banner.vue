@@ -3,13 +3,13 @@
 </docs>
 
 <script setup lang="ts">
-	const page = ref("other");
+	const currentPage = ref("other");
 	const pageListStandard = [
-		{ name: "search", englishName: "Search", icon: "search" },
-		{ name: "history", englishName: "History", icon: "history" },
-		{ name: "favorite", englishName: "Favorite", icon: "star" },
-		{ name: "feed", englishName: "Feed", icon: "feed" },
-		{ name: "upload", englishName: "Upload", icon: "upload" },
+		{ id: "search", name: "search", englishName: "Search", icon: "search" },
+		{ id: "history", name: "history", englishName: "History", icon: "history" },
+		{ id: "collections", name: "collection", englishName: "Collections", icon: "star" },
+		{ id: "feed", name: "feed", englishName: "Feed", icon: "feed" },
+		{ id: "upload", name: "upload", englishName: "Upload", icon: "upload" },
 	] as const;
 
 	/**
@@ -17,14 +17,14 @@
 	 */
 	function updateCurrentPage() {
 		const localedRoute = getRoutePath();
-		if (localedRoute === "") page.value = "home";
-		else if (localedRoute.startsWith("user")) page.value = "user";
-		else if (localedRoute.startsWith("search")) page.value = "search";
-		else if (localedRoute.startsWith("history")) page.value = "history";
-		else if (localedRoute.startsWith("favorite")) page.value = "favorite";
-		else if (localedRoute.startsWith("feed")) page.value = "feed";
-		else if (localedRoute.startsWith("upload")) page.value = "upload";
-		else page.value = "other";
+		if (localedRoute === "") currentPage.value = "home";
+		else if (localedRoute.startsWith("user")) currentPage.value = "user";
+		else if (localedRoute.startsWith("search")) currentPage.value = "search";
+		else if (localedRoute.startsWith("history")) currentPage.value = "history";
+		else if (localedRoute.startsWith("collections")) currentPage.value = "collections";
+		else if (localedRoute.startsWith("feed")) currentPage.value = "feed";
+		else if (localedRoute.startsWith("upload")) currentPage.value = "upload";
+		else currentPage.value = "other";
 	}
 
 	// SSR 首屏加载。
@@ -41,21 +41,21 @@
 
 <template>
 	<Transition>
-		<Comp v-if="page !== 'other'" class="opened" role="banner">
+		<Comp v-if="currentPage !== 'other'" class="opened" role="banner">
 			<div class="bg">
 				<Transition :duration="{ enter: 1000, leave: 100 }">
-					<BannerBackgroundHistory v-if="page === 'history'" />
-					<BannerBackgroundFavorite v-else-if="page === 'favorite'" />
+					<BannerBackgroundHistory v-if="currentPage === 'history'" />
+					<BannerBackgroundCollections v-else-if="currentPage === 'collections'" />
 				</Transition>
 			</div>
 			<Transition name="page-jump">
-				<LogoCover v-if="page === 'home'" noAnimation />
-				<NuxtImg v-else-if="page === 'user'" class="page-user" :src="banner" :key="banner" />
+				<LogoCover v-if="currentPage === 'home'" noAnimation />
+				<NuxtImg v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
 				<BannerStandard
 					v-else
-					:name="t[pageListStandard.find(i => i.name === page)!.name]"
-					:icon="pageListStandard.find(i => i.name === page)!.icon"
-					:englishName="pageListStandard.find(i => i.name === page)!.englishName"
+					:name="t(2)[pageListStandard.find(i => i.id === currentPage)!.name]"
+					:icon="pageListStandard.find(i => i.id === currentPage)!.icon"
+					:englishName="pageListStandard.find(i => i.id === currentPage)!.englishName"
 				/>
 			</Transition>
 			<div class="shadow"></div>

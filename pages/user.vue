@@ -2,10 +2,10 @@
 	export const tabs = [
 		{ id: "", icon: "home" },
 		// { id: "series", icon: "video_library" },
-		{ id: "video", icon: "movie" },
+		{ id: "videos", name: "video", icon: "movie" },
 		// { id: "audio", icon: "music" },
 		// { id: "photo", icon: "photo_library" },
-		{ id: "favorites", icon: "star" },
+		{ id: "collections", name: "collection", icon: "star" },
 	];
 </script>
 
@@ -118,7 +118,7 @@
 					</div>
 				</div>
 				<TabBar v-model="currentTab">
-					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t[tab.id || "home"] }}</TabItem>
+					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t(2)[tab.name || "home"] }}</TabItem>
 				</TabBar>
 			</div>
 		</header>

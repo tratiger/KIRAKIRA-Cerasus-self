@@ -34,12 +34,12 @@
 	<div class="container">
 		<div class="toolbox-card left">
 			<Accordion>
-				<AccordionItem :title="t.favorites.my_favorites">
+				<AccordionItem :title="t.collection.my">
 					<template #actions>
 						<SoftButton icon="add" @click.stop />
 					</template>
 				</AccordionItem>
-				<AccordionItem :title="t.favorites.subscribed_favorites">
+				<AccordionItem :title="t.collection.following">
 					<template #actions>
 						<SoftButton icon="add" @click.stop />
 					</template>
@@ -60,18 +60,18 @@
 					}"
 				>
 					<div class="left">
-						<Button icon="info">{{ t.favorites.modify_info }}</Button>
-						<Button icon="clear_all">{{ t.favorites.clear_expired }}</Button>
-						<Button icon="star">{{ t.favorites.subscribe }}</Button>
-						<Button icon="play">{{ t.favorites.play_all }}</Button>
+						<Button icon="info">{{ t.collection.modify_info }}</Button>
+						<Button icon="clear_all">{{ t.collection.clear_expired }}</Button>
+						<Button icon="star">{{ t.collection.follow }}</Button>
+						<Button icon="play">{{ t.collection.play_all }}</Button>
 					</div>
 					<div class="right">
-						<Button icon="add">{{ t.favorites.add }}</Button>
+						<Button icon="add">{{ t.collection.add }}</Button>
 						<Button
 							:class="{ active: isSelectedMode }"
 							icon="library_add_check"
 							@click="isSelectedMode = !isSelectedMode"
-						>{{ t.favorites.multi_select }}</Button>
+						>{{ t.collection.multi_select }}</Button>
 					</div>
 				</div>
 			</div>
@@ -94,11 +94,11 @@
 			<section>
 				<Subheader icon="sort">{{ t.sort.by }}</Subheader>
 				<Sort v-model="sort">
-					<SortItem id="date" preferOrder="descending">{{ t.upload_date }}</SortItem>
+					<SortItem id="upload_date" preferOrder="descending">{{ t.upload_date }}</SortItem>
 					<SortItem id="view" preferOrder="descending">{{ t.sort.view }}</SortItem>
 					<SortItem id="danmaku" preferOrder="descending">{{ t.sort.danmaku }}</SortItem>
 					<SortItem id="comment" preferOrder="descending">{{ t.sort.comment }}</SortItem>
-					<SortItem id="favorite" preferOrder="descending">{{ t.sort.favorite }}</SortItem>
+					<SortItem id="save" preferOrder="descending">{{ t.sort.save }}</SortItem>
 					<SortItem id="duration" preferOrder="descending">{{ t.duration }}</SortItem>
 					<SortItem id="rating">{{ t.rating }}</SortItem>
 				</Sort>

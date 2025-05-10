@@ -286,10 +286,10 @@
 						<Subheader icon="sort">{{ t.sort.by }}</Subheader>
 						<Sort v-model="data.sort">
 							<SortItem id="upload_date" preferOrder="descending">{{ t.upload_date }}</SortItem>
-							<SortItem id="views" preferOrder="descending">{{ t.sort.view }}</SortItem>
+							<SortItem id="view" preferOrder="descending">{{ t.sort.view }}</SortItem>
 							<SortItem id="danmaku" preferOrder="descending">{{ t.sort.danmaku }}</SortItem>
-							<SortItem id="comments" preferOrder="descending">{{ t.sort.comment }}</SortItem>
-							<SortItem id="favorites" preferOrder="descending">{{ t.sort.favorite }}</SortItem>
+							<SortItem id="comment" preferOrder="descending">{{ t.sort.comment }}</SortItem>
+							<SortItem id="save" preferOrder="descending">{{ t.sort.save }}</SortItem>
 							<SortItem id="duration" preferOrder="descending">{{ t.duration }}</SortItem>
 							<SortItem id="rating">{{ t.rating }}</SortItem>
 						</Sort>

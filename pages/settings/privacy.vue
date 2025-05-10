@@ -4,7 +4,7 @@
 		{ name: t.user.age, icon: "calendar", privacy: "public" },
 		{ name: t.follow, icon: "person_add", privacy: "public" },
 		{ name: t.fans, icon: "person_heart", privacy: "public" },
-		{ name: t.favorites, icon: "star", privacy: "public" },
+		{ name: t(2).collection, icon: "star", privacy: "public" },
 		{ name: t.platform.twitter, logo: "twitter", privacy: "public" },
 		{ name: t.platform.qq, logo: "qq", privacy: "public" },
 		{ name: t.platform.wechat, logo: "wechat", privacy: "public" },

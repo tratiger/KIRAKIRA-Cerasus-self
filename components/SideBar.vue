@@ -102,8 +102,8 @@
 			<SoftButton v-tooltip="t.home" icon="home" href="/" />
 			<SoftButton v-tooltip="t.search" icon="search" href="/search" />
 			<SoftButton v-tooltip="t.history" icon="history" href="/history" />
-			<SoftButton v-tooltip="t.favorites" icon="star" href="/favorite" />
-			<SoftButton v-tooltip="t.feed" icon="feed" href="/feed" />
+			<SoftButton v-tooltip="t(2).collection" icon="star" href="/collections" />
+			<SoftButton v-tooltip="t.following_feed" icon="feed" href="/feed" />
 			<SoftButton v-tooltip="t.upload" icon="upload" href="/upload" />
 		</div>
 
@@ -132,7 +132,7 @@
 		<div class="icons">
 			<BottomNavItem icon="home" href="/">{{ t.home }}</BottomNavItem>
 			<BottomNavItem icon="category" href="/category">{{ t.category }}</BottomNavItem>
-			<BottomNavItem icon="feed" href="/feed">{{ t.feed }}</BottomNavItem>
+			<BottomNavItem icon="feed" href="/feed">{{ t.following_feed }}</BottomNavItem>
 		</div>
 	</nav>
 </template>
