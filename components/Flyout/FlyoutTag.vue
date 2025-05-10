@@ -1,6 +1,10 @@
 <script setup lang="ts">
 	const flyout = defineModel<FlyoutModel>();
 	const tags = defineModel<Map<VideoTag["tagId"], VideoTag>>("tags"); // TAG 数据
+	const emit = defineEmits<{
+		(e: "add-new-tag", tag: VideoTag): void;
+	}>();
+
 	const original = ref<[number, string] | undefined>();
 	const search = ref("");
 	const isSearched = computed(() => !!search.value.trim());
@@ -168,7 +172,10 @@
 	 * @param tag 用户点击的 TAG 数据。
 	 */
 	function addTag(tag: VideoTag) {
-		if (tag.tagId !== undefined && tag.tagId !== null && tag.tagId >= 0) tags.value?.set(tag.tagId, tag);
+		if (tag.tagId !== undefined && tag.tagId !== null && tag.tagId >= 0) {
+			tags.value?.set(tag.tagId, tag);
+			emit("add-new-tag", tag);
+		}
 	}
 
 	watch(editor, editor => {
