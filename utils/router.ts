@@ -1,5 +1,5 @@
-import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 import type { NavigateToOptions } from "nuxt/dist/app/composables/router";
+import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 
 const localeCodes = computed(() => useNuxtApp().$i18n.localeCodes.value);
 type Route = RouteLocationNormalized | RouteLocationNormalizedLoaded;
@@ -94,7 +94,7 @@ export function switchLanguage(lang: string) {
 		const settings = document.querySelector(".settings");
 		const element = settings ?? document.body;
 		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
-		routerView?.classList.add("stop-animation");
+		routerView?.classList.add("stop-transition");
 		if (!document.startViewTransition) {
 			update();
 			document.body.animate([
@@ -107,7 +107,9 @@ export function switchLanguage(lang: string) {
 			}, {
 				duration: 500,
 			});
-		// nextTick(() => routerView?.classList.add("stop-animation"));
+		setTimeout(() => {
+			routerView?.classList.remove("stop-transition");
+		}, 500);
 	}
 }
 

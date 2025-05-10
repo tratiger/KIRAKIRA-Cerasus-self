@@ -202,11 +202,10 @@
 			background: none;
 		}
 
-		.stop-animation > & {
+		.stop-transition > & {
 			&,
 			* {
 				transition: none !important;
-				animation: none !important;
 			}
 		}
 	}
