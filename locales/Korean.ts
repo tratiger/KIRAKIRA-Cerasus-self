@@ -44,7 +44,7 @@ export default {
 		repositories: {},
 		staff: {},
 	},
-	favorites: {},
+	collection: {},
 	upload: {},
 	kaomoji: {},
 	sort: {},
