@@ -59,10 +59,10 @@
 				<div class="text-wrapper">
 					<div class="title"><slot>视频标题</slot></div>
 					<div class="info">
-						<div class="line">
+						<div v-if="uploader || uploaderId" class="line">
 							<LocaleLink class="item uploader" :to="`/user/${uploaderId ?? ''}`" linkInLink :blank>
 								<Icon name="person" />
-								<div>{{ uploader }}</div>
+								<div>{{ uploader ?? uploaderId }}</div>
 							</LocaleLink>
 						</div>
 						<div class="line">
@@ -74,9 +74,9 @@
 								<Icon name="duration" />
 								<p>{{ duration }}</p>
 							</div>
-							<div class="item">
+							<div v-if="date" class="item">
 								<Icon name="calendar" />
-								<div><DateTime :dateTime="date ?? null" /></div>
+								<div><DateTime :dateTime="date" /></div>
 							</div>
 						</div>
 					</div>

@@ -200,7 +200,6 @@
 		margin-bottom: -2px;
 
 		:comp.large & {
-			gap: 4px;
 			margin-bottom: 0;
 			font-size: 18px;
 		}
