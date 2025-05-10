@@ -316,7 +316,7 @@ export default {
 	title: "crwdns2588:0crwdne2588:0",
 	press_enter_to_add: "crwdns2590:0crwdne2590:0",
 	description: "crwdns2592:0crwdne2592:0",
-	push_to_feed: "crwdns3588:0crwdne3588:0",
+	push_to_feed: "crwdns3596:0crwdne3596:0",
 	cover: "crwdns2596:0crwdne2596:0",
 	select_cover: "crwdns2598:0crwdne2598:0",
 	follow: "crwdns2600:0crwdne2600:0",

@@ -312,7 +312,7 @@ export default {
 	title: "Title",
 	press_enter_to_add: "Press Enter to Add",
 	description: "Description",
-	push_to_feed: "Push to 'Following' Feed",
+	push_to_feed: "Push to Following Feed",
 	cover: "Cover",
 	select_cover: "Select Cover",
 	follow: "Follow",

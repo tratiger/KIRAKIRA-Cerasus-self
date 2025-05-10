@@ -314,7 +314,7 @@ export default {
 	title: "Titre",
 	press_enter_to_add: "Clique sur Entrer pour ajouter",
 	description: "Description",
-	push_to_feed: "Envoyer vers le flux 'Suivant'",
+	push_to_feed: "Pousser vers le flux suivant",
 	cover: "Couverture",
 	select_cover: "Sélectionnez la couverture",
 	follow: "Suivre",

@@ -314,7 +314,7 @@ export default {
 	title: "タイトル",
 	press_enter_to_add: "Enterキーで追加",
 	description: "説明文",
-	push_to_feed: "プッシュして「フォロー」フィード",
+	push_to_feed: "次のフィードにプッシュする",
 	cover: "サムネイル",
 	select_cover: "サムネイル選択",
 	follow: "フォロー",
