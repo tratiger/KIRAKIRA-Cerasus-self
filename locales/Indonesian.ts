@@ -203,6 +203,7 @@ export default {
 	addition_date: "Tanggal Penambahan",
 	history: "History",
 	collection: {},
+	feed: {},
 	upload: {
 		_: "Unggah",
 		drag_to_upload: "Seret kesini untuk Mengunggah",

@@ -1,10 +1,11 @@
 <script lang="ts">
 	export const tabs = [
-		{ id: "", icon: "home" },
-		// { id: "series", icon: "video_library" },
-		{ id: "videos", name: "video", icon: "movie" },
-		// { id: "audio", icon: "music" },
-		// { id: "photo", icon: "photo_library" },
+		{ id: "", icon: "home" }, // 首页，Markdown自我介绍放在顶部（类似GitHub），下方为显示用户发布的所有内容，类似于「关注（/feed/following）」页面
+		{ id: "videos", name: "video", icon: "movie" }, // 视频
+		// { id: "series", icon: "video_library" }, // 系列
+		// { id: "posts", name: "post", icon: "post" }, // 帖子
+		// { id: "audios", icon: "music" }, // 音频
+		// { id: "albums", icon: "photo_library" }, // 相簿或者相册，类似QQ空间相册，所有帖子配图默认也会放在这里，相簿名称可以直接叫「帖子」。
 		{ id: "collections", name: "collection", icon: "star" },
 	];
 </script>

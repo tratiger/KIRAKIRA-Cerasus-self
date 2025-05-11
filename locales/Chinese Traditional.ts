@@ -235,6 +235,9 @@ export default {
 		add: "添加影片",
 		multi_select: "批量選擇",
 	},
+	feed: {
+		following: "已跟隨",
+	},
 	upload: {
 		_: "投稿",
 		drag_to_upload: "拖到此處上傳",

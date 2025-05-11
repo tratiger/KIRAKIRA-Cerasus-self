@@ -72,6 +72,7 @@ export default {
 	audio: "音频",
 	photo: "相册",
 	album: "专辑",
+	post: "帖子",
 	comments: "评论",
 	you_know_too_much: "你知道的太多了。",
 	settings: {
@@ -264,7 +265,9 @@ export default {
 		move_to: "移动到",
 		multi_select: "批量选择",
 	},
-	following_feed: "动态",
+	feed: {
+		following: "关注",
+	},
 	upload: {
 		_: "投稿",
 		drag_to_upload: "拖到此处上传",
@@ -316,7 +319,7 @@ export default {
 	title: "标题",
 	press_enter_to_add: "按回车键添加",
 	description: "简介",
-	push_to_feed: "推送到动态",
+	push_to_feed: "推送到关注动态",
 	cover: "封面",
 	select_cover: "选择封面",
 	follow: "关注",

@@ -248,6 +248,7 @@ export default {
 	addition_date: "Ngày thêm",
 	history: "Lịch sử",
 	collection: {},
+	feed: {},
 	upload: {
 		_: "Tải lên",
 		drag_to_upload: "Kéo vào đây để tải lên video",

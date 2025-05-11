@@ -45,6 +45,7 @@ export default {
 		staff: {},
 	},
 	collection: {},
+	feed: {},
 	upload: {},
 	kaomoji: {},
 	sort: {},

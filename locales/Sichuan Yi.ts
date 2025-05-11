@@ -72,6 +72,7 @@ export default {
 	audio: "crwdns2294:0crwdne2294:0",
 	photo: "crwdns2296:0crwdne2296:0",
 	album: "crwdns2298:0crwdne2298:0",
+	post: "crwdns3600:0crwdne3600:0",
 	comments: "crwdns2300:0crwdne2300:0",
 	you_know_too_much: "crwdns2302:0crwdne2302:0",
 	settings: {
@@ -264,7 +265,9 @@ export default {
 		move_to: "crwdns3582:0crwdne3582:0",
 		multi_select: "crwdns3584:0crwdne3584:0",
 	},
-	following_feed: "crwdns3586:0crwdne3586:0",
+	feed: {
+		following: "crwdns3598:0crwdne3598:0",
+	},
 	upload: {
 		_: "crwdns2514:0crwdne2514:0",
 		drag_to_upload: "crwdns2516:0crwdne2516:0",

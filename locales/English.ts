@@ -68,6 +68,7 @@ export default {
 	audio: "Audio | Audios",
 	photo: "Photo | Photos",
 	album: "Album | Albums",
+	post: "Post | Posts",
 	comments: "Comments",
 	you_know_too_much: "You know too much.",
 	settings: {
@@ -260,7 +261,9 @@ export default {
 		move_to: "Move to",
 		multi_select: "Multi Select",
 	},
-	following_feed: "Following Feed",
+	feed: {
+		following: "Following",
+	},
 	upload: {
 		_: "Upload",
 		drag_to_upload: "Drag Here to Upload",

@@ -253,6 +253,9 @@ export default {
 		move_to: "移動到",
 		multi_select: "批量揀選",
 	},
+	feed: {
+		following: "追蹤緊",
+	},
 	upload: {
 		_: "上載",
 		drag_to_upload: "拖到嚟呢度去po嘢",

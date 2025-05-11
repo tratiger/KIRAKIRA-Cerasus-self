@@ -262,7 +262,9 @@ export default {
 		move_to: "Déplacez-vous",
 		multi_select: "Multi Sélection",
 	},
-	following_feed: "Flux suivant",
+	feed: {
+		following: "Suit",
+	},
 	upload: {
 		_: "Télécharger",
 		drag_to_upload: "Glisser ici pour télécharger",

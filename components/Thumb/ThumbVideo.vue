@@ -14,7 +14,7 @@
 		/** 视频播放量。 */
 		watchedCount?: number;
 		/** 创作者名称。 */
-		uploader: string;
+		uploader?: string;
 		/** 创作者编号 UID。 */
 		uploaderId?: number;
 		/** 视频时长。 */

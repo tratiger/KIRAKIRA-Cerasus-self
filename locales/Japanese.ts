@@ -262,7 +262,9 @@ export default {
 		move_to: "移動先:",
 		multi_select: "複数選択",
 	},
-	following_feed: "フォロー中のフィード",
+	feed: {
+		following: "フォロー中",
+	},
 	upload: {
 		_: "投稿",
 		drag_to_upload: "ここにドラッグしてアップロード",

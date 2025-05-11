@@ -8,7 +8,7 @@
 		{ id: "search", name: "search", englishName: "Search", icon: "search" },
 		{ id: "history", name: "history", englishName: "History", icon: "history" },
 		{ id: "collections", name: "collection", englishName: "Collections", icon: "star" },
-		{ id: "following_feed", name: "following_feed", englishName: "Following Feed", icon: "feed" },
+		{ id: "feed_following", name: "feed.following", englishName: "Following", icon: "feed" },
 		{ id: "upload", name: "upload", englishName: "Upload", icon: "upload" },
 	] as const;
 
@@ -22,7 +22,7 @@
 		else if (localedRoute.startsWith("search")) currentPage.value = "search";
 		else if (localedRoute.startsWith("history")) currentPage.value = "history";
 		else if (localedRoute.startsWith("collections")) currentPage.value = "collections";
-		else if (localedRoute.startsWith("feed/following")) currentPage.value = "following_feed";
+		else if (localedRoute.startsWith("feed/following")) currentPage.value = "feed_following";
 		else if (localedRoute.startsWith("upload")) currentPage.value = "upload";
 		else currentPage.value = "other";
 	}
