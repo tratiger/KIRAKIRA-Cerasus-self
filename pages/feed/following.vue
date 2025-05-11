@@ -1,12 +1,15 @@
 <docs>
-	关注。
+	# 关注
 
 	显示比如关注的用户发了新东西、关注的收藏夹有了更新等。
 	当前只支持显示视频。
+
+	TODO: 滚动加载更多，希望可以像Twitter一样尽可能无感（在还没到最底部的时候就开始往下加载）。
 </docs>
 
 <script setup lang="ts">
-	const loadingMore = ref(true);
+	const loadingMore = ref(false); // 是否正在加载更多
+	const reachedEnd = ref(true); // 是否到达底部
 </script>
 
 <template>
@@ -31,8 +34,9 @@
 					</ThumbVideo>
 				</ThumbGrid>
 			</UserContent>
-			<div class="bottom">
+			<div v-if="loadingMore || reachedEnd" class="bottom">
 				<ProgressRing v-if="loadingMore" />
+				<p v-if="reachedEnd">¯\_(ツ)_/¯</p>
 			</div>
 		</div>
 	</div>
@@ -54,5 +58,12 @@
 	.bottom {
 		@include flex-center;
 		width: 100%;
+		padding: 8px 0;
+		color: c(icon-color, 50%);
+
+		.progress-ring {
+			--size: 30px;
+			--thickness: 3px;
+		}
 	}
 </style>
