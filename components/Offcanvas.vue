@@ -106,6 +106,7 @@
 			color: c(icon-color);
 			font-size: 13px;
 			background-color: c(main-bg, 50%);
+			cursor: pointer;
 
 			.icon {
 				font-size: 32px;
