@@ -182,11 +182,11 @@
 			}
 
 			&.v-enter-active {
-				transition: $fallback-transitions, all $ease-out-smooth 500ms;
+				transition: $fallback-transitions, all $ease-out-smooth 600ms;
 			}
 
 			&.v-leave-active {
-				transition: $fallback-transitions, all $ease-in-smooth 150ms;
+				transition: $fallback-transitions, all $ease-out-max 200ms;
 			}
 		}
 
