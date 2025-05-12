@@ -100,6 +100,8 @@
 				// TODO: 使用多语言
 				useToast("屏蔽用户成功", "success");
 				closeBlockUserAlert();
+				inputPendingBlockUid.value = Infinity;
+				pendingBlockUserInfo.value = undefined;
 			} else {
 				console.error("ERROR", "屏蔽用户失败");
 				// TODO: 使用多语言
