@@ -26,5 +26,5 @@ declare global {
 	// FeedControllerDto
 	export type { UnfollowingUploaderRequestDto, FollowingUploaderRequestDto } from "api/Feed/FeedControllerDto";
 	// BlockListDto
-	export type { GetBlockListResponseDto, GetBlockListRequestDto } from "api/BlockList/BlockControllerDto";
+	export type { GetBlockListResponseDto, GetBlockListRequestDto, BlockUserByUidRequestDto, UnblockUserByUidRequestDto } from "api/BlockList/BlockControllerDto";
 }
