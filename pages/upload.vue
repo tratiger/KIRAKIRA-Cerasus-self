@@ -93,10 +93,26 @@
 		showEditor.value = false;
 		clearFileInput(fileInput);
 	}
+
+	const [DefineCountCard, CountCard] = createReusableTemplate<{
+		value: number | string;
+		icon: DeclaredIcons;
+		name: string;
+	}>();
 </script>
 
 <template>
 	<div class="container" :class="{ 'no-scroll': !showEditor }">
+
+		<DefineCountCard v-slot="{ value, icon, name }">
+			<div class="count-card">
+				<div class="title">
+					<Icon :name="icon" />
+					<span>{{ name }}</span>
+				</div>
+				<p class="value">{{ value }}</p>
+			</div>
+		</DefineCountCard>
 
 		<InfoBar type="warning" :title="t.severity.warning">
 			{{ t.under_construction.feature_admin_only }}
@@ -134,6 +150,8 @@
 					<div class="outline normal"></div>
 					<div class="outline successful"></div>
 				</div>
+				<CountCard :value="0" icon="movie" :name="t(2).video" />
+				<CountCard :value="0" icon="play" :name="t.sort.view" />
 			</div>
 
 			<UploadEditor v-else :files />
@@ -142,7 +160,7 @@
 </template>
 
 <style scoped lang="scss">
-	$box-height: 350px;
+	$box-height: 144px;
 
 	.container {
 		display: flex;
@@ -158,8 +176,8 @@
 
 	.upload-wrapper {
 		@include flex-center;
-		flex-direction: column;
-		height: 100%;
+		gap: 16px;
+		// flex-direction: column;
 		margin-top: 1rem;
 
 		.upload {
@@ -167,6 +185,7 @@
 			@include round-large;
 			$color: c(gray-60);
 			position: relative;
+			gap: 16px;
 			width: 100%;
 			height: $box-height;
 			max-height: 100%;
@@ -181,7 +200,7 @@
 
 			h3 {
 				margin-bottom: 8px;
-				font-size: 36px;
+				font-size: 24px;
 			}
 
 			.outline {
@@ -220,6 +239,36 @@
 					animation: uploading $ease-out-smooth 1s 500ms forwards;
 				}
 			}
+		}
+	}
+
+	.count-card {
+		@include card-shadow;
+		@include round-large;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 230px;
+		height: $box-height;
+		padding: 16px;
+
+		.title {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			color: c(icon-color);
+		}
+
+		.icon {
+			font-size: 24px;
+		}
+
+		.value {
+			color: c(accent);
+			font-family: $english-logo-fonts;
+			font-size: 36px;
+			font-weight: bold;
+			line-height: 1;
 		}
 	}
 
