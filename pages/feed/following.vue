@@ -8,12 +8,14 @@
 </docs>
 
 <script setup lang="ts">
-	const loadingMore = ref(false); // 是否正在加载更多
-	const reachedEnd = ref(true); // 是否到达底部
+	const loadingMore = ref(false);
+	const reachedEnd = ref(true);
+	const refreshing = ref(false);
 </script>
 
 <template>
 	<div class="container">
+		<PullToRefresh v-model:refreshing="refreshing" />
 		<!-- TODO: 切换视图 -->
 		<div class="feed">
 			<UserContent
@@ -43,6 +45,10 @@
 </template>
 
 <style scoped lang="scss">
+	.conatiner {
+		position: relative;
+	}
+
 	.feed {
 		display: flex;
 		flex-direction: column;
@@ -53,6 +59,10 @@
 		@include card-shadow;
 		@include round-large;
 		padding: 16px;
+	}
+
+	.thumb-grid {
+		margin-bottom: -8px;
 	}
 
 	.bottom {

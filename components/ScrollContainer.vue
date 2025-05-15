@@ -9,6 +9,7 @@
 	const props = withDefaults(defineProps<{
 		overflowX?: "visible" | "hidden" | "clip" | "scroll" | "auto";
 		overflowY?: "visible" | "hidden" | "clip" | "scroll" | "auto";
+		scrollElId?: string;
 	}>(), {
 		overflowX: "auto",
 		overflowY: "auto",
@@ -282,6 +283,7 @@
 	>
 		<div
 			ref="scrollerEl"
+			:id="scrollElId"
 			class="scroller"
 			@scroll="onScrollChange"
 			:style="{ overflowX: props.overflowX, overflowY: props.overflowY }"

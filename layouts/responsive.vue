@@ -30,7 +30,7 @@
 			</div>
 		</ClientOnly>
 		<SideBar />
-		<ScrollContainer class="container" :overflowX="isCurrentSettings ? 'hidden' : undefined">
+		<ScrollContainer scrollElId="mainScroller" class="container" :overflowX="isCurrentSettings ? 'hidden' : undefined">
 			<Banner />
 			<div class="router-view">
 				<slot></slot>
