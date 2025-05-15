@@ -70,6 +70,10 @@
 		width: 100%;
 		overflow: clip;
 
+		@include mobile {
+			display: none;
+		}
+
 		> * {
 			&:not(.logo-cover) {
 				@include square(100%);
