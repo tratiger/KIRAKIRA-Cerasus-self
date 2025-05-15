@@ -24,6 +24,7 @@
 				:uid="1"
 				nickname="占位符"
 				username="占位符"
+				avatarInside
 			>
 				<template #description>
 					<DateTime :dateTime="new Date()" showTime />

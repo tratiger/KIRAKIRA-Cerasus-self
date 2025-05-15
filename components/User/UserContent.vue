@@ -34,6 +34,8 @@
 		size?: "large" | "huge";
 		/** 是否垂直居中。 */
 		center?: boolean;
+		/** 是否让头像不凸出。 */
+		avatarInside?: boolean;
 	}>();
 
 	const slots = useSlots();
@@ -51,35 +53,43 @@
 </script>
 
 <template>
-	<Comp :class="{ large: size === 'large', huge: size === 'huge', center, 'link-full': to }">
+	<Comp :class="{ large: size === 'large', huge: size === 'huge', center, 'link-full': to, 'avatar-inside': avatarInside }">
 		<Transition>
 			<div v-if="pinned" class="pinned">
 				<Icon v-tooltip:bottom="t.pinned" name="pin" />
 			</div>
 		</Transition>
 
-		<slot name="avatar">
+		<slot v-if="!avatarInside" name="avatar">
 			<UserAvatar :avatar :uid :to />
 		</slot>
 
 		<component :is="to ? LocaleLink : 'div'" class="container link lite" :to>
-			<div class="info">
-				<component :is="uid ? LocaleLink : 'div'" v-if="nickname || username" :to="uid ? `/user/${uid ?? ''}` : undefined" class="names lite">
-					<span class="nickname">{{ nickname }}</span>
-					<span class="username">@{{ username }}</span>
-					<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ memo }}</span> -->
-				</component>
+			<div class="above">
+				<div v-if="avatarInside" class="user-avatar">
+					<UserAvatar :avatar :uid :to />
+				</div>
 
-				<div class="icons">
-					<Icon v-if="gender === 'male' " name="male" class="male" />
-					<Icon v-else-if="gender === 'female'" name="female" class="female" />
-					<slot name="icons"></slot>
+				<div class="info">
+					<div class="user">
+						<component :is="uid ? LocaleLink : 'div'" v-if="nickname || username" :to="uid ? `/user/${uid ?? ''}` : undefined" class="names lite">
+							<span class="nickname">{{ nickname }}</span>
+							<span class="username">@{{ username }}</span>
+							<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ memo }}</span> -->
+						</component>
+
+						<div class="icons">
+							<Icon v-if="gender === 'male' " name="male" class="male" />
+							<Icon v-else-if="gender === 'female'" name="female" class="female" />
+							<slot name="icons"></slot>
+						</div>
+					</div>
+
+					<p v-if="slots.description" class="description">
+						<slot name="description"></slot>
+					</p>
 				</div>
 			</div>
-
-			<p v-if="slots.description" class="description">
-				<slot name="description"></slot>
-			</p>
 
 			<div v-if="slots.default" class="content">
 				<slot></slot>
@@ -92,9 +102,11 @@
 
 			<div v-if="date || slots.footerLeft || slots.footerRight" class="footer">
 				<div class="left">
-					<span v-if="index">#{{ index }}</span>
-					<span v-if="date"><DateTime :dateTime="date" showTime /></span>
 					<slot name="footerLeft"></slot>
+					<span v-if="index">#{{ index }}</span>
+					<span v-if="date">
+						<DateTime :dateTime="date" showTime />
+					</span>
 				</div>
 
 				<div class="right">
@@ -112,7 +124,7 @@
 		display: flex;
 		min-width: 0;
 
-		&.center {
+		&.center:not(.avatar-inside) {
 			align-items: center;
 		}
 
@@ -152,7 +164,6 @@
 		gap: 8px;
 		width: 100%;
 		min-width: 0;
-		padding-left: 16px;
 		user-select: text;
 
 		:comp.large &,
@@ -160,7 +171,30 @@
 			gap: 4px;
 		}
 
-		:comp.center & {
+		:comp:not(.avatar-inside) & {
+			padding-left: 12px;
+		}
+	}
+
+	.above {
+		display: flex;
+
+		:comp.avatar-inside & {
+			align-items: center;
+		}
+	}
+
+	.info {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		:comp.large &,
+		:comp.huge & {
+			gap: 4px;
+		}
+
+		:comp.avatar-inside & {
 			padding-left: 12px;
 		}
 	}
@@ -182,10 +216,10 @@
 	}
 
 	.user-avatar {
-		@include square(48px);
+		@include square(40px);
 
 		:comp.large & {
-			@include square(58px);
+			@include square(56px);
 		}
 
 		:comp.huge & {
@@ -193,7 +227,7 @@
 		}
 	}
 
-	.info {
+	.user {
 		display: flex;
 		gap: 6px;
 		align-items: center;
@@ -201,7 +235,7 @@
 
 		:comp.large & {
 			margin-bottom: 0;
-			font-size: 18px;
+			font-size: 16px;
 		}
 
 		:comp.huge & {
@@ -290,8 +324,14 @@
 	.description {
 		overflow: hidden;
 		color: c(icon-color);
+		font-size: 12px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+
+		:comp.large &,
+		:comp.huge & {
+			font-size: 14px;
+		}
 	}
 
 	.content {
@@ -341,6 +381,7 @@
 
 		.left {
 			gap: 12px;
+			margin-left: -8px;
 		}
 
 		.right {
@@ -352,9 +393,9 @@
 		}
 
 		:deep(.soft-button) {
-			--wrapper-size: 36px;
+			--wrapper-size: 32px;
 			--ripple-size: var(--wrapper-size);
-			--icon-size: 20px;
+			--icon-size: 18px;
 		}
 	}
 </style>
