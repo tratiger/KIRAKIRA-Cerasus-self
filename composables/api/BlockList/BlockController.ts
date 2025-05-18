@@ -1,5 +1,5 @@
 import { DELETE, GET, POST } from "../Common";
-import type { BlockUserByUidRequestDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
+import type { BlockUserByUidRequestDto, BlockUserByUidResponseDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidRequestDto, HideUserByUidResponseDto, ShowUserByUidRequestDto, ShowUserByUidResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
 
 const BACK_END_URI = environment.backendUri;
 const BLOCK_API_URI = `${BACK_END_URI}block`;
@@ -15,13 +15,13 @@ export const getBlockListController = async (getBlockListRequest: GetBlockListRe
 };
 
 /**
- * 取消屏蔽用户
+ * 屏蔽用户
  * @param blockUserByUidRequest 屏蔽用户的请求载荷
  * @returns 屏蔽用户的请求响应
  */
-export const blockUserController = async (blockUserByUidRequest: BlockUserByUidRequestDto): Promise<HideUserByUidResponseDto> => {
+export const blockUserController = async (blockUserByUidRequest: BlockUserByUidRequestDto): Promise<BlockUserByUidResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${BLOCK_API_URI}/user`, blockUserByUidRequest, { credentials: "include" }) as HideUserByUidResponseDto;
+	return await POST(`${BLOCK_API_URI}/user`, blockUserByUidRequest, { credentials: "include" }) as BlockUserByUidResponseDto;
 };
 
 /**
@@ -32,4 +32,24 @@ export const blockUserController = async (blockUserByUidRequest: BlockUserByUidR
 export const unblockUserController = async (unblockUserByUidRequest: UnblockUserByUidRequestDto): Promise<UnblockUserByUidResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${BLOCK_API_URI}/delete/user`, unblockUserByUidRequest, { credentials: "include" }) as UnblockUserByUidResponseDto;
+};
+
+/**
+ * 隐藏用户
+ * @param hideUserByUidRequest 隐藏用户的请求载荷
+ * @returns 隐藏用户的请求响应
+ */
+export const hideUserController = async (hideUserByUidRequest: HideUserByUidRequestDto): Promise<HideUserByUidResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${BLOCK_API_URI}/hideuser`, hideUserByUidRequest, { credentials: "include" }) as HideUserByUidResponseDto;
+};
+
+/**
+ * 取消隐藏用户
+ * @param showUserByUidRequest 显示用户的请求载荷
+ * @returns 显示用户的请求响应
+ */
+export const showUserController = async (showUserByUidRequest: ShowUserByUidRequestDto): Promise<ShowUserByUidResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await DELETE(`${BLOCK_API_URI}/delete/hideuser`, showUserByUidRequest, { credentials: "include" }) as ShowUserByUidResponseDto;
 };

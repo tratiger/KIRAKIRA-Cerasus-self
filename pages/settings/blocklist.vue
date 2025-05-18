@@ -17,9 +17,14 @@
 	const pendingBlockUserInfo = ref<GetUserInfoByUidResponseDto["result"]>(); // 待屏蔽用户信息
 	const isBlockingUser = ref(false); // 正在屏蔽用户
 
-	const hideUserList = ref<GetBlockListResponseDto["result"]>();
-	const hideUserListPage = ref(0);
-	const hideUserListPageSize = ref(0);
+	const hideUserList = ref<GetBlockListResponseDto["result"]>(); // 被隐藏的用户列表
+	const hideUserListPage = ref(0); // 被隐藏的用户列表的页码
+	const hideUserListPageSize = ref(0); // 被隐藏的用户列表的每页数
+	const inputPendingHideUid = ref(Infinity); // 用户输入的待隐藏用户 UID
+	const isFetchPendingHideUserInfo = ref(false); // 是否正在请求待隐藏用户数据
+	const isShowAddHideUserAlert = ref(false); // 是否展示待隐藏用户信息对话框
+	const pendingHideUserInfo = ref<GetUserInfoByUidResponseDto["result"]>(); // 待隐藏用户信息
+	const isHidingUser = ref(false); // 正在隐藏用户
 
 	// const blockTagList = ref<DisplayVideoTag[]>();
 	const blockTagList = ref<Map<VideoTag["tagId"], VideoTag>>(new Map()); // 视频标签
@@ -47,6 +52,11 @@
 	async function getPendingBlockUserInfo() {
 		isClickAddButton.value = true;
 		try {
+			if (inputPendingBlockUid.value === Infinity) {
+				isClickAddButton.value = false;
+				return;
+			}
+
 			if (inputPendingBlockUid.value === undefined || inputPendingBlockUid.value === null || inputPendingBlockUid.value < 1) {
 				console.error("ERROR", "待屏蔽用户的 UID 格式不正确，不能为空或小于零");
 				// TODO: 使用多语言
@@ -82,6 +92,10 @@
 	async function blockUser() {
 		isBlockingUser.value = true;
 		try {
+			if (inputPendingBlockUid.value === Infinity) {
+				isBlockingUser.value = false;
+				return;
+			}
 			if (inputPendingBlockUid.value === undefined || inputPendingBlockUid.value === null || inputPendingBlockUid.value < 1) {
 				console.error("ERROR", "屏蔽用户的 UID 格式不正确，不能为空或小于零");
 				// TODO: 使用多语言
@@ -124,21 +138,20 @@
 	}
 
 	/**
-	 * 屏蔽用户
-	 * @param blockUid 被屏蔽的用户 UID
+	 * 解除屏蔽用户
+	 * @param blockUserUid 被屏蔽的用户 UID
 	 */
-	async function unblockUser(blockUid: number) {
+	async function unblockUser(blockUserUid: number) {
 		try {
-			if (blockUid === undefined || blockUid === null || blockUid < 1) {
-				console.error("ERROR", "屏蔽用户的 UID 格式不正确，不能为空或小于零");
+			if (blockUserUid === undefined || blockUserUid === null || blockUserUid < 1) {
+				console.error("ERROR", "解除屏蔽用户的 UID 格式不正确，不能为空或小于零");
 				// TODO: 使用多语言
-				useToast("屏蔽用户的 UID 格式不正确", "error", 5000);
-				isBlockingUser.value = false;
+				useToast("解除屏蔽用户的 UID 格式不正确", "error", 5000);
 				return;
 			}
 
 			const unblockUserByUidRequest: UnblockUserByUidRequestDto = {
-				blockUid,
+				blockUid: blockUserUid,
 			};
 			const unblockUserResult = await api.block.unblockUserController(unblockUserByUidRequest);
 			if (unblockUserResult.success) {
@@ -159,6 +172,131 @@
 	}
 
 	/**
+	 * 获取待隐藏用户的信息
+	 */
+	async function getPendingHideUserInfo() {
+		isClickAddButton.value = true;
+		try {
+			if (inputPendingHideUid.value === Infinity) {
+				isClickAddButton.value = false;
+				return;
+			}
+
+			if (inputPendingHideUid.value === undefined || inputPendingHideUid.value === null || inputPendingHideUid.value < 1) {
+				console.error("ERROR", "待隐藏用户的 UID 格式不正确，不能为空或小于零");
+				// TODO: 使用多语言
+				useToast("待隐藏用户的 UID 格式不正确", "error", 5000);
+				isClickAddButton.value = false;
+				return;
+			}
+
+			const getUserInfoByUidRequest: GetUserInfoByUidRequestDto = {
+				uid: inputPendingHideUid.value,
+			};
+			const pendingHideUserInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest);
+			if (pendingHideUserInfoResult.success) {
+				pendingHideUserInfo.value = pendingHideUserInfoResult.result;
+				isShowAddHideUserAlert.value = true;
+				isShowAlert.value = true;
+			} else {
+				console.error("ERROR", "获取待隐藏用户信息失败");
+				// TODO: 使用多语言
+				useToast("获取待隐藏用户信息失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("ERROR", "获取待隐藏用户信息时出错", error);
+			// TODO: 使用多语言
+			useToast("获取待隐藏用户信息时出错", "error", 5000);
+		}
+		isClickAddButton.value = false;
+	}
+
+	/**
+	 * 隐藏一个用户
+	 */
+	async function hideUser() {
+		isHidingUser.value = true;
+		try {
+			if (inputPendingHideUid.value === Infinity) {
+				isHidingUser.value = false;
+				return;
+			}
+			if (inputPendingHideUid.value === undefined || inputPendingHideUid.value === null || inputPendingHideUid.value < 1) {
+				console.error("ERROR", "隐藏用户的 UID 格式不正确，不能为空或小于零");
+				// TODO: 使用多语言
+				useToast("隐藏用户的 UID 格式不正确", "error", 5000);
+				isHidingUser.value = false;
+				return;
+			}
+
+			const hideUserByUidRequest: HideUserByUidRequestDto = {
+				hideUid: inputPendingHideUid.value,
+			};
+			const hideUserResult = await api.block.hideUserController(hideUserByUidRequest);
+			if (hideUserResult.success) {
+				const hideUserListResult = await getBlockList("hide", hideUserListPage.value, hideUserListPageSize.value);
+				if (hideUserListResult && hideUserListResult.success) hideUserList.value = hideUserListResult.result;
+				// TODO: 使用多语言
+				useToast("隐藏用户成功", "success");
+				closeHideUserAlert();
+				inputPendingHideUid.value = Infinity;
+				pendingHideUserInfo.value = undefined;
+			} else {
+				console.error("ERROR", "隐藏用户失败");
+				// TODO: 使用多语言
+				useToast("隐藏用户失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("ERROR", "隐藏用户时出错", error);
+			// TODO: 使用多语言
+			useToast("隐藏用户时出错", "error", 5000);
+		}
+		isHidingUser.value = false;
+	}
+
+	/**
+	 * 关闭待隐藏用户信息对话框
+	 */
+	function closeHideUserAlert() {
+		isShowAlert.value = false;
+		isShowAddHideUserAlert.value = false;
+	}
+
+	/**
+	 * 恢复显示用户
+	 * @param hideUserUid 被屏蔽的用户 UID
+	 */
+	async function showUser(hideUserUid: number) {
+		try {
+			if (hideUserUid === undefined || hideUserUid === null || hideUserUid < 1) {
+				console.error("ERROR", "恢复显示用户的 UID 格式不正确，不能为空或小于零");
+				// TODO: 使用多语言
+				useToast("恢复显示用户的 UID 格式不正确", "error", 5000);
+				return;
+			}
+
+			const showUserByUidRequest: ShowUserByUidRequestDto = {
+				hideUid: hideUserUid,
+			};
+			const showUserResult = await api.block.showUserController(showUserByUidRequest);
+			if (showUserResult.success) {
+				const hideUserListResult = await getBlockList("hide", hideUserListPage.value, hideUserListPageSize.value);
+				if (hideUserListResult && hideUserListResult.success) hideUserList.value = hideUserListResult.result;
+				// TODO: 使用多语言
+				useToast("恢复显示用户成功", "success");
+			} else {
+				console.error("ERROR", "解除屏蔽用户失败");
+				// TODO: 使用多语言
+				useToast("恢复显示用户失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("ERROR", "解除屏蔽用户时出错", error);
+			// TODO: 使用多语言
+			useToast("恢复显示用户时出错", "error", 5000);
+		}
+	}
+
+	/**
 	 * 显示标签的上下文工具栏。
 	 * @param key - 标签键名。
 	 * @param tag - 标签内容。
@@ -175,6 +313,7 @@
 		hideExceptMe.value = false;
 		contextualToolbar.value = [e, "top", 0];
 	}
+
 	/**
 	 * 隐藏标签的上下文工具栏。
 	 */
@@ -285,11 +424,19 @@
 		<Subheader icon="visibility_off">{{ t.blocklist.hide }}</Subheader>
 		<span>{{ t.blocklist.hide.description }}</span>
 		<section>
-			<SettingsChipItem v-for="hideUser in hideUserList" :key="hideUser.uid" :image="hideUser.avatar" icon="placeholder" :details="t.addition_date + t.colon + formatLocalizationSemanticDateTime(hideUser.createDateTime, 2)" trailingIcon="delete" @trailingIconClick="remove">{{ hideUser.username }}</SettingsChipItem>
+			<SettingsChipItem
+				v-for="hideUser in hideUserList"
+				:key="hideUser.uid"
+				:image="hideUser.avatar"
+				icon="placeholder"
+				:details="t.addition_date + t.colon + formatLocalizationSemanticDateTime(hideUser.createDateTime, 2)"
+				trailingIcon="delete"
+				@trailingIconClick="showUser(hideUser.uid ?? -1)"
+			>{{ hideUser.username }}</SettingsChipItem>
 		</section>
 		<div class="add">
-			<TextBox v-model="add" icon="person" />
-			<Button icon="add" :disabled="isAddButtonUnclickalbe">{{ t.step.add }}</Button>
+			<TextBox v-model="inputPendingHideUid" type="number" icon="person" />
+			<Button icon="add" @click="getPendingHideUserInfo" :disabled="isAddButtonUnclickalbe" :loading="isFetchPendingHideUserInfo">{{ t.step.add }}</Button>
 		</div>
 
 		<hr />
@@ -350,7 +497,7 @@
 	<Alert v-model="isShowAddBlockUserAlert" static>
 		<!-- TODO: 使用多语言 -->
 		<h4>确定要屏蔽这个用户吗？</h4>
-		<div class="block-user-display">
+		<div class="user-info-alert-display">
 			<div class="user">
 				<UserAvatar :avatar="pendingBlockUserInfo?.avatar" />
 				<div class="texts">
@@ -372,6 +519,34 @@
 		</template>
 		<template #footer-right>
 			<Button @click="closeBlockUserAlert" class="secondary">取消</Button>
+		</template>
+	</Alert>
+
+	<Alert v-model="isShowAddHideUserAlert" static>
+		<!-- TODO: 使用多语言 -->
+		<h4>确定要隐藏这个用户吗？</h4>
+		<div class="user-info-alert-display">
+			<div class="user">
+				<UserAvatar :avatar="pendingHideUserInfo?.avatar" />
+				<div class="texts">
+					<div class="names">
+						<span class="username">{{ pendingHideUserInfo?.username }}</span> <span v-if="pendingHideUserInfo?.userNickname">/{{ pendingHideUserInfo?.userNickname }}</span>
+						<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ user?.bio }}</span> -->
+						<span class="icons">
+							<Icon v-if="pendingHideUserInfo?.gender === 'male'" name="male" class="male" />
+							<Icon v-else-if="pendingHideUserInfo?.gender === 'female'" name="female" class="female" />
+							<span v-else class="other-gender">{{ pendingHideUserInfo?.gender }}</span>
+						</span>
+					</div>
+					<div class="bio">{{ pendingHideUserInfo?.signature }}</div>
+				</div>
+			</div>
+		</div>
+		<template #footer-left>
+			<Button @click="hideUser" :loading="isHidingUser" :disabled="isHidingUser">确认隐藏</Button>
+		</template>
+		<template #footer-right>
+			<Button @click="closeHideUserAlert" class="secondary">取消</Button>
 		</template>
 	</Alert>
 </template>
@@ -406,7 +581,7 @@
 		margin-top: 1rem;
 	}
 	
-	.block-user-display {
+	.user-info-alert-display {
 		height: 60px;
 
 		.user {
