@@ -20,7 +20,7 @@
 	"license": "BSD 3-Clause",
 	"author": "KIRAKIRA Project Team",
 	"scripts": {
-		"dev-local": "cross-env pnpm run dev-local-stg",
+		"dev-local": "cross-env bun run dev-local-stg",
 		"dev-local-stg": "cross-env VITE_BACKEND_URI=https://localhost:9999 VITE_CLOUDFLARE_IMAGES_PROVIDER=cloudflare-stg VITE_CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=https://customer-o9xrvgnj5fidyfm4.cloudflarestream.com/ nuxi dev --host --https --ssl-cert server/server.cer --ssl-key server/server.key",
 		"dev-local-prod": "cross-env VITE_BACKEND_URI=https://localhost:9999 VITE_CLOUDFLARE_IMAGES_PROVIDER=cloudflare-prod VITE_CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=https://customer-yvgxn6arnuae3q89.cloudflarestream.com/ nuxi dev --host --https --ssl-cert server/server.cer --ssl-key server/server.key",
 		"dev-stg-demo": "cross-env VITE_BACKEND_URI=https://stg-rosales.kirafile.com VITE_CLOUDFLARE_IMAGES_PROVIDER=cloudflare-stg VITE_CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=https://customer-o9xrvgnj5fidyfm4.cloudflarestream.com/ nuxi dev --host --https --ssl-cert server/server.cer --ssl-key server/server.key",
@@ -98,7 +98,7 @@
 		"stylelint-order": "^6.0.4",
 		"stylelint-scss": "^6.5.1",
 		"tsx": "^4.18.0",
-		"typescript": "^5.5.4",
+		"typescript": "^5.8.3",
 		"typescript-eslint": "^8.2.0",
 		"typescript-plugin-css-modules": "^5.1.0"
 	},
