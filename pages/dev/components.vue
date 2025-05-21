@@ -1,7 +1,7 @@
 <script setup lang="ts">
-	import animationData from "lotties/spinner-dev1.json";
 	import beepSrc from "assets/audios/NOVA 2022.1 Alert Quick.ogg";
 	import type { ToastEvent } from "composables/toast";
+	import animationData from "lotties/spinner-dev1.json";
 
 	const useSyncKiraCookieOptions = { isWatchCookieRef: true, isSyncSettings: true, isListenLoginEvent: true };
 
@@ -90,11 +90,11 @@
 			<div class="modal-content">
 				<div>
 					<p>视频标题</p>
-					<TextBox v-model="inputValue" placeholder="视频标题" />
+					<TextBox v-model="inputValue" placeholder="视频标题" autoComplete="off" />
 				</div>
 				<div>
 					<p>视频分P</p>
-					<TextBox v-model="inputValue" placeholder="视频分P" />
+					<TextBox v-model="inputValue" placeholder="视频分P" autoComplete="off" />
 				</div>
 			</div>
 		</DefinePopoverSlot>
@@ -159,9 +159,9 @@
 				<SettingsGridItem id="b" v-model="settingsGridItemSelect" title="b" />
 			</ThumbGrid>
 			<hr />
-			<TextBox v-model="inputValue" placeholder="小小的软软的香香的" :style="{ '--size': 'small' }" />
-			<TextBox v-model="inputValue" type="email" required placeholder="请输入正确的邮箱" />
-			<TextBox v-model="inputValue" icon="lock" type="password" placeholder="密码" :style="{ '--size': 'large' }" />
+			<TextBox v-model="inputValue" placeholder="小小的软软的香香的" :style="{ '--size': 'small' }" autoComplete="off" />
+			<TextBox v-model="inputValue" type="email" required placeholder="请输入正确的邮箱" autoComplete="off" />
+			<TextBox v-model="inputValue" icon="lock" type="password" placeholder="密码" :style="{ '--size': 'large' }" autoComplete="off" />
 			<SendVerificationCode v-model="inputValue" />
 			<em>所有输入框的内容同时输入属正常现象，因为懒得做三个变量。</em>
 			<hr />
