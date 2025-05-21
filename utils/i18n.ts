@@ -1,6 +1,8 @@
 import type { TranslateOptions } from "@intlify/core-base";
 import type { I18nArgsFunction, LocaleWithDefaultValue } from "locales/types";
 
+const currentI18n = computed(() => useNuxtApp().$i18n);
+
 // 如果需要 <i18n> 块内语言字符串：useI18n({ useScope: "local" })
 
 const getProxy = (options: TranslateOptions | typeof targetFunction) =>
@@ -9,7 +11,7 @@ const getProxy = (options: TranslateOptions | typeof targetFunction) =>
 			if (rootName === "__v_isRef" || typeof rootName === "symbol") return; // Vue 干的好事。
 			if (typeof target === "function") target = {};
 			const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
-			const i18n = useNuxtApp().$i18n;
+			const i18n = currentI18n.value;
 			const getDeclarationInfo = (...keys: string[]) => {
 				const key = getParentsPrefix(...keys);
 				const raw: string | object = i18n.tm(key);
@@ -76,7 +78,7 @@ Object.freeze(t);
  * @returns 当前语言名称。
  */
 export function getCurrentLocale() {
-	return useNuxtApp().$i18n.locale.value;
+	return currentI18n.value.locale.value;
 }
 
 /**
