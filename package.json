@@ -28,7 +28,7 @@
 		"build": "nuxi build",
 		"generate": "nuxi generate",
 		"preview": "nuxi preview",
-		"postinstall": "node postinstall.js",
+		"postinstall": "bun postinstall.js",
 		"lint:css": "stylelint **/*.{html,vue,css,sass,scss}",
 		"typed-scss-modules": "typed-scss-modules assets/styles/*.module.scss --exportType default",
 		"update-eases": "tsx scripts/update-eases.ts",
