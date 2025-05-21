@@ -2,10 +2,6 @@
 	"name": "kirakira-cerasus",
 	"version": "0.0.0-alpha",
 	"description": "KIRAKIRA-Cerasus, The PC/PE Front-end Created by Nuxt3.",
-	"engines": {
-		"node": ">=20.9.0"
-	},
-	"packageManager": "pnpm@10.11.0",
 	"private": true,
 	"type": "module",
 	"module": "esnext",
