@@ -14,7 +14,7 @@ const dev = process.env.NODE_ENV === "development";
 
 export default defineNuxtConfig({
 	devtools: {
-		enabled: false,
+		enabled: true,
 	},
 
 	plugins: [
@@ -187,6 +187,10 @@ export default defineNuxtConfig({
 			useCookie: true,
 			cookieKey: "language",
 			alwaysRedirect: true,
+		},
+		bundle: {
+			// 非预期错误，临时解决办法。参考：https://github.com/intlify/bundle-tools/issues/423#issuecomment-2525540710
+			optimizeTranslationDirective: false,
 		},
 	},
 
