@@ -1,5 +1,5 @@
 import type { TranslateOptions } from "@intlify/core-base";
-import type { I18nArgsFunction, LocaleWithDefaultValue } from "locales/types";
+import type { I18nArgsFunction, LocaleWithDefaultValue } from "../i18n/locales/types";
 
 export /* @internal */ const _globalI18n = ref() as typeof __globalI18n;
 const __globalI18n = computed({
@@ -87,7 +87,7 @@ Object.freeze(t);
  * @returns 当前语言名称。
  */
 export function getCurrentLocale() {
-	return _globalI18n.value?.locale.value ?? "zhs";
+	return useNuxtApp().$i18n.locale.value;
 }
 
 /**
