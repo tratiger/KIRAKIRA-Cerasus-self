@@ -36,7 +36,7 @@ export default defineNuxtConfig({
 		["@pinia/nuxt", {
 			autoImports: ["defineStore", "storeToRefs"],
 		}],
-		"@pinia-plugin-persistedstate/nuxt",
+		"pinia-plugin-persistedstate/nuxt",
 		"modules/theme/module.ts",
 		"modules/noscript/module.ts",
 		"modules/unsupported-browsers/module.ts",

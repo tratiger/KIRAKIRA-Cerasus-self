@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	const props = withDefaults(defineProps<{
-		title?: string;
+		title?: string | Function;
 		type?: "info" | "warning";
 		lite?: boolean;
 	}>(), {
