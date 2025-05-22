@@ -104,11 +104,11 @@
 								}"
 							/>
 						</th>
-						<div class="shadow">
+						<tr class="shadow">
 							<th v-for="(header, _column, j) in headers" :key="header" :width="colWidths[j]">
 								<div class="grip" :data-index="j" @pointerdown="onGripDown"></div>
 							</th>
-						</div>
+						</tr>
 					</thead>
 					<tbody>
 						<RecycleScroller v-slot="{ item }" class="scroller" :itemSize="28" keyField="key" :items="danmakuList" pageMode>

@@ -5,7 +5,7 @@ import { createResolver } from "@nuxt/kit";
 import htmlMinifierTerser from "html-minifier-terser";
 import type { Nuxt } from "nuxt/schema";
 import { type ModuleFormat, rollup } from "rollup";
-import sass from "sass";
+import * as sass from "sass";
 import * as terser from "terser";
 import ts from "typescript";
 

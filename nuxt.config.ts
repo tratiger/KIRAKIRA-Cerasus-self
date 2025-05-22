@@ -86,6 +86,15 @@ export default defineNuxtConfig({
 			pomsky.vite({
 				fileExtensions: [".vue"],
 			}),
+			{
+				// 干掉 nuxt-icons 引起的警告。https://github.com/gitFoxCode/nuxt-icons/issues/56
+				name: "vite-plugin-glob-transform",
+				transform(code: string, id: string) {
+					if (id.includes("nuxt-icons"))
+						return code.replaceAll(/as:\s*['"]raw['"]/g, 'query: "?raw", import: "default"');
+					return code;
+				},
+			},
 		],
 		optimizeDeps: {
 			needsInterop: [
