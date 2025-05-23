@@ -2,10 +2,8 @@
 	import crowdinLogoSvg from "assets/svg/crowdin.svg";
 	import { useDynamicLayout } from "helpers/page-transition";
 	import manifest from "public/manifest.json";
-	import { _globalI18n } from "./utils/i18n";
 
 	const homepage = "https://kirakira.moe/";
-	_globalI18n.value = useI18n() as never;
 	const { locale } = useI18n();
 	const appSettings = useAppSettingsStore();
 	const inContextLocalization = isInContextLocalization();

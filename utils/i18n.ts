@@ -1,75 +1,66 @@
 import type { TranslateOptions } from "@intlify/core-base";
 import type { I18nArgsFunction, LocaleWithDefaultValue } from "../i18n/locales/types";
 
-export /* @internal */ const _globalI18n = ref() as typeof __globalI18n;
-const __globalI18n = computed({
-	get: () => useNuxtApp().$i18n,
-	set: () => {},
-});
+const currentI18n = computed(() => useNuxtApp().$i18n);
 
 // 如果需要 <i18n> 块内语言字符串：useI18n({ useScope: "local" })
 
 const getProxy = (options: TranslateOptions | typeof targetFunction) =>
 	new Proxy(options, {
 		get(target, rootName) {
-			try {
-				if (rootName === "__v_isRef" || typeof rootName === "symbol") return; // Vue 干的好事。
-				if (typeof target === "function") target = {};
-				const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
-				const i18n = _globalI18n.value;
-				const getDeclarationInfo = (...keys: string[]) => {
-					const key = getParentsPrefix(...keys);
-					const raw: string | object = i18n.tm(key);
-					return {
-						isNamespace: typeof raw === "object" && Object.keys(raw).length > 0,
-						includesInterpolation: typeof raw === "string" && raw.includes("{"),
-						missing: typeof raw === "object" && Object.keys(raw).length === 0,
-						missingDefault: typeof raw === "object" && !("_" in raw),
-						key,
-						raw,
-					};
+			if (rootName === "__v_isRef" || typeof rootName === "symbol") return; // Vue 干的好事。
+			if (typeof target === "function") target = {};
+			const getParentsPrefix = (...prefixes: string[]) => prefixes.length > 0 ? prefixes.join(".") : "";
+			const i18n = currentI18n.value;
+			const getDeclarationInfo = (...keys: string[]) => {
+				const key = getParentsPrefix(...keys);
+				const raw: string | object = i18n.tm(key);
+				return {
+					isNamespace: typeof raw === "object" && Object.keys(raw).length > 0,
+					includesInterpolation: typeof raw === "string" && raw.includes("{"),
+					missing: typeof raw === "object" && Object.keys(raw).length === 0,
+					missingDefault: typeof raw === "object" && !("_" in raw),
+					key,
+					raw,
 				};
-				const getMissingKey = (key: string, getAFunction: boolean = true) => {
-					const displayValue = `<${key}>`;
-					if (!getAFunction) return displayValue;
-					const missingKey = () => missingKey;
-					missingKey.toString = () => displayValue;
-					return missingKey;
-				};
-				const translate = (keys: string[], list: Readable[] = []) => {
-					const { isNamespace, missingDefault } = getDeclarationInfo(...keys);
-					if (missingDefault) return getMissingKey(getParentsPrefix(...keys), false);
-					const key = !isNamespace ? getParentsPrefix(...keys) : getParentsPrefix(...keys, "_");
-					return i18n.t(key, typeof list[0] === "object" ? list[0] : list, {
-						fallbackWarn: false,
-						missingWarn: false,
-						...target,
-					});
-				};
-				const getWithArgsFunction = (...prefixes: string[]) =>
-					(...args: Readable[]) =>
-						translate(prefixes, typeof args[0] === "object" ? args[0] : args);
-				const getWithArgsProxy = (...parents: string[]) => {
-					const keys = [rootName, ...parents];
-					const info = getDeclarationInfo(...keys);
-					if (info.missing)
-						return getMissingKey(info.key);
-					else if (!info.includesInterpolation && !info.isNamespace)
-						return translate(keys);
-					else return new Proxy(getWithArgsFunction(...keys), {
-						get(_target, currentName): unknown {
-							if (currentName === Symbol.toPrimitive || currentName === "toString")
-								return () => translate(keys);
-							if (typeof currentName === "string")
-								return getWithArgsProxy(...parents, currentName);
-						},
-					});
-				};
-				return getWithArgsProxy();
-			} catch (e) {
-				if (e instanceof TypeError) return new VirtualObject("Nuxt not setup yet!");
-				else throw e;
-			}
+			};
+			const getMissingKey = (key: string, getAFunction: boolean = true) => {
+				const displayValue = `<${key}>`;
+				if (!getAFunction) return displayValue;
+				const missingKey = () => missingKey;
+				missingKey.toString = () => displayValue;
+				return missingKey;
+			};
+			const translate = (keys: string[], list: Readable[] = []) => {
+				const { isNamespace, missingDefault } = getDeclarationInfo(...keys);
+				if (missingDefault) return getMissingKey(getParentsPrefix(...keys), false);
+				const key = !isNamespace ? getParentsPrefix(...keys) : getParentsPrefix(...keys, "_");
+				return i18n.t(key, typeof list[0] === "object" ? list[0] : list, {
+					fallbackWarn: false,
+					missingWarn: false,
+					...target,
+				});
+			};
+			const getWithArgsFunction = (...prefixes: string[]) =>
+				(...args: Readable[]) =>
+					translate(prefixes, typeof args[0] === "object" ? args[0] : args);
+			const getWithArgsProxy = (...parents: string[]) => {
+				const keys = [rootName, ...parents];
+				const info = getDeclarationInfo(...keys);
+				if (info.missing)
+					return getMissingKey(info.key);
+				else if (!info.includesInterpolation && !info.isNamespace)
+					return translate(keys);
+				else return new Proxy(getWithArgsFunction(...keys), {
+					get(_target, currentName): unknown {
+						if (currentName === Symbol.toPrimitive || currentName === "toString")
+							return () => translate(keys);
+						if (typeof currentName === "string")
+							return getWithArgsProxy(...parents, currentName);
+					},
+				});
+			};
+			return getWithArgsProxy();
 		},
 	}) as LocaleDictionary;
 const targetFunction = (options?: number | bigint | TranslateOptions) => {
@@ -79,7 +70,7 @@ const targetFunction = (options?: number | bigint | TranslateOptions) => {
 };
 type LocaleDictionary = LocaleWithDefaultValue & Readonly<Record<string, string & I18nArgsFunction>>;
 /** 获取本地化字符串对象。 */
-export const t = getProxy(targetFunction) as LocaleDictionary & typeof targetFunction;
+export const t = getProxy(targetFunction);
 Object.freeze(t);
 
 /**
