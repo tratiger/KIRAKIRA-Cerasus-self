@@ -116,10 +116,7 @@ export function getLocaleName(targetLocale: string | Intl.Locale, displayLocale?
  * 处于语境翻译工具模式？
  */
 export function isInContextLocalization(locale?: string) {
-	const { locale: currentLocale } = useI18n();
-
 	return computed(() => {
-		const resolvedLocale = locale || currentLocale.value;
-		return resolvedLocale === "ii";
+		return locale === "ii" || currentI18n.value.locale.value === "ii";
 	});
 }
