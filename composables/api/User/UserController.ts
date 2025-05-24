@@ -95,22 +95,24 @@ export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRe
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const selfUserInfo = await POST(`${USER_API_URI}/self`, getSelfUserInfoRequest, { credentials: "include" }) as GetSelfUserInfoResponseDto;
 	const selfUserInfoResult = selfUserInfo.result;
-	const selfUserInfoStore = useSelfUserInfoStore();
 	if (selfUserInfo.success && selfUserInfoResult) {
-		const appSettings = useAppSettingsStore();
-		selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
-		appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
-		selfUserInfoStore.isLogined = true;
-		selfUserInfoStore.uid = selfUserInfoResult.uid;
-		selfUserInfoStore.userCreateDateTime = selfUserInfoResult.userCreateDateTime ?? 0;
-		selfUserInfoStore.roles = selfUserInfoResult.roles ?? ["user"];
-		selfUserInfoStore.userEmail = selfUserInfoResult.email ?? "";
-		selfUserInfoStore.userAvatar = selfUserInfoResult.avatar || "";
-		selfUserInfoStore.username = selfUserInfoResult.username || "Anonymous"; // TODO: 使用多语言，为未设置用户名的用户提供国际化的缺省用户名
-		selfUserInfoStore.userNickname = selfUserInfoResult.userNickname || ""; // TODO: 使用多语言，为未设置用户昵称的用户提供国际化的缺省用户昵称
-		selfUserInfoStore.gender = selfUserInfoResult.gender || "";
-		selfUserInfoStore.signature = selfUserInfoResult.signature || "";
-		selfUserInfoStore.tags = selfUserInfoResult.label?.map(label => label.labelName) || [];
+		if (environment.client) {
+			const selfUserInfoStore = useSelfUserInfoStore();
+			const appSettings = useAppSettingsStore();
+			selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
+			appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
+			selfUserInfoStore.isLogined = true;
+			selfUserInfoStore.uid = selfUserInfoResult.uid;
+			selfUserInfoStore.userCreateDateTime = selfUserInfoResult.userCreateDateTime ?? 0;
+			selfUserInfoStore.roles = selfUserInfoResult.roles ?? ["user"];
+			selfUserInfoStore.userEmail = selfUserInfoResult.email ?? "";
+			selfUserInfoStore.userAvatar = selfUserInfoResult.avatar || "";
+			selfUserInfoStore.username = selfUserInfoResult.username || "Anonymous"; // TODO: 使用多语言，为未设置用户名的用户提供国际化的缺省用户名
+			selfUserInfoStore.userNickname = selfUserInfoResult.userNickname || ""; // TODO: 使用多语言，为未设置用户昵称的用户提供国际化的缺省用户昵称
+			selfUserInfoStore.gender = selfUserInfoResult.gender || "";
+			selfUserInfoStore.signature = selfUserInfoResult.signature || "";
+			selfUserInfoStore.tags = selfUserInfoResult.label?.map(label => label.labelName) || [];
+		}
 	} else
 		await userLogout();
 	return selfUserInfo;
