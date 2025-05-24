@@ -27,7 +27,6 @@ export default defineNuxtConfig({
 	modules: [
 		// "@nuxt/devtools",
 		"@nuxtjs/i18n",
-		"@nuxt/content",
 		"@nuxt/image",
 		dev && "nuxt-icons",
 		!dev && "@nuxtjs/svg-sprite",
@@ -55,7 +54,6 @@ export default defineNuxtConfig({
 		"public/static",
 		"assets/lotties",
 		"modules",
-		"content",
 		"middleware",
 		"server",
 		"helpers",
@@ -205,23 +203,6 @@ export default defineNuxtConfig({
 		bundle: {
 			// 非预期错误，临时解决办法。参考：https://github.com/intlify/bundle-tools/issues/423#issuecomment-2525540710
 			optimizeTranslationDirective: false,
-		},
-	},
-
-	content: {
-		markdown: {
-			remarkPlugins: {
-				"remark-emoji": {
-					emoticon: true,
-				},
-			},
-		},
-		highlight: {
-			theme: {
-				default: "github-light",
-				dark: "github-dark",
-				sepia: "monokai",
-			},
 		},
 	},
 
