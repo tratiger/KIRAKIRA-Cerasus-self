@@ -285,7 +285,7 @@
 			ref="scrollerEl"
 			:id="scrollElId"
 			class="scroller"
-			@scroll="onScrollChange"
+			@scroll.passive="onScrollChange"
 			:style="{ overflowX: props.overflowX, overflowY: props.overflowY }"
 		>
 			<div ref="contentEl" class="content">
