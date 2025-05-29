@@ -100,6 +100,20 @@ export default defineNuxtConfig({
 			},
 		],
 		optimizeDeps: {
+			// 防止「optimized dependencies changed. reloading」
+			include: [
+				"lottie-web",
+				"vue-cropper",
+				"js-confetti",
+				"@number-flow/vue",
+				"vue-virtual-scroller",
+				"danmaku/dist/esm/danmaku.dom.js",
+				"qrcode.vue",
+				"shaka-player",
+				"@tiptap/starter-kit",
+				"@tiptap/extension-underline",
+				"@tiptap/core",
+			],
 			needsInterop: [
 				"mediainfo.js",
 			],

@@ -1,0 +1,3 @@
+patchedDependencies:
+  shaka-player: patches/shaka-player.patch
+  nuxt: patches/nuxt.patch
