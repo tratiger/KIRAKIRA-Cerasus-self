@@ -22,39 +22,23 @@
 	watch(indeterminate, async (curInd, prevInd) => {
 		if (prevInd && !curInd) { // 当从不定状态到定值状态时增加一个动画，但反之则不会。
 			toDeterminate.value = true;
-			await delay(250);
+			await delay(500);
 			toDeterminate.value = false;
 		}
 	});
 </script>
 
 <template>
-	<Transition :duration="250">
-		<Comp v-if="shown" role="progressbar" :aria-busy="shown">
-			<template v-if="indeterminate">
-				<div class="layer-wrapper">
-					<div class="layer">
-						<div class="circle-clipper left">
-							<div class="circle"></div>
-						</div>
-						<div class="gap-patch">
-							<div class="circle"></div>
-						</div>
-						<div class="circle-clipper right">
-							<div class="circle"></div>
-						</div>
-					</div>
-				</div>
-				<Icon name="refresh" />
-			</template>
-			<svg
-				v-else
-				class="ring"
-				:class="{ 'to-determinate': toDeterminate }"
-				:style="{ '--progress': value / max }"
-			>
-				<circle />
+	<Transition :duration="500">
+		<Comp v-if="shown" role="progressbar" :aria-busy="shown" :class="{ indeterminate, 'to-determinate': toDeterminate }">
+			<svg class="ring" :style="{ '--progress': value / max }">
+				<g class="linear-rotate">
+					<g class="rotate-arc">
+						<circle fill="none" />
+					</g>
+				</g>
 			</svg>
+			<Icon name="refresh" />
 		</Comp>
 	</Transition>
 </template>
@@ -86,7 +70,7 @@
 
 		&.v-enter-from,
 		&.v-leave-to {
-			// stylelint-disable-next-line length-zero-no-unit
+			/* stylelint-disable-next-line length-zero-no-unit */
 			--thickness: 0px !important; // 如果去掉 px 则会行为异常。
 		}
 	}
@@ -101,9 +85,63 @@
 		}
 	}
 
-	.layer-wrapper {
+	.ring {
 		@include square(100%);
-		animation: spinner 1568ms linear infinite;
+		--progress: 0;
+		overflow: visible;
+
+		:comp.indeterminate & {
+			.linear-rotate {
+				/* stylelint-disable-next-line number-max-precision */
+				animation: linear-rotate 1568.2352941176ms linear infinite both;
+			}
+
+			.rotate-arc {
+				animation: rotate-arc 5332ms $layer-animation-options;
+			}
+
+			circle {
+				animation: dash 1333ms $layer-animation-options;
+			}
+		}
+
+		:comp:not(.indeterminate) & {
+			circle {
+				rotate: -100grad;
+			}
+		}
+
+		.linear-rotate {
+			transform-origin: center;
+			animation-fill-mode: both;
+		}
+
+		.rotate-arc {
+			transform-origin: center;
+			animation-fill-mode: both;
+		}
+
+		circle {
+			--center: calc(var(--size) / 2);
+			--radius: calc(var(--center) - var(--thickness) / 2);
+			--dash-array: calc(2 * #{math.$pi} * var(--radius));
+			transform-origin: center;
+			transition: $fallback-transitions, rotate 500ms $ease-out-smooth;
+			animation-fill-mode: both;
+			fill: transparent;
+			stroke: currentColor;
+			stroke-dasharray: var(--dash-array);
+			stroke-dashoffset: calc(var(--dash-array) * (1 - var(--progress)));
+			stroke-linecap: round;
+			stroke-width: var(--thickness);
+			cx: var(--center);
+			cy: var(--center);
+			r: var(--radius);
+
+			:comp.to-determinate & {
+				animation: to-determinate-scale 500ms $ease-out-smooth;
+			}
+		}
 
 		+ .icon {
 			display: none;
@@ -117,204 +155,66 @@
 		}
 	}
 
-	.layer {
-		@include square(100%);
-		position: absolute;
-		border-color: currentColor;
-		opacity: 1;
-		animation: layer-fill-unfill-rotate 5332ms $layer-animation-options;
-	}
-
-	.gap-patch {
-		position: absolute;
-		top: 0;
-		left: 45%;
-		width: 10%;
-		height: 100%;
-		overflow: clip;
-		border-color: inherit;
-
-		.circle {
-			left: -450%;
-			box-sizing: border-box;
-			width: 1000%;
-		}
-	}
-
-	.circle-clipper {
-		$circle-animation-options: 1333ms $layer-animation-options;
-
-		position: relative;
-		display: inline-block;
-		width: 50%;
-		height: 100%;
-		overflow: clip;
-		border-color: inherit;
-
-		.circle {
-			@include circle;
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			box-sizing: border-box;
-			width: 200%;
-			height: 100%;
-			border-width: var(--thickness);
-			border-style: solid;
-			border-color: inherit;
-			border-bottom-color: transparent !important;
-			animation: none;
-
-			&.v-enter-from,
-			&.v-leave-to {
-				border: 0 solid;
-			}
-		}
-
-		&.left {
-			float: left;
-
-			.circle {
-				left: 0;
-				border-right-color: transparent !important;
-				rotate: 129deg;
-				animation: left-spin $circle-animation-options;
-			}
-		}
-
-		&.right {
-			float: right;
-
-			.circle {
-				left: -100%;
-				border-left-color: transparent !important;
-				rotate: -129deg;
-				animation: right-spin $circle-animation-options;
-			}
-		}
-	}
-
-	.ring {
-		@include square(var(--size));
-		--progress: 0;
-		overflow: visible;
-		rotate: -100grad;
-
-		circle {
-			--center: calc(var(--size) / 2);
-			--radius: calc(var(--center) - var(--thickness) / 2);
-			--dash-array: calc(2 * #{math.$pi} * var(--radius));
-			fill: transparent;
-			stroke: currentColor;
-			stroke-dasharray: var(--dash-array);
-			stroke-dashoffset: calc(var(--dash-array) * (1 - var(--progress)));
-			stroke-linecap: round;
-			stroke-width: var(--thickness);
-			cx: var(--center);
-			cy: var(--center);
-			r: var(--radius);
-		}
-
-		&.to-determinate circle {
-			animation: to-determinate-scale 250ms $ease-out-smooth;
-		}
-	}
-
-	@keyframes spinner {
-		to {
-			rotate: 1turn;
-		}
-	}
-
-	@keyframes layer-fill-unfill-rotate {
-		$length: 8;
-
-		@for $i from 1 through 8 {
-			#{calc(100% / $length) * $i} {
-				rotate: calc(3turn / $length) * $i;
-			}
-		}
-	}
-
-	@keyframes layer-1-fade-in-out {
-		0%,
-		25%,
-		90%,
-		100% {
-			opacity: 1;
-		}
-
-		26%,
-		89% {
-			opacity: 0;
-		}
-	}
-
-	@keyframes layer-2-fade-in-out {
-		0%,
-		15%,
-		51% {
-			opacity: 0;
-		}
-
-		25%,
-		50% {
-			opacity: 1;
-		}
-	}
-
-	@keyframes layer-3-fade-in-out {
-		0%,
-		40%,
-		76% {
-			opacity: 0;
-		}
-
-		50%,
-		75% {
-			opacity: 1;
-		}
-	}
-
-	@keyframes layer-4-fade-in-out {
-		0%,
-		65%,
-		100% {
-			opacity: 0;
-		}
-
-		75%,
-		90% {
-			opacity: 1;
-		}
-	}
-
-	@keyframes left-spin {
-		0%,
-		100% {
-			rotate: 130deg;
-		}
-
-		50% {
-			rotate: -5deg;
-		}
-	}
-
-	@keyframes right-spin {
-		0%,
-		100% {
-			rotate: -130deg;
-		}
-
-		50% {
-			rotate: 5deg;
-		}
-	}
-
 	@keyframes to-determinate-scale {
 		from {
 			stroke-dashoffset: 0;
+		}
+	}
+
+	@keyframes rotate-arc {
+		12.5% {
+			transform: rotate(135deg);
+		}
+
+		25% {
+			transform: rotate(270deg);
+		}
+
+		37.5% {
+			transform: rotate(405deg);
+		}
+
+		50% {
+			transform: rotate(540deg);
+		}
+
+		62.5% {
+			transform: rotate(675deg);
+		}
+
+		75% {
+			transform: rotate(810deg);
+		}
+
+		87.5% {
+			transform: rotate(945deg);
+		}
+
+		100% {
+			transform: rotate(1080deg);
+		}
+	}
+
+	@keyframes linear-rotate {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes dash {
+		0% {
+			transform: rotate(-91.8deg);
+			stroke-dashoffset: calc(var(--dash-array) * (1 - 0.01));
+		}
+
+		50% {
+			transform: rotate(-225deg);
+			stroke-dashoffset: calc(var(--dash-array) * (1 - 0.75));
+		}
+
+		100% {
+			transform: rotate(-91.8deg);
+			stroke-dashoffset: calc(var(--dash-array) * (1 - 0.01));
 		}
 	}
 </style>
