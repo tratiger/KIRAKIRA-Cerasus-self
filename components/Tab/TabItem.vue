@@ -1,7 +1,7 @@
 <script setup lang="ts">
+	import type { Property } from "csstype";
 	import LocaleLink from "../LocaleLink.vue";
 	import TabBar from "./TabBar.vue";
-	import type { Property } from "csstype";
 
 	const props = withDefaults(defineProps<{
 		/** 选项卡唯一标识符。 */
@@ -86,10 +86,6 @@
 			}
 		}
 
-		&:active .content {
-			@include scale-pressed;
-		}
-
 		&.active {
 			@include accent-ripple;
 			color: c(accent);
@@ -105,6 +101,10 @@
 
 			@container style(--loose: true) {
 				height: 48px;
+			}
+
+			&:active .content {
+				@include scale-pressed;
 			}
 
 			> div {
@@ -182,6 +182,8 @@
 			width: 100%;
 
 			&:any-hover {
+				font-weight: 500;
+
 				> div > div {
 					background-color: c(hover-overlay);
 
@@ -191,12 +193,24 @@
 				}
 			}
 
+			&:active {
+				font-weight: normal;
+			}
+
 			&:not(:any-hover) > div > div > .content {
 				transition-duration: 1s;
 			}
 
 			&.active {
 				font-weight: bold;
+
+				&:any-hover {
+					font-weight: 800;
+				}
+
+				&:active {
+					font-weight: 900;
+				}
 
 				> div > div {
 					background-color: c(accent-hover-overlay);
@@ -214,6 +228,10 @@
 
 			.content {
 				justify-content: flex-start;
+
+				span {
+					transition: $fallback-transitions, font-weight 500ms $ease-out-smooth;
+				}
 			}
 
 			.icon-wrapper {

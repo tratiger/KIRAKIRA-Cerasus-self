@@ -34,8 +34,13 @@
 		color: c(text-color);
 		cursor: pointer;
 
-		&:hover {
+		&:any-hover {
+			font-weight: 500;
 			background-color: c(hover-overlay);
+		}
+
+		&:active {
+			font-weight: normal;
 		}
 
 		&.active {
@@ -46,6 +51,7 @@
 
 			&::before {
 				@include oval;
+				content: "";
 				position: absolute;
 				left: 0;
 				z-index: 3;
@@ -53,13 +59,24 @@
 				height: 16px;
 				background-color: c(accent);
 				animation: show-indicator 250ms $ease-out-max;
-				content: "";
+			}
+
+			&:any-hover {
+				font-weight: 800;
+			}
+
+			&:active {
+				font-weight: 900;
 			}
 
 			&:active:hover::before {
 				height: 10px;
 			}
 		}
+	}
+
+	span {
+		transition: $fallback-transitions, font-weight 500ms $ease-out-smooth;
 	}
 
 	@keyframes show-indicator {
