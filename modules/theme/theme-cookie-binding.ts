@@ -182,7 +182,16 @@ export function cookieBinding() {
 		const rootNode = document.documentElement;
 		const isPreviousDark = rootNode.classList.contains("dark");
 		rootNode.className = "";
-		if (isColoredSidebar === "true") rootNode.classList.add("colored-sidebar");
+		const themeColorMetaTagName = "theme-color";
+		const themeColorCssPropertyName = "--accent-50";
+		if (isColoredSidebar === "true") {
+			rootNode.classList.add("colored-sidebar");
+			const themeColorHex = getComputedStyle(rootNode).getPropertyValue(themeColorCssPropertyName).trim();
+			updateOrCreateMetaTag(themeColorMetaTagName, themeColorHex);
+		} else {
+			const metaTag = document.querySelector(`meta[name="${themeColorMetaTagName}"]`);
+			if (metaTag) metaTag.remove();
+		}
 		if (isSharpAppearanceMode === "true") rootNode.classList.add("sharp");
 		if (isFlatAppearanceMode === "true") rootNode.classList.add("flat");
 		if (themeColor) {
@@ -196,10 +205,10 @@ export function cookieBinding() {
 				rootNode.classList.add(themeColor);
 				setTimeout(() => rootNode.classList.remove("no-color-transition"), 5);
 			}
-			const themeColorMetaTagName = "theme-color";
-			const themeColorCssPropertyName = "--accent-50";
-			const themeColorHex = getComputedStyle(rootNode).getPropertyValue(themeColorCssPropertyName).trim();
-			updateOrCreateMetaTag(themeColorMetaTagName, themeColorHex);
+			if (isColoredSidebar === "true") {
+				const themeColorHex = getComputedStyle(rootNode).getPropertyValue(themeColorCssPropertyName).trim();
+				updateOrCreateMetaTag(themeColorMetaTagName, themeColorHex);
+			}
 		}
 		if (currentThemeType) {
 			const actualThemeType = currentThemeType === "system" ? systemThemeType : currentThemeType;
