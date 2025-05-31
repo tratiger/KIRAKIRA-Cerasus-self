@@ -106,6 +106,7 @@ export default defineNuxtConfig({
 				"vue-cropper",
 				"js-confetti",
 				"@number-flow/vue",
+				"vue-audio-visual",
 				"vue-virtual-scroller",
 				"danmaku/dist/esm/danmaku.dom.js",
 				"qrcode.vue",
