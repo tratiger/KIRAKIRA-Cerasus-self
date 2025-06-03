@@ -72,6 +72,7 @@ export default {
 	audio: "音声",
 	photo: "画像",
 	album: "アルバム",
+	post: "投稿 | 投稿",
 	comments: "コメント",
 	you_know_too_much: "あなたは知りすぎた。",
 	settings: {
@@ -145,7 +146,13 @@ export default {
 		},
 		control_bar: {
 			_: "コントロールバー",
-			show_frame_by_frame: "フレームごとに制御の表示",
+			stop: "停止ボタンを表示",
+			stop_description: "最初のフレームにテレポートして停止",
+			first_last_frame: "最初と最後のフレームボタンを表示",
+			first_last_frame_description: "最初または最後のフレームにテレポートして停止",
+			frame_by_frame: "フレームごとのフレームコントロールボタンを表示",
+			frame_by_frame_description: "時間をフレーム単位で正確に調整",
+			auto_resume_play_after_seeking: "シーク後に自動再生再開",
 		},
 		screenshot: "スクリーンショット",
 		stats: "統計情報",

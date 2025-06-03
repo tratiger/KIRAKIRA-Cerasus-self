@@ -71,12 +71,12 @@
 		},
 	});
 	const countdown = ref(false);
-
 	const volumeMenu = ref<MenuModel>();
 	const rateMenu = ref<MenuModel>();
 	const qualityMenu = ref<MenuModel>();
 	const tracksSorted = computed(() => props.tracks.sort((a, b) => (b.height || 0) - (a.height || 0)));
-
+	const isPlayingBeforeSeeking = ref<boolean>();
+	const seekingIcon = ref<DeclaredIcons>();
 	const currentPercent = computed({
 		get() {
 			const result = model.value / props.duration;
@@ -87,11 +87,9 @@
 			model.value = newTime;
 		},
 	});
-
 	const currentTime = computed(() => new Duration(model.value).toString());
 	const countdownTime = computed(() => new Duration(model.value - props.duration).toString());
 	const duration = computed(() => new Duration(props.duration).toString());
-
 	const mobile = () => getResponsiveDevice() === "mobile";
 
 	/**
@@ -160,6 +158,31 @@
 		clearTimeout(hideFullbrowserTimeout.value);
 		useEvent("component:hideAllPlayerVideoMenu");
 		showFullbrowserBtn.value = !props.fullscreen;
+	}
+
+	/**
+	 * 当用户拖拽时间进度滑动条时的事件。
+	 * @param isSeeking - 用户正在拖拽滑动条？
+	 */
+	function onSeeking(isSeeking: boolean) {
+		if (isSeeking) {
+			isPlayingBeforeSeeking.value ??= playing.value;
+			playing.value = false;
+		} else {
+			seekingIcon.value = undefined;
+			playing.value = props.settings?.controller.autoResumePlayAfterSeeking ? true : isPlayingBeforeSeeking.value ?? true;
+			isPlayingBeforeSeeking.value = undefined;
+		}
+	}
+
+	/**
+	 * 当用户拖拽时间进度滑动条时改变为快进或快退的图标。
+	 * @param relativeChangingTime - 相对改变时间，即新时间减去旧时间。
+	 */
+	function setSeekingIcon(relativeChangingTime: number) {
+		if (relativeChangingTime === 0) {
+			if (!seekingIcon.value) seekingIcon.value = "fast_forward";
+		} else seekingIcon.value = relativeChangingTime > 0 ? "fast_forward" : "fast_rewind";
 	}
 
 	const playbackRateText = (rate: number) => (2 ** rate).toFixed(2).replace(/\.?0+$/, "") + "×";
@@ -260,13 +283,12 @@
 
 	<Comp role="toolbar" :class="{ mobile: isMobile(), hidden }" v-bind="$attrs">
 		<div class="left">
-			<SoftButton class="play" :disabled="splash" :icon="ended ? 'replay' : playing ? 'pause' : 'play'" @click="playing = !playing" />
-			<Transition>
-				<div v-if="settings?.controller.showFrameByFrame" class="frame-by-frame">
-					<SoftButton :disabled="splash || !getCurrentFrameRate()" icon="caret_left" @click="model -= (1 / getCurrentFrameRate()!)" />
-					<SoftButton :disabled="splash || !getCurrentFrameRate()" icon="caret_right" @click="model += (1 / getCurrentFrameRate()!)" />
-				</div>
-			</Transition>
+			<SoftButton class="play" :disabled="splash" :icon="seekingIcon ?? (ended ? 'replay' : playing ? 'pause' : 'play')" @click="playing = !playing" />
+			<Transition><SoftButton v-if="settings?.controller.showStop && !settings?.controller.showFrameByFrame" :disabled="splash" icon="stop" @click="model = 0; playing = false;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showStop && settings?.controller.showFrameByFrame" :disabled="splash" icon="skip_previous" @click="model = 0; playing = false;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_left" @click="model -= (1 / getCurrentFrameRate()!)" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_right" @click="model += (1 / getCurrentFrameRate()!)" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showStop && settings?.controller.showFrameByFrame" :disabled="splash" icon="skip_next" @click="model = props.duration; playing = false;" /></Transition>
 		</div>
 		<div class="slider-wrapper">
 			<Slider
@@ -277,6 +299,8 @@
 				:waiting
 				pending="cursor"
 				:displayValue="pending => new Duration(pending * props.duration).toString()"
+				@changing="(value, prevValue) => { onSeeking(true); setSeekingIcon(value - prevValue); }"
+				@changed="onSeeking(false)"
 			/>
 		</div>
 		<div class="right">
@@ -388,14 +412,8 @@
 			padding-left: $ripple-fix-padding;
 		}
 
-		.play {
-			width: $thickness + 10px;
-		}
-
-		.frame-by-frame {
-			display: flex;
-			width: $thickness * 2;
-			margin-right: 6px;
+		> * {
+			width: $thickness;
 
 			&.v-enter-from,
 			&.v-leave-to {
@@ -404,6 +422,14 @@
 				scale: 0;
 				opacity: 0;
 			}
+		}
+
+		.play {
+			width: $thickness + 10px;
+		}
+
+		&:has(.play + *) {
+			margin-right: 6px;
 		}
 	}
 

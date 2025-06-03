@@ -46,7 +46,9 @@
 			opacity: 1,
 		},
 		controller: {
+			showStop: true,
 			showFrameByFrame: false,
+			autoResumePlayAfterSeeking: false,
 		},
 		filter: {
 			horizontalFlip: false,
@@ -339,7 +341,7 @@
 	const selectedTrack = computed({
 		get: () => activeTrack.value,
 		set: track => {
-			player.value?.selectVariantTrack(track!, true);
+			player.value?.selectVariantTrack(track, true);
 			playerConfig.quality.preferred = track!.height!;
 		},
 	});

@@ -72,6 +72,7 @@ export default {
 	audio: "音訊",
 	photo: "相片",
 	album: "專輯",
+	post: "帖文",
 	comments: "留言",
 	you_know_too_much: "你知太多嘢。",
 	settings: {
@@ -79,7 +80,10 @@ export default {
 		search: "搵設定",
 		user: "用家設定",
 		app: "程式設定",
-		security: {},
+		experimental_warning: "下低設定係實驗性功能，唔保證穩定運作，亦未必可以喺唔同裝置之間同步。請小心使用！",
+		security: {
+			is_unsafe_2fa: "你仲未啓用雙重認證。我哋強烈建議你即刻啓用佢！\n冇開雙重認證嘅賬戶會更加容易俾人入侵/盜用。",
+		},
 	},
 	dashboard: "儀表盤",
 	account: "帳戶",
@@ -121,6 +125,7 @@ export default {
 		},
 		hide: {
 			_: "隱藏",
+			description: "隱藏你唔想見到嘅用戶（除非你直接入去佢哋嘅個人頁面）。",
 		},
 		tag: {
 			description: "使用標籤隱藏唔想見到嘅內容。",
@@ -143,7 +148,6 @@ export default {
 		},
 		control_bar: {
 			_: "控制列",
-			show_frame_by_frame: "顯示逐個影格控制",
 		},
 		screenshot: "擷取畫面",
 		stats: "統計",
@@ -235,6 +239,7 @@ export default {
 	keyword: "關鍵字",
 	email: "電郵",
 	email_address: "電郵",
+	totp_authenticator: "TOTP 身份驗證器",
 	totp_verification_code: "驗證碼",
 	current_email: "當前電郵",
 	change_email: "變更電郵",
@@ -243,6 +248,7 @@ export default {
 	addition_date: "添加日期",
 	history: "記錄",
 	collection: {
+		_: "收藏",
 		modify_info: "變更資訊",
 		clear_expired: "剷走已經冇得睇啲片",
 		play_all: "播晒佢哋",
@@ -273,6 +279,8 @@ export default {
 	selected_item_label: "揀中項爲：",
 	upvote: "加分",
 	downvote: "減分",
+	like: "鍾意",
+	dislike: "唔鍾意",
 	share: "分享",
 	play: "播放",
 	pause: "暫停",

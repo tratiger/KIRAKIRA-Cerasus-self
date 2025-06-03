@@ -134,7 +134,6 @@ export default {
 		},
 		control_bar: {
 			_: "控制列",
-			show_frame_by_frame: "顯示逐幀控制",
 		},
 		screenshot: "螢幕截圖",
 		stats: "統計",

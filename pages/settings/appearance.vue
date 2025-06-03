@@ -164,7 +164,7 @@
 					:max="1"
 					:step="0.01"
 					:defaultValue="0.75"
-					icon="opacity"
+					icon="join_inner"
 					pending="current"
 					:displayValue="backgroundSliderDisplayValue"
 				>{{ t.background.tint }}</SettingsSlider>
@@ -174,7 +174,7 @@
 					:max="64"
 					:step="1"
 					:defaultValue="0"
-					icon="opacity"
+					icon="blur"
 					pending="current"
 					:displayValue="backgroundSliderDisplayValue"
 				>{{ t.background.blur_intensity }}</SettingsSlider>
