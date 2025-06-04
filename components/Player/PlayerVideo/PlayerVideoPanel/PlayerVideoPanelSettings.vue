@@ -156,6 +156,7 @@
 
 	:comp {
 		position: relative;
+		z-index: 11;
 		flex-grow: 1;
 		height: 100%;
 		contain: strict;
@@ -206,8 +207,7 @@
 	}
 
 	.toggle-switch {
-		height: 48px;
-		margin-block: 8px;
+		padding-block: 12px;
 		padding-inline: $padding;
 
 		&:deep(.icon) {
