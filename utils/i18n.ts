@@ -68,7 +68,7 @@ const targetFunction = (options?: number | bigint | TranslateOptions) => {
 	else if (typeof options === "number" || typeof options === "bigint") options = { plural: Number(options) };
 	return getProxy(options);
 };
-type LocaleDictionary = LocaleWithDefaultValue & Readonly<Record<string, string & I18nArgsFunction>>;
+type LocaleDictionary = LocaleWithDefaultValue & Readonly<Record<string, string & I18nArgsFunction>> & typeof targetFunction;
 /** 获取本地化字符串对象。 */
 export const t = getProxy(targetFunction);
 Object.freeze(t);
