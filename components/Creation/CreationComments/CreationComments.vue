@@ -12,6 +12,8 @@
 	const pinned = ref(false);
 	const search = ref("");
 	const pageCount = computed(() => Math.max(1, Math.ceil(commentsCount.value / pageSize)));
+	const selfUserInfoStore = useSelfUserInfoStore();
+	const sort = ref<SortModel>(["rating", "descending"]); // 排序方式
 
 	/**
 	 * 发送评论，将发送的评论添加到评论列表中
@@ -55,10 +57,16 @@
 <template>
 	<Comp>
 		<HeadingComments :count="commentsCount" />
-		<TextEditorRtf :videoId />
+		<div class="send">
+			<UserAvatar :avatar="selfUserInfoStore.userAvatar" />
+			<TextEditorRtf :videoId />
+		</div>
 		<div class="toolbar">
 			<div class="left">
-
+				<Sort v-model="sort">
+					<SortItem id="rating">{{ t.rating }}</SortItem>
+					<SortItem id="date">{{ t.send_date }}</SortItem>
+				</Sort>
 			</div>
 			<div class="right">
 				<TextBox v-model="search" :placeholder="t.search" icon="search" />
@@ -97,10 +105,28 @@
 
 <style scoped lang="scss">
 	:comp {
-		margin-top: 2.5rem;
-
 		header {
 			margin-bottom: 16px;
+		}
+	}
+
+	.heading-comments {
+		@include tablet {
+			display: none;
+		}
+	}
+
+	.send {
+		display: flex;
+		gap: 12px;
+		margin-bottom: 16px;
+
+		.user-avatar {
+			--size: 40px;
+		}
+
+		&:deep(.text-editor-rtf) {
+			flex-grow: 1;
 		}
 	}
 
@@ -109,7 +135,6 @@
 		flex-wrap: wrap;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: 16px;
 
 		> * {
 			display: flex;
@@ -117,6 +142,10 @@
 			gap: 16px;
 			justify-content: flex-end;
 			align-items: center;
+		}
+
+		.sort {
+			grid-auto-flow: column;
 		}
 
 		.soft-button {

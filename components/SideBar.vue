@@ -5,20 +5,18 @@
 	// const isMobile = computed(() => windowSize.width.value <= numbers.mobileMaxWidth);
 	// 以后使用以上代码可获取在 SCSS 文件中定义的移动端宽度值。
 
+	const props = defineProps<{
+		hideAppBar?: boolean;
+		flatAppBar?: boolean;
+		hideBottomNavigation?: boolean;
+		isSettingsPage?: boolean;
+	}>();
+
 	const selfUserInfoStore = useSelfUserInfoStore();
 	const showLogin = ref(false);
-	const isCurrentSettings = ref(false);
 	const [DefineAvatar, Avatar] = createReusableTemplate();
 	const scopeId = useParentScopeId()!;
-	const flyoutNotification = ref<FlyoutModel>();
-
-	// SSR
-	isCurrentSettings.value = !!currentSettingsPage();
-	// CSR
-	const nuxtApp = useNuxtApp();
-	nuxtApp.hook("page:finish", () => {
-		isCurrentSettings.value = !!currentSettingsPage();
-	});
+	const flyoutNotifications = ref<FlyoutModel>();
 
 	/**
 	 * 判断用户是否合法，或者判断用户是否已经登录
@@ -79,24 +77,21 @@
 
 <template>
 	<DefineAvatar>
-		<UserAvatar
-			v-if="selfUserInfoStore.isEffectiveCheckOnce"
+		<UserAvatar v-if="selfUserInfoStore.isEffectiveCheckOnce"
 			v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.login"
 			:avatar="selfUserInfoStore.isLogined && !selfUserInfoStore.tempHideAvatarFromSidebar ? selfUserInfoStore.userAvatar : undefined"
 			hoverable
 		/>
 	</DefineAvatar>
 
-	<FlyoutNotification v-model="flyoutNotification" />
+	<FlyoutNotification v-model="flyoutNotifications" />
 
 	<aside
 		:class="{
-			'hide-topbar': isCurrentSettings,
+			'hide-appbar': hideAppBar,
+			'flat-appbar': flatAppBar,
 		}"
-		:[scopeId]="''"
-		role="toolbar"
-		aria-label="side bar"
-		aria-orientation="vertical"
+		:[scopeId]="''" role="toolbar" aria-label="side bar" aria-orientation="vertical"
 	>
 		<div class="top icons">
 			<SoftButton v-tooltip="t.home" icon="home" href="/" />
@@ -120,15 +115,19 @@
 
 		<div class="bottom icons">
 			<Avatar class="pc" @click="onClickUser" />
-			<SoftButton v-if="selfUserInfoStore.isLogined" v-tooltip="t.notification" icon="notifications" :active="!!flyoutNotification" @click="e => flyoutNotification = [e]" />
-			<SoftButton v-tooltip="t.settings" class="pc icon-settings" icon="settings" href="/settings" :active="isCurrentSettings" />
+			<SoftButton v-if="selfUserInfoStore.isLogined" v-tooltip="t.notification" icon="notifications"
+				:active="!!flyoutNotifications" @click="e => flyoutNotifications = [e]"
+			/>
+			<SoftButton v-tooltip="t.settings" class="pc icon-settings" icon="settings" href="/settings"
+				:active="isSettingsPage"
+			/>
 			<SoftButton v-tooltip="t.search" class="pe" icon="search" href="/search" />
 		</div>
 
 		<LoginWindow v-model="showLogin" />
 	</aside>
 
-	<nav :[scopeId]="''">
+	<nav v-show="!hideBottomNavigation" :[scopeId]="''">
 		<div class="icons">
 			<BottomNavItem icon="home" href="/">{{ t.home }}</BottomNavItem>
 			<BottomNavItem icon="category" href="/category">{{ t.category }}</BottomNavItem>
@@ -141,7 +140,6 @@
 	$icons-gap: 8px;
 
 	aside {
-		@include sidebar-shadow;
 		@include flex-center;
 		--color: #{c(accent)};
 		z-index: 30;
@@ -151,9 +149,17 @@
 		overflow: clip;
 		background-color: c(main-bg);
 
+		@include not-mobile {
+			@include sidebar-shadow;
+		}
+
 		@include mobile {
 			background-color: c(main-bg, 75%);
 			backdrop-filter: blur(16px);
+
+			&:not(.flat-appbar) {
+				@include sidebar-shadow;
+			}
 		}
 
 		:root.colored-sidebar & {
@@ -314,7 +320,7 @@
 				margin-right: 4px;
 			}
 
-			&.hide-topbar {
+			&.hide-appbar {
 				display: none;
 
 				~ :deep(.container) {
@@ -439,3 +445,4 @@
 		}
 	}
 </style>
+Zz

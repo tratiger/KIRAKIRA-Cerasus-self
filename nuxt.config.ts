@@ -293,7 +293,7 @@ export default defineNuxtConfig({
 
 	app: {
 		pageTransition: {
-			name: "page-jump",
+			name: "page-jump-in",
 			mode: "out-in",
 		},
 		rootId: "root",

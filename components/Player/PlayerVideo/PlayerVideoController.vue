@@ -363,7 +363,7 @@
 		color: c(icon-color);
 		font-size: 14px;
 		font-weight: 600;
-		background-color: c(main-bg);
+		// background-color: c(main-bg);
 
 		.fullscreen & {
 			@include acrylic-background;

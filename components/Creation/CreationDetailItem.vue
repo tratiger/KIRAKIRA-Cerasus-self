@@ -39,7 +39,8 @@
 		font-size: 20px;
 	}
 
-	p {
+	p,
+	p:deep(time) {
 		user-select: text;
 
 		:comp.clickable & {

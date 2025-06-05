@@ -2,9 +2,9 @@
 	const visibilities = reactive<{ name: string; icon?: string; logo?: string; privacy: PrivacyType }[]>([
 		{ name: t.user.birthday, icon: "birthday", privacy: "public" },
 		{ name: t.user.age, icon: "calendar", privacy: "public" },
-		{ name: t.follow, icon: "person_add", privacy: "public" },
-		{ name: t.fans, icon: "person_heart", privacy: "public" },
-		{ name: t(2).collection, icon: "star", privacy: "public" },
+		{ name: t.following, icon: "person_add", privacy: "public" },
+		{ name: t(0).follower, icon: "person_heart", privacy: "public" },
+		{ name: t(0).collection, icon: "star", privacy: "public" },
 		{ name: t.platform.twitter, logo: "twitter", privacy: "public" },
 		{ name: t.platform.qq, logo: "qq", privacy: "public" },
 		{ name: t.platform.wechat, logo: "wechat", privacy: "public" },

@@ -2,7 +2,7 @@
 	const videos = ref<ThumbVideoResponseDto>();
 	const route = useRoute();
 	const { query } = route;
-	const transitionName = ref("page-jump");
+	const transitionName = ref("page-jump-in");
 
 	const data = reactive({
 		selectedTab: "Home",

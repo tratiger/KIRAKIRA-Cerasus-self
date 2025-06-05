@@ -318,7 +318,8 @@ html.no-color-transition {
 	transition: all $ease-out-smooth 600ms !important;
 }
 
-.page-jump-enter-active {
+.page-jump-in-enter-active,
+.page-jump-out-enter-active {
 	@media not (prefers-reduced-motion: reduce) {
 		> * {
 			$length: 20;
@@ -338,7 +339,8 @@ html.no-color-transition {
 
 .page-forward-leave-active,
 .page-backward-leave-active,
-.page-jump-leave-active,
+.page-jump-in-leave-active,
+.page-jump-out-leave-active,
 .settings-leave-active,
 .right-leave-active,
 .left-leave-active {
@@ -363,15 +365,27 @@ html.no-color-transition {
 	opacity: 0;
 }
 
-.page-jump-enter-from {
+.page-jump-in-enter-from {
 	> * {
 		translate: 0 8rem;
 		opacity: 0;
 	}
 }
 
-.page-jump-leave-to {
+.page-jump-in-leave-to {
 	translate: 0 -2rem;
+	opacity: 0;
+}
+
+.page-jump-out-enter-from {
+	> * {
+		translate: 0 -2rem;
+		opacity: 0;
+	}
+}
+
+.page-jump-out-leave-to {
+	translate: 0 8rem;
 	opacity: 0;
 }
 

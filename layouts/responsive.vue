@@ -5,14 +5,31 @@
 <script setup lang="ts">
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
 	const showDrawer = ref(false);
-	const isCurrentSettings = ref(false);
+	const isSettingsPage = ref(false);
+
+	const route = useRoute();
+	const hideAppBar = ref(false);
+	const flatAppBar = ref(false);
+	const hideBottomNavigation = ref(false);
+	const appBarTitle = ref<string | undefined>();
+
+	function pageLoaded() {
+		isSettingsPage.value = !!currentSettingsPage();
+		hideAppBar.value = Boolean(route.meta.hideAppBar);
+		flatAppBar.value = Boolean(route.meta.flatAppBar);
+		hideBottomNavigation.value = Boolean(route.meta.hideBottomNavigation);
+
+		const appBarTitleTemp = route.meta.appBarTitle as string | undefined;
+		if (appBarTitleTemp?.startsWith("t.")) appBarTitle.value = t(2)[appBarTitleTemp.slice(2)];
+		else appBarTitle.value = route.meta.appBarTitle as string | undefined;
+	}
 
 	// SSR
-	isCurrentSettings.value = !!currentSettingsPage();
+	pageLoaded();
 	// CSR
 	const nuxtApp = useNuxtApp();
 	nuxtApp.hook("page:finish", () => {
-		isCurrentSettings.value = !!currentSettingsPage();
+		pageLoaded();
 	});
 
 	useListen("app:showDrawer", () => showDrawer.value = true);
@@ -29,8 +46,13 @@
 				<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
 			</div>
 		</ClientOnly>
-		<SideBar />
-		<ScrollContainer scrollElId="mainScroller" class="container" :overflowX="isCurrentSettings ? 'hidden' : undefined">
+		<SideBar :hideAppBar :flatAppBar :hideBottomNavigation :isSettingsPage />
+		<ScrollContainer
+			scrollElId="mainScroller"
+			class="container"
+			:overflowX="isSettingsPage ? 'hidden' : undefined"
+			:style="{ '--padding-top': hideAppBar ? '0' : undefined, '--padding-bottom': hideBottomNavigation ? '0' : undefined }"
+		>
 			<Banner />
 			<div class="router-view">
 				<slot></slot>
@@ -61,7 +83,7 @@
 				padding: 26px $page-padding-x;
 
 				@include tablet {
-					padding: 26px $page-padding-x-tablet;
+					padding: $page-padding-x-tablet;
 				}
 
 				@include mobile {

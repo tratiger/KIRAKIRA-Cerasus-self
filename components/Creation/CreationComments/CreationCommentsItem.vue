@@ -1,4 +1,6 @@
 <script setup lang="ts">
+	import NumberFlow from "@number-flow/vue";
+
 	const props = withDefaults(defineProps<{
 		/** 评论唯一 ID */
 		commentId: string;
@@ -229,15 +231,10 @@
 			</div>
 
 			<template #footerLeft>
-				<div class="votes-wrapper">
-					<div class="votes">
-						<SoftButton v-tooltip:bottom="t.upvote" icon="thumb_up" :active="isUpvoted" @click="onClickVotes('upvote')" />
-						<span v-if="upvote">{{ upvote }}</span>
-					</div>
-					<div class="votes">
-						<SoftButton v-tooltip:bottom="t.downvote" icon="thumb_down" :active="isDownvoted" @click="onClickVotes('downvote')" />
-						<span v-if="downvote">{{ downvote }}</span>
-					</div>
+				<div class="votes">
+					<SoftButton v-tooltip:bottom="t.upvote" icon="arrow_up" :active="isUpvoted" @click="onClickVotes('upvote')" />
+					<NumberFlow :value="upvote - downvote" />
+					<SoftButton v-tooltip:bottom="t.downvote" icon="arrow_down" :active="isDownvoted" @click="onClickVotes('downvote')" />
 				</div>
 			</template>
 
@@ -299,14 +296,11 @@
 			margin-left: auto;
 		}
 
-		.votes-wrapper {
-			display: flex;
-			gap: 8px;
-		}
-
 		.votes {
 			display: flex;
+			gap: 4px;
 			align-items: center;
+			margin-left: -8px;
 		}
 	}
 </style>

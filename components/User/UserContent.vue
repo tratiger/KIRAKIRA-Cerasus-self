@@ -73,8 +73,8 @@
 				<div class="info">
 					<div class="user">
 						<component :is="uid ? LocaleLink : 'div'" v-if="nickname || username" :to="uid ? `/user/${uid ?? ''}` : undefined" class="names lite">
-							<span class="nickname">{{ nickname }}</span>
-							<span class="username">@{{ username }}</span>
+							<span v-if="nickname" class="nickname">{{ nickname }}</span>
+							<span v-if="username" class="username">@{{ username }}</span>
 							<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ memo }}</span> -->
 						</component>
 
@@ -216,14 +216,14 @@
 	}
 
 	.user-avatar {
-		@include square(40px);
+		--size: 40px;
 
 		:comp.large & {
-			@include square(56px);
+			--size: 56px;
 		}
 
 		:comp.huge & {
-			@include square(64px);
+			--size: 64px;
 		}
 	}
 
@@ -381,7 +381,6 @@
 
 		.left {
 			gap: 12px;
-			margin-left: -8px;
 		}
 
 		.right {

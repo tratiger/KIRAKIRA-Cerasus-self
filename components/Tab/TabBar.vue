@@ -44,7 +44,7 @@
 		const transitionName =
 			movement === "previous" ? "left" :
 			movement === "next" ? "right" :
-			// movement === "none" ? "page-jump" :
+			// movement === "none" ? "page-jump-in" :
 			"";
 
 		emits("moving", movement);

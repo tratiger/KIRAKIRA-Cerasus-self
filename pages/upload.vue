@@ -129,7 +129,7 @@
 			@change="onChangeFile"
 		/>
 
-		<Transition name="page-jump" mode="out-in">
+		<Transition name="page-jump-in" mode="out-in">
 			<div v-if="!showEditor" class="upload-wrapper">
 				<div
 					v-ripple

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 	definePageMeta({
 		pageTransition: {
-			name: "page-jump",
+			name: "page-jump-in",
 			mode: "out-in",
 		},
 		async middleware(to, from) {
@@ -26,7 +26,7 @@
 					if (index !== prevIndex)
 						to.meta.pageTransition.name = index > prevIndex ? "right" : index < prevIndex ? "left" : "";
 				} else
-					to.meta.pageTransition.name = "page-jump";
+					to.meta.pageTransition.name = "page-jump-in";
 			}
 		},
 	});
@@ -34,7 +34,7 @@
 	const userSelfInfoStore = useSelfUserInfoStore();
 
 	const isSelf = ref(false);
-	const isFollowed = ref(false); // TODO
+	const isFollowing = ref(false); // TODO
 	const actionMenu = ref<FlyoutModel>();
 	const userInfo = ref<GetUserInfoByUidResponseDto["result"]>();
 
@@ -111,9 +111,9 @@
 							<MenuItem icon="block">{{ t.block_user }}</MenuItem>
 						</Menu>
 						<div v-if="!isSelf" class="follow-button">
-							<Button v-if="!isFollowed" icon="add" @click="isFollowed = true">{{ t.follow_verb }}</Button>
-							<!-- TODO: !user.isFollowed -->
-							<Button v-else icon="check" @click="isFollowed = false">{{ t.following }}</Button>
+							<Button v-if="!isFollowing" icon="add" @click="isFollowing = true">{{ t.follow_verb }}</Button>
+							<!-- TODO: !user.isFollowing -->
+							<Button v-else icon="check" @click="isFollowing = false">{{ t.following }}</Button>
 						</div>
 						<Button v-if="isSelf">{{ t.manage_content }}</Button>
 					</div>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-	import { RecycleScroller } from "vue-virtual-scroller"; // TODO: 使用虚拟列表以防弹幕过多造成卡顿。
+	import { RecycleScroller } from "vue-virtual-scroller";
 
 	const insertDanmaku = defineModel<DanmakuListItem[]>();
 	const danmakuItemMenu = ref<MenuModel>();
 	const currentDanmaku = ref<UnwrapRef<DanmakuListItem>>();
 	const { copy } = useClipboard();
-	const headers = { videoTime: t.danmaku.list.thead.time, content: t.danmaku.list.thead.content, sendTime: t.danmaku.list.thead.send_time };
-	const colWidths = reactive([60, 125, 160]);
+	const headers = { videoTime: t.danmaku.list.thead.time, content: t.danmaku.list.thead.content, sendTime: t.send_date };
+	const colWidths = reactive([70, 130, 180]);
 	const danmakuList = ref<Array<{ item: DanmakuListItem; key: PropertyKey }>>([]);
 	const danmakuListKey = ref(0); // FIXME: 理论上 vue-virtual-scroller 会自动监测弹幕数组更新，但是目前不知道为什么不生效，暂时只能用这种方法解决。
 	const sortBy = reactive<[column: "videoTime" | "sendTime", order: SortOrder]>(["sendTime", "ascending"]);
@@ -119,19 +119,14 @@
 					</tbody>
 				</table>
 			</ScrollContainer>
-			<template #fallback>
-				<div class="danmaku-placeholder">
-					<ProgressRing />
-					<span>{{ t.danmaku.list.loading }}</span>
-				</div>
-			</template>
+
+			<Menu v-model="danmakuItemMenu">
+				<MenuItem icon="copy" @click="copyDanmaku">{{ t.copy }}</MenuItem>
+				<MenuItem icon="flag">{{ t.report }}</MenuItem>
+				<hr />
+				<MenuItem icon="person">TODO: USER NAME HERE</MenuItem>
+			</Menu>
 		</ClientOnly>
-		<Menu v-model="danmakuItemMenu">
-			<MenuItem icon="copy" @click="copyDanmaku">{{ t.copy }}</MenuItem>
-			<MenuItem icon="flag">{{ t.report }}</MenuItem>
-			<hr />
-			<MenuItem icon="person">TODO: USER NAME HERE</MenuItem>
-		</Menu>
 	</Comp>
 </template>
 
@@ -309,13 +304,6 @@
 					transition-duration: 500ms;
 				}
 			}
-		}
-
-		.danmaku-placeholder {
-			@include flex-center;
-			flex-direction: column;
-			gap: 12px;
-			height: 100%;
 		}
 	}
 </style>

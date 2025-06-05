@@ -1,5 +1,7 @@
 <script setup lang="ts">
 	definePageMeta({
+		hideAppBar: true,
+		hideBottomNavigation: true,
 		pageTransition: {
 			name: "settings",
 			mode: "out-in",
@@ -166,7 +168,7 @@
 				</header>
 
 				<div class="router-view">
-					<NuxtPage :transition="{ name: 'page-jump', mode: 'out-in' }" />
+					<NuxtPage :transition="{ name: 'page-jump-in', mode: 'out-in' }" />
 				</div>
 			</div>
 		</main>
@@ -338,7 +340,7 @@
 			padding: 0 $main-padding-x $main-padding-x;
 
 			@include mobile {
-				padding: 0 $mobile-padding;
+				padding: $mobile-toolbar-height $mobile-padding 0;
 			}
 
 			.router-view {

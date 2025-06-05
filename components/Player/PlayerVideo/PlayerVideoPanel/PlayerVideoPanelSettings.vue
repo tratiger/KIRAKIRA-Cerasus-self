@@ -62,7 +62,7 @@
 	const selectedSettingsTab = defineModel<string>("selectedSettingsTab", { default: "player" });
 	const blockWordsToggle = ref(false);
 	const blockWordsSelectedTab = ref("block-keywords");
-	const transitionName = defineModel<string>("transitionName", { default: "page-jump" });
+	const transitionName = defineModel<string>("transitionName", { default: "page-jump-in" });
 </script>
 
 <template>

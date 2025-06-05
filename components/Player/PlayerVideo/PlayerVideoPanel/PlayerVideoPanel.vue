@@ -1,9 +1,9 @@
 <script setup lang="ts">
+	import NumberFlow from "@number-flow/vue";
+
 	const props = defineProps<{
 		/** 视频 ID。 */
 		videoId: number;
-		/** 视频评分。 */
-		rating: number;
 		/** 当前视频时间。 */
 		currentTime: number;
 		/** 视频是否正在播放？ */
@@ -14,63 +14,19 @@
 		settings: PlayerVideoSettings;
 	}>();
 
-	const selfUserInfoStore = useSelfUserInfoStore();
-	const sendDanmaku = defineModel<DanmakuComment[]>("sendDanmaku");
 	const insertDanmaku = defineModel<DanmakuListItem[]>("insertDanmaku");
 
 	/** @deprecated - 测试数据。 */
 	const counts = reactive({
-		play: 100n,
-		rating: props.rating,
-		favorite: 100n,
 		danmaku: 10000n,
 		watching: 1n,
 	});
-
-	/**
-	 * 收藏视频。
-	 */
-	function favorite() {
-		if (selfUserInfoStore.isLogined)
-			useToast(t.under_construction.feature, "warning", 5000); // DELETE 请在收藏功能完成后删除该提示
-		else
-			useEvent("app:requestLogin");
-	}
-
-	/**
-	 * 为当前视频加分。
-	 */
-	function upvote() {
-		// const oapiClient = useApi();
-		// await oapiClient.upvoteVideo(props.videoId, 1);
-		counts.rating++;
-	}
-
-	/**
-	 * 为当前视频减分。
-	 */
-	function downvote() {
-		// const oapiClient = useApi();
-		// await oapiClient.upvoteVideo(props.videoId, -1);
-		counts.rating--;
-	}
-
-	/**
-	 * 分享视频。
-	 */
-	function share() {
-		navigator.share({
-			title: document.title,
-			text: "KIRAKIRA☆DOUGA", // XXX: 这里得放页面的 title。
-			url: location.href,
-		});
-	}
 
 	const showTabBar = ref(false);
 	const showSettings = ref(false);
 	const selectedTab = ref("danmaku-list");
 	const selectedSettingsTab = ref("player");
-	const transitionName = ref("page-jump");
+	const transitionName = ref("page-jump-in");
 
 	const [DefineCountItem, CountItem] = createReusableTemplate<{
 		value: number | string;
@@ -80,40 +36,32 @@
 
 <template>
 	<DefineCountItem v-slot="{ value, icon, $slots }">
-		<div>
+		<div class="count-item">
 			<Icon :name="icon" />
 			<span>
 				<component :is="$slots.default!" />
-				<span class="value">{{ value }}</span>
+				<NumberFlow class="value" :value="value" />
 			</span>
 		</div>
 	</DefineCountItem>
 
 	<Comp>
 		<div class="top">
-			<div class="info">
-				<CountItem v-tooltip:bottom="t(counts.play).watched" icon="play" :value="getCompactDecimal(counts.play)" />
-				<CountItem v-tooltip:bottom="t(counts.danmaku).danmaku" icon="danmaku" :value="getCompactDecimal(insertDanmaku?.length ?? 0)" />
-				<CountItem v-tooltip:bottom="t.rating" icon="thumb_up" :value="getCompactDecimal(counts.rating)" :class="{ downvote: counts.rating < 0 }" />
-				<CountItem v-tooltip:bottom="t(counts.favorite).favorite" icon="star" :value="getCompactDecimal(counts.favorite)" />
-				<!-- <div class="watching">
-					<span class="watching-number">{{ counts.watching }}</span>
-					<span class="watching-description">{{ t(counts.watching).are_watching }}</span>
-				</div> -->
-			</div>
-			<div class="buttons">
-				<SoftButton v-tooltip:bottom="t.upvote" icon="thumb_up" class="button-upvote" @click="upvote" />
-				<SoftButton v-tooltip:bottom="t.downvote" icon="thumb_down" class="button-downvote" @click="downvote" />
-				<SoftButton v-tooltip:bottom="t.favorite_verb" icon="star" class="button-favorite" @click="favorite" />
-				<SoftButton v-tooltip:bottom="t.share" icon="share" class="button-share" @click="share" />
-				<SoftButton v-tooltip:bottom="t.danmaku.history" icon="history" class="button-history" />
-				<SoftButton v-tooltip:bottom="t.settings" :icon="showSettings ? 'close' : 'settings'" class="button-settings" :active="showSettings" @click="showSettings = !showSettings" />
+			<div class="top-bar">
+				<div class="counts">
+					<!-- <CountItem v-tooltip:bottom="t(counts.watching).are_watching(counts.watching)" icon="person" :value="getCompactDecimal(counts.watching)" /> -->
+					<CountItem v-tooltip:bottom="t(insertDanmaku?.length ?? 0).danmaku" icon="danmaku" :value="getCompactDecimal(insertDanmaku?.length ?? 0)" />
+				</div>
+				<div class="buttons">
+					<SoftButton v-tooltip:bottom="t.danmaku.history" icon="history" class="button-history" />
+					<SoftButton v-tooltip:bottom="t.settings" :icon="showSettings ? 'close' : 'settings'" class="button-settings" :active="showSettings" @click="showSettings = !showSettings" />
+				</div>
 			</div>
 			<Transition>
 				<div v-if="showTabBar || showSettings" class="tab-wrapper">
-					<Transition name="page-jump">
+					<Transition :name="showSettings ? 'page-jump-out' : 'page-jump-in'" mode="out-in">
 						<TabBar v-if="showTabBar && !showSettings" v-model="selectedTab" @movingForTransition="name => transitionName = name">
-							<TabItem id="danmaku-list">弹幕列表</TabItem>
+							<TabItem id="danmaku-list">{{ t(0).danmaku }}</TabItem>
 							<TabItem id="chapters">分段章节</TabItem>
 							<TabItem id="playlist">播放列表「」</TabItem>
 						</TabBar>
@@ -127,12 +75,11 @@
 			</Transition>
 		</div>
 		<div class="content">
-			<Transition name="page-jump">
+			<Transition :name="showSettings ? 'page-jump-out' : 'page-jump-in'" mode="out-in">
 				<div v-if="!showSettings" class="pages-wrapper">
 					<Transition :name="transitionName" mode="out-in">
 						<div v-if="selectedTab === 'danmaku-list'" key="danmaku-list">
-							<PlayerVideoPanelDanmakuList v-model="insertDanmaku" />
-							<PlayerVideoPanelDanmakuSender v-model="sendDanmaku" :videoId="props.videoId" :currentTime />
+							<slot name="danmaku"></slot>
 						</div>
 
 						<div v-else-if="selectedTab === 'chapters'" key="chapters">
@@ -157,7 +104,6 @@
 </template>
 
 <style scoped lang="scss">
-	$panel-width: 350px;
 	$info-height: 36px;
 	$buttons-height: 48px;
 
@@ -165,8 +111,7 @@
 		display: flex;
 		flex-direction: column;
 		flex-shrink: 0;
-		width: $panel-width;
-		height: inherit;
+		height: 100%;
 		overflow: clip;
 
 		@include tablet {
@@ -197,6 +142,43 @@
 		.tab-bar {
 			--full: true;
 			--clipped: true;
+		}
+	}
+
+	.top-bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 56px;
+		padding: 4px;
+
+		.counts {
+			@include flex-center;
+			gap: 4px;
+			margin-left: 12px;
+		}
+
+		.count-item {
+			@include flex-center;
+			gap: 8px;
+			color: c(icon-color);
+
+			.icon {
+				font-size: 24px;
+			}
+
+			.value {
+				display: inline-block;
+				min-width: 1ch;
+				margin-left: 0.2em;
+				font-weight: 600;
+				user-select: text;
+			}
+		}
+
+		.soft-button {
+			--wrapper-size: 48px;
+			--ripple-size: var(--wrapper-size);
 		}
 	}
 

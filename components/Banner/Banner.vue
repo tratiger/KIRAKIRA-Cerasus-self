@@ -48,7 +48,7 @@
 					<BannerBackgroundCollections v-else-if="currentPage === 'collections'" />
 				</Transition>
 			</div>
-			<Transition name="page-jump">
+			<Transition name="page-jump-in">
 				<LogoCover v-if="currentPage === 'home'" noAnimation />
 				<NuxtImg v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
 				<BannerStandard
