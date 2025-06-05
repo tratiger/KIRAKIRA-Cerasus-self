@@ -21,6 +21,8 @@
 		memo?: string;
 		/** 性别。 */
 		gender?: string;
+		/** 角色。 */
+		roles?: string[];
 		/** 日期。 */
 		date?: Date;
 		/** 序号。 */
@@ -29,7 +31,6 @@
 		pinned?: boolean;
 		/** 整个组件的超链接目标地址，优先级高于 UID（用于比如自己个人主页点击后直接跳转至资料设置）。 */
 		to?: string;
-
 		/** 大小。 */
 		size?: "large" | "huge";
 		/** 是否垂直居中。 */
@@ -81,6 +82,8 @@
 						<div class="icons">
 							<Icon v-if="gender === 'male' " name="male" class="male" />
 							<Icon v-else-if="gender === 'female'" name="female" class="female" />
+							<Icon v-if="roles?.includes('administrator')" v-tooltip="t.role.administrator" name="build_circle" class="administrator" />
+							<Icon v-if="roles?.includes('developer')" v-tooltip="t.role.developer" name="code_circle" class="developer" />
 							<slot name="icons"></slot>
 						</div>
 					</div>
@@ -317,6 +320,14 @@
 
 			.female {
 				color: c(pink);
+			}
+
+			.administrator {
+				color: c(red);
+			}
+
+			.developer {
+				color: c(blue);
 			}
 		}
 	}

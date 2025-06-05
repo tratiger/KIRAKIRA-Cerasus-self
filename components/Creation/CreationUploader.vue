@@ -6,6 +6,8 @@
 		nickname: string;
 		/** 用户名。 */
 		username: string;
+		/** 角色。 */
+		roles?: string[];
 		/** 粉丝数。 */
 		followers: number;
 		/** 是否已关注？ */

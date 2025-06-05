@@ -626,4 +626,8 @@ export default {
 	enable: "Enable",
 	disable: "Disable",
 	sync_across_devices: "Sync Across Devices",
+	role: {
+		administrator: "Administrator",
+		developer: "Developer",
+	},
 } as const;

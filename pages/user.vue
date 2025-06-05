@@ -92,6 +92,7 @@
 						:username="isSelf ? userSelfInfoStore.username : userInfo?.username"
 						:nickname="isSelf ? userSelfInfoStore.userNickname : userInfo?.userNickname"
 						:gender="isSelf ? userSelfInfoStore.gender : userInfo?.gender"
+						:roles="isSelf ? userSelfInfoStore.roles : userInfo?.roles"
 						:to="isSelf ? `/settings/profile` : undefined"
 						size="huge"
 						center
