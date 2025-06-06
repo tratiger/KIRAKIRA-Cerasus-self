@@ -110,7 +110,6 @@
 		flex-shrink: 0;
 		min-height: 36px;
 		padding: 8px 16px;
-		letter-spacing: 0.05em;
 		white-space: nowrap;
 		vertical-align: middle;
 		background-color: c(accent);

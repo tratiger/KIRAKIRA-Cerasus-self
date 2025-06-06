@@ -58,12 +58,17 @@
 		gap: $menu-padding + 2px;
 		justify-content: flex-start;
 		width: calc(100% - 2 * $menu-padding);
-		margin: 0 $menu-padding;
-		padding: 8px 16px;
+		margin-inline: $menu-padding;
+		padding-block: $menu-item-padding-block;
+		padding-inline: 16px;
 		padding-left: 14px;
 		color: c(icon-color);
 		white-space: nowrap;
 		cursor: pointer;
+
+		@include tablet {
+			padding-block: $menu-item-padding-block-mobile;
+		}
 
 		.icon {
 			font-size: 20px;

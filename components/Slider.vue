@@ -401,7 +401,6 @@
 		padding: 8px;
 		color: white;
 		font-weight: 500;
-		letter-spacing: 0.5px;
 		background-color: c(accent);
 		transform-origin: center calc(100% + 8px);
 		translate: -50% calc(-100% - 4px);

@@ -548,7 +548,6 @@
 			font-size: 12px;
 			font-weight: normal;
 			font-variant-numeric: tabular-nums;
-			letter-spacing: 1;
 		}
 	}
 

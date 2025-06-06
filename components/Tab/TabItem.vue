@@ -219,10 +219,11 @@
 
 			> div > div {
 				@include round-small;
-				padding: 8px 12px;
+				padding-block: $menu-item-padding-block;
+				padding-inline: 12px 8px;
 
-				@include mobile {
-					padding: 10px 8px 10px 12px;
+				@include tablet {
+					padding-block: $menu-item-padding-block-mobile;
 				}
 			}
 
