@@ -115,18 +115,21 @@
 </template>
 
 <style scoped lang="scss">
-	$track-thickness: 32px;
-
 	:comp {
 		@include round-large;
 		@include dropdown-flyouts;
 		@include acrylic-background;
 		--value: 0;
 		position: relative;
-		height: $track-thickness;
+		height: $menu-item-height - 4px;
 		overflow: clip;
+		font-weight: 500;
 		cursor: pointer;
 		touch-action: none;
+
+		@include mobile {
+			height: $menu-item-height-mobile - 4px;
+		}
 	}
 
 	.value-container {

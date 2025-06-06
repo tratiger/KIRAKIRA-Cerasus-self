@@ -21,6 +21,7 @@
 	const isDraging = ref(false);
 	const toggleSwitch = refComp();
 	const hasLabel = hasContentInDefaultSlot() || !!props.details;
+	const slots = useSlots();
 
 	/**
 	 * 拖拽滑块逻辑处理。
@@ -84,7 +85,7 @@
 		<Icon v-if="icon" :name="icon" />
 		<div v-if="hasLabel" class="content">
 			<label class="title"><slot></slot></label>
-			<label class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 		<div class="switch">
 			<div class="base"></div>
@@ -127,6 +128,10 @@
 			> * {
 				display: flex;
 				align-items: center;
+			}
+
+			> label.details {
+				margin-top: 4px;
 			}
 		}
 	}

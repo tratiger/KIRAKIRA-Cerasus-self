@@ -843,6 +843,7 @@
 	}
 
 	.stats {
+		flex-grow: 1;
 		min-width: 320px;
 		user-select: text;
 

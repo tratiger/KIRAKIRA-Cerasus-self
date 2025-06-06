@@ -68,6 +68,7 @@
 	button {
 		display: inline-grid;
 		color: white;
+		font-weight: 500;
 
 		&[disabled] {
 			pointer-events: none;
@@ -92,7 +93,7 @@
 
 		&.warning,
 		&.danger {
-			font-weight: bold;
+			font-weight: 600;
 		}
 
 		&:deep(*) {

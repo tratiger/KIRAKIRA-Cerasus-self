@@ -29,6 +29,7 @@
 	const radio = ref<HTMLInputElement>();
 	const isAnimating = ref(false);
 	const hasLabel = hasContentInDefaultSlot() || !!props.details;
+	const slots = useSlots();
 
 	/**
 	 * 数据改变事件。
@@ -107,9 +108,9 @@
 				<div class="radio" :class="{ 'is-animating': isAnimating }"></div>
 			</div>
 		</div>
-		<div v-if="hasLabel">
+		<div v-if="hasLabel" class="content">
 			<label><slot></slot></label>
-			<label class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 	</Comp>
 </template>
@@ -127,6 +128,10 @@
 		gap: 8px;
 		align-items: center;
 		cursor: pointer;
+
+		> .content > label.details {
+			margin-top: 4px;
+		}
 	}
 
 	@mixin short-transition {
@@ -258,7 +263,9 @@
 		}
 	}
 
-	@each $key in "", "-back" { // 故意把动画写两遍，让 CSS 以为是两个动画。
+	@each $key in "", "-back" {
+
+		// 故意把动画写两遍，让 CSS 以为是两个动画。
 		@keyframes outer-border-change#{$key} {
 			from {
 				box-shadow: inset 0 0 0 $border-size c(icon-color);
@@ -274,7 +281,7 @@
 				scale: 1;
 			}
 
-			@if $key != "" {
+			@if $key !="" {
 				to {
 					scale: 0.5;
 				}

@@ -219,10 +219,12 @@
 
 			> div > div {
 				@include round-small;
+				min-height: $menu-item-height;
 				padding-block: $menu-item-padding-block;
 				padding-inline: 12px 8px;
 
 				@include tablet {
+					min-height: $menu-item-height-mobile;
 					padding-block: $menu-item-padding-block-mobile;
 				}
 			}

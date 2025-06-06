@@ -29,10 +29,14 @@
 		position: relative;
 		display: flex;
 		align-items: center;
-		height: 36px;
+		min-height: $menu-item-height;
 		padding: 0 12px;
 		color: c(text-color);
 		cursor: pointer;
+
+		@include mobile {
+			min-height: $menu-item-height-mobile;
+		}
 
 		&:any-hover {
 			font-weight: 500;

@@ -16,6 +16,7 @@
 		href?: string;
 	}>();
 
+	const slots = useSlots();
 	const isExtenalLink = computed(() => props.href?.includes(":/"));
 </script>
 
@@ -37,7 +38,7 @@
 			<Icon v-else-if="icon" :name="icon" :filled class="item-icon" />
 			<div class="text">
 				<label class="title"><slot></slot></label>
-				<label class="details"><slot name="details">{{ details }}</slot></label>
+				<label v-if="details || slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 			</div>
 			<template v-if="trailingIcon">
 				<Icon v-if="!onTrailingIconClick" class="trailing-icon" :name="trailingIcon" />

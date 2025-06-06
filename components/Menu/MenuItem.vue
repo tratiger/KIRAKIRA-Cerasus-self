@@ -58,6 +58,7 @@
 		gap: $menu-padding + 2px;
 		justify-content: flex-start;
 		width: calc(100% - 2 * $menu-padding);
+		min-height: $menu-item-height;
 		margin-inline: $menu-padding;
 		padding-block: $menu-item-padding-block;
 		padding-inline: 16px;
@@ -67,6 +68,7 @@
 		cursor: pointer;
 
 		@include tablet {
+			min-height: $menu-item-height-mobile;
 			padding-block: $menu-item-padding-block-mobile;
 		}
 
