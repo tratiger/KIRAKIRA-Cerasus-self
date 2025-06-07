@@ -1,4 +1,7 @@
 <script setup lang="ts" generic="T extends string">
+	/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+	// BUG: 上面那个是 typescript-eslint 的 bug，如果去掉，则会触发 typescript 的报错。简而言之就是目前 typescript-eslint 和 typescript 在互相打架。
+
 	const props = withDefaults(defineProps<{
 		/** 禁用。 */
 		disabled?: boolean;
@@ -29,15 +32,14 @@
 	const radio = ref<HTMLInputElement>();
 	const isAnimating = ref(false);
 	const hasLabel = hasContentInDefaultSlot() || !!props.details;
-	const slots = useSlots();
 
 	/**
 	 * 数据改变事件。
 	 */
 	function onChange() {
 		if (!radio.value) return;
-		model.value = radio.value.value;
-		emits("change", { value: radio.value.value, checked: true });
+		model.value = radio.value.value as T;
+		emits("change", { value: radio.value.value as T, checked: true });
 	}
 
 	// 如果单选框勾选情况与 prop 不同，就强制使其相同。
@@ -82,8 +84,8 @@
 			break;
 		}
 		thatComponent.focus();
-		model.value = radio.value;
-		emits("change", { value: radio.value, checked: true });
+		model.value = radio.value as T;
+		emits("change", { value: radio.value as T, checked: true });
 	}
 </script>
 
@@ -110,7 +112,7 @@
 		</div>
 		<div v-if="hasLabel" class="content">
 			<label><slot></slot></label>
-			<label v-if="details || slots.details" class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 	</Comp>
 </template>
@@ -263,9 +265,7 @@
 		}
 	}
 
-	@each $key in "", "-back" {
-
-		// 故意把动画写两遍，让 CSS 以为是两个动画。
+	@each $key in "", "-back" { // 故意把动画写两遍，让 CSS 以为是两个动画。
 		@keyframes outer-border-change#{$key} {
 			from {
 				box-shadow: inset 0 0 0 $border-size c(icon-color);
@@ -281,7 +281,7 @@
 				scale: 1;
 			}
 
-			@if $key !="" {
+			@if $key != "" {
 				to {
 					scale: 0.5;
 				}

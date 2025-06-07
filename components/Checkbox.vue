@@ -1,4 +1,7 @@
 <script setup lang="ts" generic="T extends string">
+	/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+	// BUG: 上面那个是 typescript-eslint 的 bug，如果去掉，则会触发 typescript 的报错。简而言之就是目前 typescript-eslint 和 typescript 在互相打架。
+
 	const props = withDefaults(defineProps<{
 		/** 禁用。 */
 		disabled?: boolean;
@@ -33,7 +36,6 @@
 	const isIndeterminate = computed(() => props.checkState === "indeterminate");
 	const checkbox = ref<HTMLInputElement>();
 	const hasLabel = hasContentInDefaultSlot() || !!props.details;
-	const slots = useSlots();
 
 	/**
 	 * 数据改变事件。
@@ -48,7 +50,7 @@
 			else arrayRemoveAllItem(modelValue, props.value);
 		model.value = modelValue;
 		single.value = nextChecked;
-		emits("change", { value: checkbox.value.value, checkState: nextState, checked: nextChecked });
+		emits("change", { value: checkbox.value.value as T, checkState: nextState, checked: nextChecked });
 	}
 
 	// 如果复选框勾选情况与 prop 不同，就强制使其相同。
@@ -117,7 +119,7 @@
 		</div>
 		<div v-if="hasLabel" class="content">
 			<label><slot></slot></label>
-			<label v-if="details || slots.details" class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 	</Comp>
 </template>

@@ -39,8 +39,6 @@
 		avatarInside?: boolean;
 	}>();
 
-	const slots = useSlots();
-
 	// TODO: 显示备注用户，待后端功能实现。
 
 	// const fullwidthRegexp = makeFullwidth();
@@ -88,22 +86,22 @@
 						</div>
 					</div>
 
-					<p v-if="slots.description" class="description">
+					<p v-if="$slots.description" class="description">
 						<slot name="description"></slot>
 					</p>
 				</div>
 			</div>
 
-			<div v-if="slots.default" class="content">
+			<div v-if="$slots.default" class="content">
 				<slot></slot>
 			</div>
 
-			<div v-if="slots.quote" class="quote">
+			<div v-if="$slots.quote" class="quote">
 				<Icon name="quote_start" />
 				<span><slot name="quote"></slot></span>
 			</div>
 
-			<div v-if="date || slots.footerLeft || slots.footerRight" class="footer">
+			<div v-if="date || $slots.footerLeft || $slots.footerRight" class="footer">
 				<div class="left">
 					<slot name="footerLeft"></slot>
 					<span v-if="index">#{{ index }}</span>
