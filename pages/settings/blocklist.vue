@@ -325,11 +325,59 @@
 	}
 
 	async function removeTag(tagId: number) {
-		// TODO
+		try {
+			if (tagId === undefined || tagId === null) return;
+
+			const unblockTagRequest: UnblockTagRequestDto = {
+				tagId,
+			};
+
+			const unblockTagResult = await api.block.unblockTagController(unblockTagRequest);
+
+			if (unblockTagResult.success) {
+				blockTagList.value.delete(tagId);
+				// TODO: 使用多语言
+				useToast("解除屏蔽 TAG 成功", "success");
+			} else {
+				console.error(`解除屏蔽 TAG 失败，请求失败，tagId: '${tagId}', error message: ${unblockTagResult.message}`);
+				// TODO: 使用多语言
+				useToast("解除屏蔽 TAG 失败，请求失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("解除屏蔽 TAG 失败", error);
+			// TODO: 使用多语言
+			useToast("解除屏蔽 TAG 失败", "error", 5000);
+		}
 	}
 
+	/**
+	 * 屏蔽一个 TAG
+	 * @param tag 标签
+	 */
 	async function handleAddNewBlockTag(tag: VideoTag) {
-		// TODO
+		try {
+			if (!tag || !("tagId" in tag) || tag.tagId === undefined || tag.tagId === null) return;
+
+			const blockTagRequest: BlockTagRequestDto = {
+				tagId: tag.tagId,
+			};
+
+			const blockTagResult = await api.block.blockTagController(blockTagRequest);
+
+			if (blockTagResult.success) {
+				blockTagList.value.set(tag.tagId, tag);
+				// TODO: 使用多语言
+				useToast("屏蔽 TAG 成功", "success");
+			} else {
+				console.error("屏蔽 TAG 失败，请求失败", blockTagResult.message);
+				// TODO: 使用多语言
+				useToast("屏蔽 TAG 失败，请求失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("屏蔽 TAG 失败", error);
+			// TODO: 使用多语言
+			useToast("屏蔽 TAG 失败", "error", 5000);
+		}
 	}
 
 	/**
@@ -400,7 +448,7 @@
 	<div>
 		<InfoBar type="warning" title="警告">
 			该页面中的某些功能正在开发中，无法按预期工作。
-		<!-- TODO: 使用多语言 -->
+			<!-- TODO: 使用多语言 -->
 		</InfoBar>
 
 		<Subheader icon="block">{{ t.blocklist.ban }}</Subheader>

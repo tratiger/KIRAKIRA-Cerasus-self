@@ -1,5 +1,5 @@
 import { DELETE, GET, POST } from "../Common";
-import type { BlockUserByUidRequestDto, BlockUserByUidResponseDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidRequestDto, HideUserByUidResponseDto, ShowUserByUidRequestDto, ShowUserByUidResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
+import type { BlockTagRequestDto, BlockTagResponseDto, BlockUserByUidRequestDto, BlockUserByUidResponseDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidRequestDto, HideUserByUidResponseDto, ShowUserByUidRequestDto, ShowUserByUidResponseDto, UnblockTagRequestDto, UnblockTagResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
 
 const BACK_END_URI = environment.backendUri;
 const BLOCK_API_URI = `${BACK_END_URI}block`;
@@ -52,4 +52,24 @@ export const hideUserController = async (hideUserByUidRequest: HideUserByUidRequ
 export const showUserController = async (showUserByUidRequest: ShowUserByUidRequestDto): Promise<ShowUserByUidResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${BLOCK_API_URI}/delete/hideuser`, showUserByUidRequest, { credentials: "include" }) as ShowUserByUidResponseDto;
+};
+
+/**
+ * 屏蔽 TAG
+ * @param blockTagRequest 屏蔽 TAG 的请求载荷
+ * @returns 频闭 TAG 的请求响应
+ */
+export const blockTagController = async (blockTagRequest: BlockTagRequestDto): Promise<BlockTagResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${BLOCK_API_URI}/tag`, blockTagRequest, { credentials: "include" }) as BlockTagResponseDto;
+};
+
+/**
+ * 取消屏蔽 TAG
+ * @param unblockTagRequest 取消屏蔽 TAG 的请求载荷
+ * @returns 取消屏蔽 TAG 的请求响应
+ */
+export const unblockTagController = async (unblockTagRequest: UnblockTagRequestDto): Promise<UnblockTagResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await DELETE(`${BLOCK_API_URI}/delete/tag`, unblockTagRequest, { credentials: "include" }) as UnblockTagResponseDto;
 };

@@ -152,7 +152,10 @@
 			if (checkTagData(tagData)) {
 				isCreatingTag.value = true;
 				const result = await api.videoTag.createVideoTag(tagData);
-				if (result.result?.tagId !== null && result.result?.tagId !== undefined) tags.value?.set(result.result.tagId, result.result);
+				if (result.result?.tagId !== null && result.result?.tagId !== undefined) {
+					tags.value?.set(result.result.tagId, result.result);
+					emit("add-new-tag", result.result);
+				}
 				isCreatingTag.value = false;
 				onFlyoutHide();
 			} else
