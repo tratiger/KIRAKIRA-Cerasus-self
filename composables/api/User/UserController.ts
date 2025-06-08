@@ -1,36 +1,36 @@
 import { GET, POST, uploadFile2CloudflareImages } from "api/Common";
 import type {
-	CheckUsernameRequestDto, CheckInvitationCodeRequestDto, CheckInvitationCodeResponseDto,
-	CheckUserTokenResponseDto, CreateInvitationCodeResponseDto, GetMyInvitationCodeResponseDto,
+	AdminClearUserInfoRequestDto,
+	AdminClearUserInfoResponseDto, AdminGetUserInfoResponseDto,
+	ApproveUserInfoRequestDto, ApproveUserInfoResponseDto,
+	BlockUserByUIDRequestDto, BlockUserByUIDResponseDto, CheckInvitationCodeRequestDto, CheckInvitationCodeResponseDto,
+	CheckUserHave2FARequestDto,
+	CheckUserHave2FAResponseDto,
+	CheckUserTokenResponseDto,
+	CheckUsernameRequestDto, CheckUsernameResponseDto,
+	ConfirmUserTotpAuthenticatorRequestDto,
+	ConfirmUserTotpAuthenticatorResponseDto, CreateInvitationCodeResponseDto,
+	CreateUserEmailAuthenticatorResponseDto,
+	CreateUserTotpAuthenticatorResponseDto,
+	DeleteTotpAuthenticatorByTotpVerificationCodeRequestDto,
+	DeleteTotpAuthenticatorByTotpVerificationCodeResponseDto,
+	DeleteUserEmailAuthenticatorRequestDto,
+	DeleteUserEmailAuthenticatorResponseDto, GetBlockedUserResponseDto, GetMyInvitationCodeResponseDto,
 	GetSelfUserInfoRequestDto, GetSelfUserInfoResponseDto, GetUserAvatarUploadSignedUrlResponseDto,
 	GetUserInfoByUidRequestDto, GetUserInfoByUidResponseDto, GetUserSettingsRequestDto,
-	GetUserSettingsResponseDto, RequestSendChangeEmailVerificationCodeRequestDto, RequestSendChangePasswordVerificationCodeRequestDto,
+	GetUserSettingsResponseDto, ReactivateUserByUIDRequestDto, RequestSendChangeEmailVerificationCodeRequestDto, RequestSendChangePasswordVerificationCodeRequestDto,
 	RequestSendChangeEmailVerificationCodeResponseDto, RequestSendVerificationCodeRequestDto,
 	RequestSendVerificationCodeResponseDto, UpdateOrCreateUserInfoResponseDto, UpdateOrCreateUserSettingsRequestDto,
 	UpdateOrCreateUserSettingsResponseDto, UpdateUserEmailRequestDto, UpdateUserEmailResponseDto,
 	UserEmailExistsCheckRequestDto, UserEmailExistsCheckResponseDto, UserLoginRequestDto,
 	UserLoginResponseDto, UserRegistrationRequestDto, UserRegistrationResponseDto,
 	RequestSendChangePasswordVerificationCodeResponseDto, UpdateUserPasswordRequestDto,
-	UpdateUserPasswordResponseDto, UserLogoutResponseDto, CheckUsernameResponseDto,
-	BlockUserByUIDRequestDto, BlockUserByUIDResponseDto, ReactivateUserByUIDRequestDto,
-	ReactivateUserByUIDResponseDto, GetBlockedUserResponseDto, AdminGetUserInfoResponseDto,
-	ApproveUserInfoRequestDto, ApproveUserInfoResponseDto,
-	AdminClearUserInfoRequestDto,
-	AdminClearUserInfoResponseDto,
-	CheckUserHave2FAResponseDto,
-	CreateUserTotpAuthenticatorResponseDto,
-	ConfirmUserTotpAuthenticatorRequestDto,
-	ConfirmUserTotpAuthenticatorResponseDto,
-	DeleteTotpAuthenticatorByTotpVerificationCodeRequestDto,
-	DeleteTotpAuthenticatorByTotpVerificationCodeResponseDto,
-	CreateUserEmailAuthenticatorResponseDto,
-	DeleteUserEmailAuthenticatorRequestDto,
-	DeleteUserEmailAuthenticatorResponseDto,
+	UpdateUserPasswordResponseDto, UserLogoutResponseDto,
+	ReactivateUserByUIDResponseDto,
 	SendUserEmailAuthenticatorVerificationCodeRequestDto,
 	SendUserEmailAuthenticatorVerificationCodeResponseDto,
 	SendDeleteUserEmailAuthenticatorVerificationCodeRequestDto,
 	SendDeleteUserEmailAuthenticatorVerificationCodeResponseDto,
-	CheckUserHave2FARequestDto,
 	UserExistsCheckByUIDRequestDto,
 	UserExistsCheckByUIDResponseDto,
 } from "./UserControllerDto";
@@ -91,7 +91,7 @@ export const updateOrCreateUserInfo = async (updateOrCreateUserInfoRequest: Upda
  * @param pinia pinia
  * @returns 用户信息
  */
-export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto): Promise<GetSelfUserInfoResponseDto> => {
+export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto, isNoPiniaStore: boolean = false): Promise<GetSelfUserInfoResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const { data } = await useFetch<GetSelfUserInfoResponseDto>(
 		`${USER_API_URI}/self`,
@@ -103,12 +103,14 @@ export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRe
 	);
 	const selfUserInfoResult = data.value?.result;
 	if (data.value?.success && selfUserInfoResult) {
-		const appSettings = useAppSettingsStore();
-		const selfUserInfoStore = useSelfUserInfoStore();
-		appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
-		selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
-		selfUserInfoStore.isLogined = true;
-		selfUserInfoStore.userInfo = data.value.result ?? {};
+		if (!isNoPiniaStore) { // 某些情况下不能使用 Pinia store，例如当 SSR 的早期阶段同步主题设置时
+			const appSettings = useAppSettingsStore();
+			const selfUserInfoStore = useSelfUserInfoStore();
+			appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
+			selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
+			selfUserInfoStore.isLogined = true;
+			selfUserInfoStore.userInfo = data.value.result ?? {};
+		}
 	} else
 		await userLogout();
 	return data.value as GetSelfUserInfoResponseDto;
