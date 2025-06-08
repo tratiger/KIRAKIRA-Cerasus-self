@@ -6,8 +6,10 @@
 		nickname: string;
 		/** 用户名。 */
 		username: string;
+		/** 角色。 */
+		roles?: string[];
 		/** 粉丝数。 */
-		fans: number;
+		followers: number;
 		/** 是否已关注？ */
 		isFollowing?: boolean;
 		/** 是否是自己？ */
@@ -54,9 +56,9 @@
 
 <template>
 	<Comp>
-		<UserContent :avatar="avatar" :nickname="nickname" :username="username" :fans="fans" :uid="uid" size="large" center>
+		<UserContent :avatar="avatar" :nickname="nickname" :followers="followers" :uid="uid" center>
 			<template #description>
-				{{ fans }} {{ t(fans).fans }}
+				{{ followers }} {{ t(followers).follower }}
 			</template>
 		</UserContent>
 		<!-- TODO: 使用多语言 -->

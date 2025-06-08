@@ -23,7 +23,7 @@
 		if (!thumb) return;
 		const trackItems = thumb.parentElement?.querySelector(".track")?.children;
 		const _items = items.value;
-		if (!trackItems?.length || !_items.length) return;
+		if (!trackItems?.length || _items.length === 0) return;
 		pressed.value = true;
 		forceCursor("grabbing");
 		const lefts = Array.from(trackItems, item => item.getBoundingClientRect().left);
@@ -112,6 +112,7 @@
 
 	:comp {
 		position: relative;
+		font-weight: 500;
 	}
 
 	.track {
@@ -155,9 +156,9 @@
 		top: 0;
 		z-index: 4;
 		color: white;
-		transition: $fallback-transitions, clip-path $ease-in-out-smooth $duration;
-		clip-path: inset(0% calc((1 - (v-bind(selectedIndex) + 1) / v-bind(count)) * 100%) 0% calc(v-bind(selectedIndex) / v-bind(count) * 100%) round 4px);
 		pointer-events: none;
+		clip-path: inset(0% calc((1 - (v-bind(selectedIndex) + 1) / v-bind(count)) * 100%) 0% calc(v-bind(selectedIndex) / v-bind(count) * 100%) round 4px);
+		transition: $fallback-transitions, clip-path $ease-in-out-smooth $duration;
 
 		.thumb:is(.pressed, :active) + & {
 			transition: $fallback-transitions, clip-path $ease-out-smooth $duration, opacity $ease-in-out-smooth $duration;
@@ -187,8 +188,8 @@
 		font-weight: bold;
 		background-color: c(accent);
 		cursor: grab;
-		transition: $transition, left $ease-in-out-smooth $duration, opacity $ease-in-out-smooth $duration;
 		touch-action: pan-y pinch-zoom;
+		transition: $transition, left $ease-in-out-smooth $duration, opacity $ease-in-out-smooth $duration;
 
 		&:any-hover {
 			@include button-shadow-hover;

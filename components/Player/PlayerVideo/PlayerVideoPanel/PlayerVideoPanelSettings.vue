@@ -48,13 +48,13 @@
 				}
 				return true;
 			}
-			/* eslint-disable indent */
+			/* eslint-disable @stylistic/indent */
 			prop === "hue" ? target.hue = newValue ? 180 : 0 :
 			prop === "saturate" ? target.saturate = newValue ? 5 : 1 :
 			prop === "contrast" ? target.contrast = newValue ? 5 : 1 :
 			prop === "brightness" ? target.brightness = newValue ? 2 : 1 :
 			target[prop as never] = newValue as never;
-			/* eslint-enable indent */
+			/* eslint-enable @stylistic/indent */
 			return true;
 		},
 	}) as unknown as Record<Filters, boolean>;
@@ -62,7 +62,7 @@
 	const selectedSettingsTab = defineModel<string>("selectedSettingsTab", { default: "player" });
 	const blockWordsToggle = ref(false);
 	const blockWordsSelectedTab = ref("block-keywords");
-	const transitionName = defineModel<string>("transitionName", { default: "page-jump" });
+	const transitionName = defineModel<string>("transitionName", { default: "page-jump-in" });
 </script>
 
 <template>
@@ -71,8 +71,9 @@
 			<ScrollContainer overflowX="clip">
 				<Transition :name="transitionName" mode="out-in">
 					<div v-if="selectedSettingsTab === 'player' " class="page-player">
+						<!-- TODO: 需详细阐述是自动播放啥？分 P、合集的下一集、还是相关视频？ -->
 						<ToggleSwitch v-model="settings.autoplay" v-ripple icon="autoplay">{{ t.player.autoplay }}</ToggleSwitch>
-						<p>{{ t.danmaku }}</p>
+						<p class="subheading">{{ t.danmaku }}</p>
 						<!-- TODO: 多语言。检查字号缩放功能的可用性并显示缩放数值。 -->
 						<SettingsSlider
 							v-model="settings.danmaku.fontSizeScale"
@@ -88,8 +89,18 @@
 							:defaultValue="1"
 							icon="opacity"
 						>{{ t.opacity }}</SettingsSlider>
-						<p>{{ t.player.control_bar }}</p>
-						<ToggleSwitch v-model="settings.controller.showFrameByFrame" v-ripple icon="slow_forward">{{ t.player.control_bar.show_frame_by_frame }}</ToggleSwitch>
+						<p class="subheading">{{ t.player.control_bar }}</p>
+						<ToggleSwitch v-model="settings.controller.showStop" v-ripple icon="stop">
+							{{ !settings.controller.showFrameByFrame ? t.player.control_bar.stop : t.player.control_bar.first_last_frame }}
+							<template #details>{{ !settings.controller.showFrameByFrame ? t.player.control_bar.stop_description : t.player.control_bar.first_last_frame_description }}</template>
+						</ToggleSwitch>
+						<ToggleSwitch v-model="settings.controller.showFrameByFrame" v-ripple icon="slow_forward">
+							{{ t.player.control_bar.frame_by_frame }}
+							<template #details>{{ t.player.control_bar.frame_by_frame_description }}</template>
+						</ToggleSwitch>
+						<ToggleSwitch v-model="settings.controller.autoResumePlayAfterSeeking" v-ripple icon="play">
+							{{ t.player.control_bar.auto_resume_play_after_seeking }}
+						</ToggleSwitch>
 					</div>
 
 					<div v-else-if="selectedSettingsTab === 'filters'">
@@ -122,6 +133,7 @@
 					</div>
 
 					<div v-else-if="selectedSettingsTab === 'block-words'">
+						<!-- TODO: 使用多语言 -->
 						<ToggleSwitch v-model="blockWordsToggle" v-ripple icon="visibility_off">开启屏蔽</ToggleSwitch>
 
 						<TabBar v-model="blockWordsSelectedTab">
@@ -144,6 +156,7 @@
 
 	:comp {
 		position: relative;
+		z-index: 11;
 		flex-grow: 1;
 		height: 100%;
 		contain: strict;
@@ -170,7 +183,7 @@
 		position: absolute;
 	}
 
-	p {
+	p.subheading {
 		display: flex;
 		align-items: center;
 		height: 36px;
@@ -194,12 +207,16 @@
 	}
 
 	.toggle-switch {
-		height: 48px;
-		padding: 0 $padding;
+		padding-block: 12px;
+		padding-inline: $padding;
 
 		&:deep(.icon) {
 			margin-right: $gap;
 			font-size: $icon-size;
+		}
+
+		p.subheading + & {
+			margin-block-start: 0;
 		}
 	}
 </style>

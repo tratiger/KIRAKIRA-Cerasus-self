@@ -1,7 +1,7 @@
+import { useDrag } from "@vueuse/gesture";
 import type Danmaku from "danmaku";
 import * as themeTypes from "modules/theme/types";
 import { AcceptedPlugin } from "postcss";
-import { useDrag } from "@vueuse/gesture";
 
 export namespace FlyoutModelNS {
 	export type Target = MaybeRef<MouseEvent | PointerEvent | TwoD | HTMLElement | EventTarget | DOMRect | undefined | null>;
@@ -75,7 +75,9 @@ declare global {
 			opacity: number;
 		};
 		controller: {
+			showStop: boolean;
 			showFrameByFrame: boolean;
+			autoResumePlayAfterSeeking: boolean;
 		};
 		filter: {
 			horizontalFlip: boolean;

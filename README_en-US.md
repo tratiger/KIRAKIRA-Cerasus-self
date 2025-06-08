@@ -18,12 +18,11 @@
 [![French Translation][fr-translation-shield]][fr-translation-url]
 [![Cantonese Translation][yue-translation-shield]][yue-translation-url]
 
-Front-end
+KIRAKIRA's Front-end
 
 [简体中文](README.md) | **English**
 
-[Click here to go to the Figma design file >](https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1)
-
+[![Figma Design Menuscript][figma-design-shield]](figma-design-url)
 [![Discord Server][discord-server-shield]][discord-server-url]
 
 ## Star History
@@ -35,6 +34,90 @@ Front-end
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=KIRAKIRA-DOUGA/KIRAKIRA-Cerasus&type=Date" />
  </picture>
 </a>
+
+## Architecture Diagram
+
+```mermaid
+
+flowchart TD
+    %% Core Application
+    NuxtApp["Nuxt 3 Application"]:::frontend
+
+    %% Presentation Layer
+    subgraph "Presentation Layer"
+        Pages["Pages & Routing"]:::presentation
+        UIComponents["UI Components"]:::presentation
+    end
+
+    %% Business Logic Layer
+    subgraph "Business Logic Layer"
+        ComposablesStores["Composables & Stores"]:::business
+        Modules["Modules"]:::business
+        PluginsProviders["Plugins & Providers"]:::business
+    end
+
+    %% Utilities & Internationalization
+    subgraph "Utilities & Internationalization"
+        AssetsStyling["Assets & Styling"]:::utilities
+        Internationalization["Internationalization"]:::utilities
+    end
+
+    %% Server & Environment Setup
+    subgraph "Server & Environment Setup"
+        ServerEnv["Server & Config Files"]:::server
+    end
+
+    %% External Systems
+    subgraph "External Systems"
+        Backend["KIRAKIRA-Rosales Backend"]:::external
+        CloudflareImages["Cloudflare Images"]:::external
+        CloudflareStream["Cloudflare Stream"]:::external
+    end
+
+    %% Connections between layers
+    NuxtApp -->|"routing"| Pages
+    NuxtApp -->|"render"| UIComponents
+    Modules -->|"affects"| NuxtApp
+    PluginsProviders -->|"middleware"| NuxtApp
+    ComposablesStores -->|"fetch_API"| Backend
+    PluginsProviders -->|"integrates"| CloudflareImages
+    PluginsProviders -->|"integrates"| CloudflareStream
+    UIComponents -->|"directive_binding"| PluginsProviders
+    AssetsStyling -->|"styles"| UIComponents
+    Internationalization -->|"translations"| UIComponents
+    ComposablesStores -->|"state_sync"| UIComponents
+    Modules -->|"extends"| PluginsProviders
+    ServerEnv -->|"configures"| NuxtApp
+
+    %% Class definitions with colors
+    classDef frontend fill:#f9c,stroke:#333,stroke-width:2px;
+    classDef presentation fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef business fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef utilities fill:#ffb,stroke:#333,stroke-width:2px;
+    classDef server fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef external fill:#bef,stroke:#333,stroke-width:2px;
+
+    %% Click Events
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/nuxt.config.ts"
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/app.vue"
+    click Pages "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/pages"
+    click UIComponents "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/components"
+    click Modules "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/modules"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/composables"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/stores/app-settings.ts"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/assets"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/helpers"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/utils"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/plugins"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/providers/nuxt-image"
+    click Internationalization "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/locales"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/server"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/tsconfig.json"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/.npmrc"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/pnpm-lock.yaml"
+```
+
+To learn more, [read the wiki][deepwiki-url]!
 
 ## Nuxt 3
 
@@ -493,7 +576,7 @@ It is recommended to use any of the following platforms for development:
 
 [![VSCode](https://img.shields.io/badge/-Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/)\
 [![WebStorm](https://img.shields.io/badge/-WebStorm-000000?style=for-the-badge&logo=webstorm&logoColor=white)](https://www.jetbrains.com/webstorm/)\
-[![Sublime Text](https://img.shields.io/badge/-Sublime%20Text-FF9800?style=for-the-badge&logo=sublime-text&logoColor=white)](https://www.jetbrains.com/webstorm/)\
+[![Sublime Text](https://img.shields.io/badge/-Sublime%20Text-FF9800?style=for-the-badge&logo=sublime-text&logoColor=white)](https://www.sublimetext.com/)\
 [![Fleet](https://img.shields.io/badge/-Fleet-000000?style=for-the-badge&logo=jetbrains&logoColor=white)](https://www.jetbrains.com/fleet/)
 
 <details>
@@ -553,6 +636,10 @@ The technology stacks used in front-end development include:
 * Add a semicolon at **the end of the statement**
 * **Vue API Style:** Composition API
 
+## Contributors
+
+[![Contributors](https://contrib.rocks/image?repo=KIRAKIRA-DOUGA/KIRAKIRA-Cerasus)](https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus/graphs/contributors)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [state-shield]: https://img.shields.io/badge/STATE-ALPHA-red?style=flat-square
@@ -587,5 +674,8 @@ The technology stacks used in front-end development include:
 [yue-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=粵語&style=flat-square&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
 [yue-translation-url]: https://crowdin.com/project/kirakira/yue
 
+[figma-design-shield]: https://img.shields.io/badge/design_manuscript-white?style=for-the-badge&logo=figma&logoColor=white&label=figma&labelColor=F24E1E
+[figma-design-url]: https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1
 [discord-server-shield]: https://dcbadge.limes.pink/api/server/https://discord.gg/uVd9ZJzEy7
 [discord-server-url]: https://discord.gg/uVd9ZJzEy7
+[deepwiki-url]: https://deepwiki.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus

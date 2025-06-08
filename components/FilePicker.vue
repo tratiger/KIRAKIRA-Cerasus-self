@@ -53,7 +53,7 @@
 	 * @returns 合法的文件列表。
 	 */
 	function getValidFiles(fileList?: FileList | null) {
-		if (!fileList || !fileList.length) return [];
+		if (!fileList || fileList.length === 0) return [];
 		const files: File[] = [];
 		for (const file of fileList)
 			if (file.type.match(props.accept))
@@ -70,9 +70,9 @@
 		const files = e.dataTransfer?.files;
 		if (!files) return;
 		const dropFiles = getValidFiles(files);
-		if (dropFiles.length)
+		if (dropFiles.length > 0)
 			uploaded(dropFiles);
-		else if (files.length)
+		else if (files.length > 0)
 			invalidUploaded();
 	}
 
@@ -83,7 +83,7 @@
 	function onChangeFile(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const files = getValidFiles(input.files);
-		if (files.length)
+		if (files.length > 0)
 			uploaded(files);
 		else if (input.files?.length)
 			invalidUploaded();
@@ -213,7 +213,6 @@
 			gap: 8px;
 			padding: 8px 16px;
 			color: $color;
-			letter-spacing: 0.05em;
 			cursor: pointer;
 
 			.icon {

@@ -34,9 +34,9 @@
 
 	const emits = defineEmits<{
 		/** 当滑块拖动时即触发事件。 */
-		changing: [value: number];
+		changing: [value: number, prevValue: number];
 		/** 当滑块拖动完成抬起后才触发事件。 */
-		changed: [value: number];
+		changed: [value: number, prevValue: number];
 	}>();
 
 	const model = defineModel<number>({ required: true });
@@ -88,7 +88,7 @@
 		e.preventDefault();
 		if (props.defaultValue !== undefined && Number.isFinite(props.defaultValue)) {
 			for (const event of ["update:modelValue", "changing", "changed"] as const)
-				emits(event as "changing", props.defaultValue);
+				emits(event as "changing", props.defaultValue, model.value);
 			if (props.pending === "current")
 				pendingValue.value = props.defaultValue;
 		}
@@ -97,29 +97,31 @@
 	/**
 	 * 拖拽滑块逻辑处理。
 	 * @param e - 指针事件（包括鼠标和触摸）。
-	 * @param triggerByTrack - 是否是由点击轨道而转移过来调用的。
+	 * @param lastValueIfTriggerByTrack - 是否是由点击轨道而转移过来调用的？如果是，则提供其上一次的值。
 	 */
-	function onThumbDown(e: PointerEvent, triggerByTrack: boolean = false) {
+	function onThumbDown(e: PointerEvent, lastValueIfTriggerByTrack?: number) {
 		if (e.button === 1) { resetToDefault(e); return; }
 		const thumb = thumbEl.value!, track = trackEl.value!;
 		const thumbSize = thumb.offsetWidth;
 		const { left, width: max } = track.getBoundingClientRect();
-		const x = triggerByTrack ? thumbSize / 2 : e.pageX - left - thumb.offsetLeft;
+		const x = lastValueIfTriggerByTrack !== undefined ? thumbSize / 2 : e.pageX - left - thumb.offsetLeft;
+		const lastValue = lastValueIfTriggerByTrack ?? model.value;
 		pendingValue.value = value.value;
 		showPendingState.value = "dragging";
 		const pointerMove = useDebounce((e: PointerEvent) => {
 			const position = clamp(e.pageX - left - x, 0, max - thumbSize);
 			const value = map(position, 0, max - thumbSize, props.min, props.max);
 			const steppedValue = roundToStep(value, props.step);
+			const lastValue = model.value;
 			model.value = steppedValue;
 			pendingValue.value = map(steppedValue, props.min, props.max, 0, 1);
-			emits("changing", value);
+			emits("changing", value, lastValue);
 		});
 		const pointerUp = (e: PointerEvent) => {
 			document.removeEventListener("pointermove", pointerMove);
 			document.removeEventListener("pointerup", pointerUp);
 			showPendingState.value = isInPath(e, track.parentElement) ? "hovering" : "";
-			emits("changed", model.value);
+			emits("changed", model.value, lastValue);
 		};
 		document.addEventListener("pointermove", pointerMove);
 		document.addEventListener("pointerup", pointerUp);
@@ -145,10 +147,11 @@
 		if (e.button === 1) { resetToDefault(e); return; }
 		const value = getPointerOnTrackValue(e);
 		const steppedValue = roundToStep(value, props.step);
+		const lastValue = model.value;
 		model.value = steppedValue;
-		emits("changing", steppedValue);
+		emits("changing", steppedValue, lastValue);
 		await nextTick();
-		onThumbDown(e, true); // 再去调用拖拽滑块的事件。
+		onThumbDown(e, lastValue); // 再去调用拖拽滑块的事件。
 	}
 
 	/**
@@ -384,8 +387,9 @@
 			}
 		}
 
-		:comp:focus & {
-			@include large-shadow-focus;
+		:comp:any-hover &,
+		:comp:focus-visible & {
+			@include control-ball-shadow-hover;
 		}
 	}
 
@@ -397,7 +401,6 @@
 		padding: 8px;
 		color: white;
 		font-weight: 500;
-		letter-spacing: 0.5px;
 		background-color: c(accent);
 		transform-origin: center calc(100% + 8px);
 		translate: -50% calc(-100% - 4px);

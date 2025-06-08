@@ -1,9 +1,8 @@
-import * as _vueRouter from "#vue-router";
 import * as _lottieWeb from "lottie-web";
 import * as _nuxt_app from "nuxt/app";
 import { VTooltipBindingValue } from "plugins/vue/tooltip";
 import { AllowedComponentProps, DirectiveBinding } from "vue";
-import CSSDoodle from "./css-doodle";
+import * as _vueRouter from "#vue-router";
 
 type EventHandlers<E> = {
 	[K in keyof E]?: E[K] extends (...args: Any) => Any ? E[K] : (payload: E[K]) => void;
@@ -18,7 +17,6 @@ declare module "vue" {
 		 * KIRAKIRA 组件，KIRA 人自己的组件。
 		 */
 		"kira-component": JSX.IntrinsicElements["section"];
-		"css-doodle": CSSDoodle;
 	}
 
 	/**

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 	definePageMeta({
+		hideAppBar: true,
+		hideBottomNavigation: true,
 		pageTransition: {
 			name: "settings",
 			mode: "out-in",
@@ -68,7 +70,7 @@
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
 			{ id: "account-linking", icon: "groups" },
-			{ id: "blocklist", icon: "block" },
+			{ id: "block_and_hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],
 		general: [
@@ -98,7 +100,7 @@
 			const curPage = currentSettingsPage();
 			if (settings.general.findIndex(({ id }) => id === curPage) === -1)
 				navigate("/settings/appearance");
-			useToast("你已成功登出！", "success"); // TODO: 使用多语言
+			useToast(t.toast.logout_success, "success");
 			useEvent("user:login", false);
 		}
 	}
@@ -112,7 +114,7 @@
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: useAppSettingsStore().showCssDoodle || useAppSettingsStore().backgroundImage.image.data }">
+	<div v-bind="$attrs" class="settings" :class="{ transparent: useAppSettingsStore().backgroundImage.image.data }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">
@@ -130,7 +132,7 @@
 							</template>
 							<Subheader icon="apps">{{ t.settings.app }}</Subheader>
 							<TabItem v-for="setting in settings.general" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
-							<!-- TODO: 使用多语言 -->
+							<!-- DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。 -->
 							<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
 							<template v-if="isAdmin">
 								<TabItem v-for="setting in settings.admin" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
@@ -166,7 +168,7 @@
 				</header>
 
 				<div class="router-view">
-					<NuxtPage :transition="{ name: 'page-jump', mode: 'out-in' }" />
+					<NuxtPage :transition="{ name: 'page-jump-in', mode: 'out-in' }" />
 				</div>
 			</div>
 		</main>
@@ -200,6 +202,13 @@
 
 		&.transparent {
 			background: none;
+		}
+
+		.stop-transition > & {
+			&,
+			* {
+				transition: none !important;
+			}
 		}
 	}
 
@@ -331,7 +340,7 @@
 			padding: 0 $main-padding-x $main-padding-x;
 
 			@include mobile {
-				padding: 0 $mobile-padding;
+				padding: $mobile-toolbar-height $mobile-padding 0;
 			}
 
 			.router-view {
@@ -535,6 +544,11 @@
 
 				&:any-hover {
 					background-color: c(hover-overlay);
+				}
+
+				&.toggle-switch {
+					--icon-size: 24px;
+					--icon-margin-right: 16px;
 				}
 			}
 

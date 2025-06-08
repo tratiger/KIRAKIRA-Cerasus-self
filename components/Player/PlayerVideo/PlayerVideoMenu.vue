@@ -219,8 +219,14 @@
 
 		> .toggle-switch {
 			@include round-small;
-			min-height: 36px;
-			padding: 0 8px;
+			min-height: $menu-item-height;
+			padding-block: $menu-item-padding-block;
+			padding-inline: 8px;
+
+			@include tablet {
+				min-height: $menu-item-height-mobile;
+				padding-block: $menu-item-padding-block-mobile;
+			}
 		}
 	}
 </style>

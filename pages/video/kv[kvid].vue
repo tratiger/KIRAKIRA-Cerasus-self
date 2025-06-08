@@ -1,12 +1,31 @@
 <script setup lang="ts">
+	import { numbers } from "virtual:scss-var:theme/_variables";
+	import { ScrollContainer } from "#components";
+
+	definePageMeta({
+		flatAppBar: true,
+		hideBottomNavigation: true,
+	});
+
+	const windowSize = useWindowSize();
+	const isMobileWidth = computed(() => windowSize.width.value <= numbers.tabletMaxWidth);
+
 	const route = useRoute();
 	const kvid = +route.params.kvid;
 	const videoSource = ref<string>();
 	const videoDetails = ref<VideoData>();
+	const selectedTab = ref("info");
+	const transitionName = ref("page-jump-in");
 	const title = computed(() => videoDetails.value?.title ?? "");
 	const thumbnail = computed(() => videoDetails.value?.image || defaultThumbnail);
 	const currentLanguage = computed(getCurrentLocale); // 当前用户的语言
 	// const recommendations = ref<Videos200ResponseVideosInner[]>();
+
+	const playing = ref(false);
+	const currentTime = ref(NaN);
+	const sendDanmaku = ref<DanmakuComment[]>();
+	const insertDanmaku = ref<DanmakuListItem[]>();
+
 	type VideoData = GetVideoByKvidResponseDto["video"];
 
 	/**
@@ -14,9 +33,8 @@
 	 */
 	async function fetchVideoData() {
 		const handleError = (message: string, severity: Parameters<typeof useToast>[1] = "error") => {
-			onMounted(() => {
+			if (environment.client)
 				useToast(message, severity);
-			});
 		};
 
 		if (Number.isFinite(kvid)) {
@@ -40,11 +58,11 @@
 						image: videoData.image,
 					};
 				} else
-					handleError("获取视频失败，结果异常！"); // TODO: 使用多语言
+					handleError(t.toast.video_invalid_result);
 			} else
-				handleError("获取视频失败，请求失败！"); // TODO: 使用多语言
+				handleError(t.toast.video_request_failed);
 		} else
-			handleError("未获取到 KVID，开始使用默认视频！", "warning"); // TODO: 使用多语言
+			handleError(t.toast.video_no_id);
 	}
 
 	watch(() => kvid, fetchVideoData);
@@ -64,84 +82,117 @@
 			{ name: "twitter:image", content: videoDetails.value?.image },
 		],
 	});
+
+	const [DefineComments, Comments] = createReusableTemplate();
+	const [DefineDanmakus, Danmakus] = createReusableTemplate();
 </script>
 
 <template>
-	<div class="container">
-		<PlayerVideo
-			v-if="videoSource !== undefined"
-			:id="videoDetails?.videoId ?? 0"
-			:src="videoSource"
-			:rating="videoDetails?.rating ?? 0"
-			:title
-			:thumbnail
-		/>
+	<div class="container" :class="{ playing }">
+		<DefineComments>
+			<ClientOnly>
+				<LazyCreationComments :videoId="kvid" />
+			</ClientOnly>
+		</DefineComments>
+
+		<DefineDanmakus>
+			<ClientOnly>
+				<PlayerVideoDanmakuList v-model="insertDanmaku" />
+				<PlayerVideoDanmakuSender v-model="sendDanmaku" :videoId="videoDetails?.videoId ?? 0" :currentTime />
+			</ClientOnly>
+		</DefineDanmakus>
+
+		<div class="player-container">
+			<PlayerVideo
+				v-if="videoSource !== undefined"
+				:videoId="videoDetails?.videoId ?? 0"
+				:src="videoSource"
+				:title
+				:thumbnail
+				v-model:playing="playing"
+				v-model:currentTime="currentTime"
+				v-model:sendDanmaku="sendDanmaku"
+				v-model:insertDanmaku="insertDanmaku"
+			>
+				<template #danmaku>
+					<Danmakus v-if="!isMobileWidth" />
+				</template>
+			</PlayerVideo>
+			<TabBar v-model="selectedTab" @movingForTransition="name => transitionName = name">
+				<TabItem id="info">Info</TabItem>
+				<TabItem id="comments">{{ t.comments }}</TabItem>
+				<TabItem id="danmakus">{{ t(0).danmaku }}</TabItem>
+			</TabBar>
+		</div>
 		<div class="below-player">
-			<div class="left">
-				<CreationDetail
-					:date="new Date(videoDetails?.uploadDate!)"
-					:category="videoDetails?.videoCategory!"
-					:title="videoDetails?.title ?? ''"
-					:videoId="videoDetails?.videoId ?? NaN"
-					:copyright="(videoDetails?.copyright! as Copyright)"
-					:tags="videoDetails?.videoTagList.map(tag => getDisplayVideoTagWithCurrentLanguage(currentLanguage, tag)) ?? []"
-					:cover="videoDetails?.image"
-				/>
-
-				<p class="description">
-					<Preserves>{{ videoDetails?.description }}</Preserves>
-				</p>
-
-				<!-- 尝试减少SSR时页面上评论的比重来让谷歌索引视频，还不确定是否行。 -->
-				<ClientOnly>
-					<CreationComments
-						:videoId="kvid"
-					/>
-					<template #fallback>
-						<div class="comments-loading">
-							<ProgressRing />
+			<component :is="isMobileWidth ? ScrollContainer : 'div'">
+				<Transition :name="transitionName" mode="out-in">
+					<div v-if="selectedTab === 'info' || !isMobileWidth" class="info">
+						<div class="left">
+							<CreationDetail
+								:date="new Date(videoDetails?.uploadDate!)"
+								:category="videoDetails?.videoCategory!"
+								:title="videoDetails?.title ?? ''"
+								:videoId="videoDetails?.videoId ?? NaN"
+								:copyright="(videoDetails?.copyright! as Copyright)"
+								:tags="videoDetails?.videoTagList.map(tag => getDisplayVideoTagWithCurrentLanguage(currentLanguage, tag)) ?? []"
+								:cover="videoDetails?.image"
+							/>
+							<p class="description">
+								<Preserves>{{ videoDetails?.description }}</Preserves>
+							</p>
+							<Comments v-if="!isMobileWidth" />
 						</div>
-					</template>
-				</ClientOnly>
-			</div>
-			<div class="right">
-				<CreationUploader
-					:uid="videoDetails?.uploaderInfo?.uid ?? 0"
-					:avatar="videoDetails?.uploaderInfo?.avatar"
-					:nickname="videoDetails?.uploaderInfo?.userNickname ?? ''"
-					:username="videoDetails?.uploaderInfo?.username ?? ''"
-					:fans="videoDetails?.uploaderSubscribers ?? 0"
-					:isFollowing="videoDetails?.uploaderInfo?.isFollowing"
-					:isSelf="videoDetails?.uploaderInfo?.isSelf"
-				/>
-
-				<!-- <Subheader
-					v-if="(recommendations?.length ?? 0) > 0"
-					class="recommendations-header"
-					icon="movie"
-					:badge="recommendations?.length"
-				>{{ t.video_recommendations }}</Subheader>
-
-				<ThumbVideo
-					v-for="video in recommendations"
-					:key="video.videoID"
-					class="video-recomendation"
-					:videoId="video.videoID"
-					:uploader="video.authorName ?? ''"
-					:image="video.thumbnailLoc"
-					:date="new Date()"
-					:watchedCount="video.views"
-					:duration="new Duration(video.videoDuration ?? 0)"
-				>{{ video.title }}</ThumbVideo> -->
-			</div>
+						<div class="right">
+							<CreationUploader
+								:uid="videoDetails?.uploaderInfo?.uid ?? 0"
+								:avatar="videoDetails?.uploaderInfo?.avatar"
+								:nickname="videoDetails?.uploaderInfo?.userNickname ?? ''"
+								:username="videoDetails?.uploaderInfo?.username ?? ''"
+								:fans="videoDetails?.uploaderSubscribers ?? 0"
+								:followers="videoDetails?.uploaderFollowers ?? 0"
+								:isFollowing="videoDetails?.uploaderInfo?.isFollowing"
+								:isSelf="videoDetails?.uploaderInfo?.isSelf"
+							/>
+						</div>
+					</div>
+					<div v-else-if="selectedTab === 'comments'">
+						<Comments v-if="isMobileWidth" />
+					</div>
+					<div v-else-if="selectedTab === 'danmakus'" class="danmakus">
+						<Danmakus v-if="isMobileWidth" />
+					</div>
+				</Transition>
+			</component>
 		</div>
 	</div>
 </template>
 
 <style scoped lang="scss">
-	@include mobile {
-		.player-video:not(.fullscreen) {
-			margin: -16px -16px 0;
+	.container {
+		max-width: 1920px;
+		margin: 0 auto;
+
+		@include tablet {
+			display: flex;
+			flex-direction: column;
+			height: 100dvh;
+			padding: 0;
+		}
+
+		@include mobile {
+			height: calc(100dvh - $mobile-toolbar-height);
+		}
+	}
+
+	.player-container {
+		@include player-shadow;
+		background-color: c(main-bg);
+
+		.tab-bar {
+			@include computer {
+				display: none;
+			}
 		}
 	}
 
@@ -153,35 +204,68 @@
 		max-width: 100%;
 	}
 
+	.tab-bar {
+		--clipped: true;
+		--full: true;
+	}
+
 	.below-player {
-		display: flex;
-		margin-top: 30px;
+		@include tablet {
+			flex-grow: 1;
+			min-height: 0;
+
+			.scroll-container,
+			.scroll-container:deep(> .scroller > .content) {
+				@include square(100%);
+			}
+		}
+
+		.info {
+			@include computer {
+				display: flex;
+				margin-top: 24px;
+			}
+		}
+
+		.creation-comments {
+			width: 100%;
+		}
+
+		.danmakus {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+
+		.info,
+		.creation-comments {
+			@include tablet {
+				padding: $page-padding-x-tablet;
+			}
+
+			@include mobile {
+				padding: $page-padding-x-mobile;
+			}
+		}
 	}
 
 	.left {
 		width: 100%;
+
+		.creation-comments {
+			margin-top: 32px;
+		}
 	}
 
 	.right {
 		flex-shrink: 0;
-		width: 350px;
 
-		@include tablet {
-			display: none;
+		@include computer {
+			width: 350px;
 		}
 	}
 
 	.description {
 		margin: 1.5rem 0;
-	}
-
-	.container {
-		max-width: 1920px;
-		margin: 0 auto;
-	}
-
-	.comments-loading {
-		@include flex-center;
-		width: 100%;
 	}
 </style>

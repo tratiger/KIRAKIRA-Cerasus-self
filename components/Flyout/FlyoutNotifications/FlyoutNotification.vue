@@ -10,7 +10,7 @@
 		{ name: t.reply, id: "reply", icon: "reply" },
 		{ name: t.mention, id: "mention", icon: "at" },
 	];
-	const transitionName = ref("page-jump");
+	const transitionName = ref("page-jump-in");
 </script>
 
 <template>

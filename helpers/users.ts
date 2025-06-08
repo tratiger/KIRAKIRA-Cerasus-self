@@ -5,10 +5,10 @@ interface UserInfo {
 	memo?: string;
 	bio?: string;
 	gender: "male" | "female" | (string & {});
-	isFollowed: boolean;
-	follow: number;
-	fans: number;
-	watches: number;
+	isFollowing: boolean;
+	following: number;
+	followers: number;
+	views: number;
 	rating: number;
 	birthday: Date;
 	joinTime: Date;
@@ -21,10 +21,10 @@ const users = reactive<Record<string | number, UserInfo>>({
 		memo: "艾拉",
 		bio: "Kind and Kawaii, Forever!~",
 		gender: "female",
-		isFollowed: true,
-		follow: 233,
-		fans: 233,
-		watches: 233,
+		isFollowing: true,
+		following: 233,
+		followers: 233,
+		views: 233,
 		rating: 233,
 		birthday: new Date("2003-12-24"),
 		joinTime: new Date(),

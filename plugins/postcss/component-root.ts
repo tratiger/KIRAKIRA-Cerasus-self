@@ -1,11 +1,11 @@
 import path from "path";
 import parser from "postcss-selector-parser";
-import { VariableName } from "../../classes/VariableName";
+import VariableName from "variable-name-conversion";
 import { arrayClearAll } from "../../utils/array";
 
 const KIRA_COMPONENT_TAGNAME = "kira-component";
 
-const transformPseudo = (componentName: string): parser.SyncProcessor => (selectors => {
+const transformPseudo = (componentName: string): parser.SyncProcessor => selectors => {
 	selectors.walk(selector => {
 		if (selector.type === "pseudo" && selector.value.match(/:comp(onent)?$/)) {
 			let kiraComponentTag: parser.Pseudo | undefined;
@@ -34,7 +34,7 @@ const transformPseudo = (componentName: string): parser.SyncProcessor => (select
 			selector.replaceWith(...newSelectors);
 		}
 	});
-});
+};
 
 const componentRoot: PostCSSPlugin = (_opts = {}) => {
 	return {

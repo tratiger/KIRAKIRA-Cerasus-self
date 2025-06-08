@@ -22,9 +22,8 @@ KIRAKIRA 的前端
 
 **简体中文** | [English](README_en-US.md)
 
-[点击此处前往 Figma 设计文稿 >](https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1)
-
-[![Discord Server][discord-server-shield]][discord-server-url]
+[![Figma 设计文稿][figma-design-shield]](figma-design-url)
+[![Discord 服务器][discord-server-shield]][discord-server-url]
 
 ## 标星历史
 
@@ -35,6 +34,90 @@ KIRAKIRA 的前端
    <img alt="标星历史图表" src="https://api.star-history.com/svg?repos=KIRAKIRA-DOUGA/KIRAKIRA-Cerasus&type=Date" />
  </picture>
 </a>
+
+## 架构图
+
+```mermaid
+
+flowchart TD
+    %% 核心应用
+    NuxtApp["Nuxt 3 应用"]:::frontend
+
+    %% 表现层
+    subgraph "表现层"
+        Pages["页面和路由"]:::presentation
+        UIComponents["界面组件"]:::presentation
+    end
+
+    %% 业务逻辑层
+    subgraph "业务逻辑层"
+        ComposablesStores["组合式函数和状态库"]:::business
+        Modules["模块"]:::business
+        PluginsProviders["插件和供给"]:::business
+    end
+
+    %% 工具类函数和国际化
+    subgraph "工具类函数和国际化"
+        AssetsStyling["资产和样式"]:::utilities
+        Internationalization["国际化"]:::utilities
+    end
+
+    %% 服务器和环境设置
+    subgraph "服务器和环境设置"
+        ServerEnv["服务器和配置文件"]:::server
+    end
+
+    %% 外部系统
+    subgraph "外部系统"
+        Backend["KIRAKIRA-Rosales 后端"]:::external
+        CloudflareImages["Cloudflare 图片"]:::external
+        CloudflareStream["Cloudflare 流媒体"]:::external
+    end
+
+    %% Connections between layers
+    NuxtApp -->|"路由"| Pages
+    NuxtApp -->|"渲染"| UIComponents
+    Modules -->|"影响"| NuxtApp
+    PluginsProviders -->|"中间件"| NuxtApp
+    ComposablesStores -->|"获取接口"| Backend
+    PluginsProviders -->|"整合"| CloudflareImages
+    PluginsProviders -->|"整合"| CloudflareStream
+    UIComponents -->|"指令绑定"| PluginsProviders
+    AssetsStyling -->|"妆饰"| UIComponents
+    Internationalization -->|"翻译"| UIComponents
+    ComposablesStores -->|"状态同步"| UIComponents
+    Modules -->|"扩展"| PluginsProviders
+    ServerEnv -->|"配置"| NuxtApp
+
+    %% Class definitions with colors
+    classDef frontend fill:#f9c,stroke:#333,stroke-width:2px;
+    classDef presentation fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef business fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef utilities fill:#ffb,stroke:#333,stroke-width:2px;
+    classDef server fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef external fill:#bef,stroke:#333,stroke-width:2px;
+
+    %% Click Events
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/nuxt.config.ts"
+    click NuxtApp "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/app.vue"
+    click Pages "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/pages"
+    click UIComponents "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/components"
+    click Modules "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/modules"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/composables"
+    click ComposablesStores "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/stores/app-settings.ts"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/assets"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/helpers"
+    click AssetsStyling "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/utils"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/plugins"
+    click PluginsProviders "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/providers/nuxt-image"
+    click Internationalization "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/locales"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/tree/develop/server"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/tsconfig.json"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/.npmrc"
+    click ServerEnv "https://github.com/kirakira-douga/kirakira-cerasus/blob/develop/pnpm-lock.yaml"
+```
+
+想了解更多？[阅读 Wiki][deepwiki-url]！
 
 ## Nuxt 3
 
@@ -338,7 +421,7 @@ $t(variable)
 <td>位置参数</td>
 <td>
 
-```typescript
+```typescripthttps://img.shields.io
 t.welcome("hello", "world")
 ```
 
@@ -501,7 +584,7 @@ button:any-hover {
 
 [![VSCode](https://img.shields.io/badge/-Visual%20Studio%20Code-007ACC?style=flat-square&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/)\
 [![WebStorm](https://img.shields.io/badge/-WebStorm-000000?style=flat-square&logo=webstorm&logoColor=white)](https://www.jetbrains.com/webstorm/)\
-[![Sublime Text](https://img.shields.io/badge/-Sublime%20Text-FF9800?style=flat-square&logo=sublime-text&logoColor=white)](https://www.jetbrains.com/webstorm/)\
+[![Sublime Text](https://img.shields.io/badge/-Sublime%20Text-FF9800?style=flat-square&logo=sublime-text&logoColor=white)](https://www.sublimetext.com/)\
 [![Fleet](https://img.shields.io/badge/-Fleet-000000?style=flat-square&logo=jetbrains&logoColor=white)](https://www.jetbrains.com/fleet/)
 
 <details>
@@ -561,6 +644,10 @@ button:any-hover {
 * **语句末尾**加分号
 * **Vue API 风格：**<wbr />组合式
 
+## 贡献者
+
+[![Contributors](https://contrib.rocks/image?repo=KIRAKIRA-DOUGA/KIRAKIRA-Cerasus)](https://github.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus/graphs/contributors)
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [state-shield]: https://img.shields.io/badge/STATE-ALPHA-red?style=flat-square
@@ -592,8 +679,11 @@ button:any-hover {
 [id-translation-url]: https://crowdin.com/project/kirakira/id
 [fr-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=Français&style=flat-square&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
 [fr-translation-url]: https://crowdin.com/project/kirakira/fr
-[yue-translation-shield]: https://img.shields.io/badge/dynamic/json?color=blue&label=粵語&style=flat-square&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
+[yue-translation-shield]: /badge/dynamic/json?color=blue&label=粵語&style=flat-square&logo=crowdin&query=%24.progress.5.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14133121-613305.json
 [yue-translation-url]: https://crowdin.com/project/kirakira/yue
 
+[figma-design-shield]: https://img.shields.io/badge/设计文稿-white?style=for-the-badge&logo=figma&logoColor=white&label=figma&labelColor=F24E1E
+[figma-design-url]: https://www.figma.com/file/S5mM7zW5iMo560xnQ4cmbL/KIRAKIRA-Douga-PC?node-id=0%3A1
 [discord-server-shield]: https://dcbadge.limes.pink/api/server/https://discord.gg/uVd9ZJzEy7
 [discord-server-url]: https://discord.gg/uVd9ZJzEy7
+[deepwiki-url]: https://deepwiki.com/KIRAKIRA-DOUGA/KIRAKIRA-Cerasus

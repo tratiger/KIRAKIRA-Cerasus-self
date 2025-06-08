@@ -1,18 +1,19 @@
 <script lang="ts">
 	export const tabs = [
-		{ id: "", icon: "home" },
-		// { id: "series", icon: "video_library" },
-		{ id: "video", icon: "movie" },
-		// { id: "audio", icon: "music" },
-		// { id: "photo", icon: "photo_library" },
-		{ id: "favorites", icon: "star" },
+		{ id: "", icon: "home" }, // 首页，Markdown自我介绍放在顶部（类似GitHub），下方为显示用户发布的所有内容，类似于「关注（/feed/following）」页面
+		{ id: "videos", name: "video", icon: "movie" }, // 视频
+		// { id: "series", icon: "video_library" }, // 系列
+		// { id: "posts", name: "post", icon: "post" }, // 帖子
+		// { id: "audios", icon: "music" }, // 音频
+		// { id: "albums", icon: "photo_library" }, // 相簿或者相册，类似QQ空间相册，所有帖子配图默认也会放在这里，相簿名称可以直接叫「帖子」。
+		{ id: "collections", name: "collection", icon: "star" },
 	];
 </script>
 
 <script setup lang="ts">
 	definePageMeta({
 		pageTransition: {
-			name: "page-jump",
+			name: "page-jump-in",
 			mode: "out-in",
 		},
 		async middleware(to, from) {
@@ -25,7 +26,7 @@
 					if (index !== prevIndex)
 						to.meta.pageTransition.name = index > prevIndex ? "right" : index < prevIndex ? "left" : "";
 				} else
-					to.meta.pageTransition.name = "page-jump";
+					to.meta.pageTransition.name = "page-jump-in";
 			}
 		},
 	});
@@ -138,6 +139,7 @@
 						:username="isSelf ? userSelfInfoStore.userInfo.username : userInfo?.username"
 						:nickname="isSelf ? userSelfInfoStore.userInfo.userNickname : userInfo?.userNickname"
 						:gender="isSelf ? userSelfInfoStore.userInfo.gender : userInfo?.gender"
+						:roles="isSelf ? userSelfInfoStore.userInfo.roles : userInfo?.roles"
 						:to="isSelf ? `/settings/profile` : undefined"
 						size="huge"
 						center
@@ -156,7 +158,7 @@
 							<!-- TODO: 使用多语言 -->
 							<MenuItem v-if="isFollowing" icon="close" @click="unfollowingUser">取消关注</MenuItem>
 							<MenuItem v-tooltip:x="'老铁们，给我举报他！'" icon="flag">{{ t.report }}</MenuItem>
-							<MenuItem icon="block">{{ t.add_to_blocklist }}</MenuItem>
+							<MenuItem icon="block">{{ t.block_user }}</MenuItem>
 						</Menu>
 						<div v-if="!isSelf" class="follow-button">
 							<Button v-if="!isFollowing" icon="add" :disabled="isFollowingUser" :loading="isFollowingUser" @click="followingUser">{{ t.follow_verb }}</Button>
@@ -167,7 +169,7 @@
 					</div>
 				</div>
 				<TabBar v-model="currentTab">
-					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t[tab.id || "home"] }}</TabItem>
+					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t(2)[tab.name || "home"] }}</TabItem>
 				</TabBar>
 			</div>
 		</header>

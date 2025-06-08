@@ -3,27 +3,36 @@
 </docs>
 
 <script setup lang="ts">
-	import background from "assets/styles/css-doodles/background.css-doodle";
-
-	const cssDoodle = refComp();
-	const showCssDoodle = computed(() => useAppSettingsStore().showCssDoodle);
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
 	const showDrawer = ref(false);
-	const isCurrentSettings = ref(false);
+	const isSettingsPage = ref(false);
+
+	const route = useRoute();
+	const hideAppBar = ref(false);
+	const flatAppBar = ref(false);
+	const hideBottomNavigation = ref(false);
+	const appBarTitle = ref<string | undefined>();
+
+	function pageLoaded() {
+		isSettingsPage.value = !!currentSettingsPage();
+		hideAppBar.value = Boolean(route.meta.hideAppBar);
+		flatAppBar.value = Boolean(route.meta.flatAppBar);
+		hideBottomNavigation.value = Boolean(route.meta.hideBottomNavigation);
+
+		const appBarTitleTemp = route.meta.appBarTitle as string | undefined;
+		if (appBarTitleTemp?.startsWith("t.")) appBarTitle.value = t(2)[appBarTitleTemp.slice(2)];
+		else appBarTitle.value = route.meta.appBarTitle as string | undefined;
+	}
 
 	// SSR
-	isCurrentSettings.value = !!currentSettingsPage();
+	pageLoaded();
 	// CSR
 	const nuxtApp = useNuxtApp();
 	nuxtApp.hook("page:finish", () => {
-		isCurrentSettings.value = !!currentSettingsPage();
+		pageLoaded();
 	});
 
 	useListen("app:showDrawer", () => showDrawer.value = true);
-
-	onMounted(() => {
-		setDisplayVisible(cssDoodle.value, showCssDoodle.value);
-	});
 </script>
 
 <template>
@@ -32,16 +41,18 @@
 	</Transition>
 	<div class="viewport">
 		<ClientOnly>
-			<Transition>
-				<CssDoodle v-show="showCssDoodle" ref="cssDoodle" :rule="background" class="background-doodle" />
-			</Transition>
 			<div v-if="backgroundImageSettingsStore.image.data" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
 				<img :src="backgroundImageSettingsStore.image.data" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
 				<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
 			</div>
 		</ClientOnly>
-		<SideBar />
-		<ScrollContainer class="container" :overflowX="isCurrentSettings ? 'hidden' : undefined">
+		<SideBar :hideAppBar :flatAppBar :hideBottomNavigation :isSettingsPage />
+		<ScrollContainer
+			scrollElId="mainScroller"
+			class="container"
+			:overflowX="isSettingsPage ? 'hidden' : undefined"
+			:style="{ '--padding-top': hideAppBar ? '0' : undefined, '--padding-bottom': hideBottomNavigation ? '0' : undefined }"
+		>
 			<Banner />
 			<div class="router-view">
 				<slot></slot>
@@ -72,7 +83,7 @@
 				padding: 26px $page-padding-x;
 
 				@include tablet {
-					padding: 26px $page-padding-x-tablet;
+					padding: $page-padding-x-tablet;
 				}
 
 				@include mobile {
@@ -108,15 +119,6 @@
 		position: fixed;
 		left: 0;
 		transition: background-color $ease-out-max 250ms;
-	}
-
-	.background-doodle {
-		opacity: 0.3;
-
-		&.v-enter-from,
-		&.v-leave-to {
-			opacity: 0;
-		}
 	}
 
 	.background {

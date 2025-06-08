@@ -18,12 +18,12 @@
 		{ uid: 5, job: [t.about.staff.designer] },
 		// { uid: NaN, name: "鸣", job: [t.about.staff.frontend] },
 		{ uid: 2, job: [t.about.staff.backend] },
-		{ uid: 9, job: [t.about.staff.translator(t.language.ja)] },
-		{ uid: 4, job: [t.about.staff.translator(t.language.zht)] },
-		// { uid: NaN, name: "HanceyMica", job: [t.about.staff.translator(t.language.zht)] },
-		{ uid: 8, job: [t.about.staff.translator(t.language.vi)] },
-		{ uid: 7, job: [t.about.staff.translator(t.language.vi)] },
-		{ uid: 209, job: [t.about.staff.translator(t.language.yue)] },
+		{ uid: 9, job: [t.about.staff.translator(getLocaleName("ja"))] },
+		{ uid: 4, job: [t.about.staff.translator(getLocaleName("zh-Hant"))] },
+		// { uid: NaN, name: "HanceyMica", job: [t.about.staff.translator(getLocaleName("zh-Hant"))] },
+		{ uid: 8, job: [t.about.staff.translator(getLocaleName("vi"))] },
+		{ uid: 7, job: [t.about.staff.translator(getLocaleName("vi"))] },
+		{ uid: 209, job: [t.about.staff.translator(getLocaleName("yue"))] },
 	]);
 
 	const technologies: { name: string; version?: string; ability: string; icon?: string; monochrome?: boolean; link: string }[] = [
@@ -36,6 +36,15 @@
 		// 基于前端运行时的版本号可以自动识别，后端和编译时的版本号只能委屈你自己手打了。
 	];
 
+	const versionTag = (gitBranch && gitCommit ? {
+		branch: gitBranch,
+		commit: gitCommit.slice(0, 7),
+	} : {
+		code: "Frontend Development Mode",
+		...isLocalBackend.value && { commit: "Local Backend" },
+	}) satisfies Partial<Record<DeclaredIcons, string>>;
+	console.log(" isLocalBackend", isLocalBackend.value);
+
 	const sloganLines = computed(() => t.about.slogan.toString().split("\n"));
 	const remainingClick = ref(4);
 
@@ -45,14 +54,17 @@
 	 */
 	function showDevMode(e: MouseEvent) {
 		replayAnimation(e.currentTarget as HTMLDivElement, "active");
-		if (remainingClick.value && !isDevMode?.value) {
-			clearAllToast();
-			useToast(`继续点击${remainingClick.value--}次即可进入开发者模式`, "info");
-			return;
-		}
 		clearAllToast();
-		useToast("你已进入开发者模式！", "success");
-		isDevMode && (isDevMode.value = true);
+		if (isDevMode?.value) {
+			useToast(t.toast.developer_mode_already_enabled, "info");
+			return;
+		} else if (remainingClick.value) {
+			useToast(t.toast.developer_mode_remain_clicks(remainingClick.value--), "info");
+			return;
+		} else {
+			isDevMode && (isDevMode.value = true);
+			useToast(t.toast.developer_mode_enabled, "success");
+		}
 	}
 
 	team.forEach(async developer => {
@@ -76,22 +88,9 @@
 					<p class="slogan"><span>{{ sloganLines[0] }}</span><span><b>{{ sloganLines[1] }}</b></span></p>
 				</div>
 				<div class="version">
-					<template v-if="gitBranch && gitCommit">
-						<div>
-							<Icon name="branch" /><span>{{ gitBranch }}</span>
-						</div>
-						<div>
-							<Icon name="commit" /><span>{{ gitCommit.slice(0, 7) }}</span>
-						</div>
-					</template>
-					<template v-else>
-						<div>
-							<Icon name="code" /><span>Frontend Development Mode</span>
-						</div>
-						<div v-if="isLocalBackend">
-							<Icon name="server" /><span>Local Backend</span>
-						</div>
-					</template>
+					<div v-for="(value, icon) in versionTag" :key="icon">
+						<Icon v-if="value" :name="icon" /><span>{{ value }}</span>
+					</div>
 				</div>
 			</div>
 		</Contents>

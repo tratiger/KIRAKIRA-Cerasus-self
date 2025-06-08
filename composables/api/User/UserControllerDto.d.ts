@@ -409,8 +409,6 @@ export type BasicUserSettingsDto = {
 	unitSystemType?: string;
 	/** 是否进入了开发者模式 - 布尔 */
 	devMode?: boolean;
-	/** 实验性：启用动态背景 - 布尔 */
-	showCssDoodle?: boolean;
 	/** 实验性：启用直角模式 - 布尔 */
 	sharpAppearanceMode?: boolean;
 	/** 实验性：启用扁平模式 - 布尔 */

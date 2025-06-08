@@ -45,6 +45,20 @@
 		bgImage.data = file ? await fileToData(file) : "";
 	});
 
+	const useCookieAndLocalStorageOptions = { isWatchCookieRef: true, isSyncSettings: false };
+	// 在 cookie 和 localStorage 中同步的 Cookie，是否开启主题同步
+	const isAllowSyncThemeSettings = useKiraCookie<boolean>(COOKIE_KEY.isAllowSyncThemeSettings, undefined, useCookieAndLocalStorageOptions);
+	watch(isAllowSyncThemeSettings, () => {
+		// 用户选择开启或关闭 isAllowSyncThemeSettings 的时候会载入数据
+		api.user.getUserSettings().then(userSettings => {
+			saveUserSetting2BrowserCookieStore(userSettings);
+			cookieBinding();
+		});
+	});
+
+	const selfUserInfoStore = useSelfUserInfoStore();
+	const appSettings = useAppSettingsStore();
+
 	onMounted(() => {
 		if (paletteSection.value)
 			for (const item of paletteSection.value.children)
@@ -150,7 +164,7 @@
 					:max="1"
 					:step="0.01"
 					:defaultValue="0.75"
-					icon="opacity"
+					icon="join_inner"
 					pending="current"
 					:displayValue="backgroundSliderDisplayValue"
 				>{{ t.background.tint }}</SettingsSlider>
@@ -160,10 +174,10 @@
 					:max="64"
 					:step="1"
 					:defaultValue="0"
-					icon="opacity"
+					icon="blur"
 					pending="current"
 					:displayValue="backgroundSliderDisplayValue"
-				>{{ t.background.blurIntensity }}</SettingsSlider>
+				>{{ t.background.blur_intensity }}</SettingsSlider>
 			<!-- TODO: 滑块上方的气泡定位有问题。 -->
 			</template>
 		</section>
@@ -171,6 +185,18 @@
 		<Subheader icon="more_horiz">{{ t(2).other }}</Subheader>
 		<section list>
 			<ToggleSwitch v-model="cookieColoredSidebar" v-ripple icon="dehaze">{{ t.appearance.colorful_navbar }}</ToggleSwitch>
+			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" v-ripple :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">使用阿卡林游客头像</ToggleSwitch>
+		</section>
+
+		<section list>
+			<ToggleSwitch
+				v-model="isAllowSyncThemeSettings"
+				v-ripple
+				:disabled="!selfUserInfoStore.isLogined"
+				icon="sync"
+			>
+				{{ t.sync_across_devices }}
+			</ToggleSwitch>
 		</section>
 	</div>
 </template>

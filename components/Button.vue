@@ -13,7 +13,7 @@
 		/** 按钮是否在加载中？ */
 		loading?: boolean;
 		/** 按钮事件级别。 */
-		severity?: "warning" | "error";
+		severity?: "warning" | "danger";
 	}>();
 
 	const emits = defineEmits<{
@@ -34,9 +34,12 @@
 	<button
 		type="button"
 		@click="onClick"
-		:class="severity && ['force-color', { warning: 'yellow', error: 'red' }[severity]]"
+		:class="severity && ['force-color', { warning: ['yellow', 'warning'], danger: ['red', 'danger'] }[severity]]"
 	>
 		<div v-ripple class="button-content">
+			<div v-if="severity === 'warning' || severity === 'danger'" class="decoration">
+				<Icon v-for="i in 5" :name="severity === 'danger' ? 'close' : 'exclamation'" :key="i" />
+			</div>
 			<Icon v-if="icon" :name="icon" />
 			<span class="caption"><span><slot></slot></span></span>
 			<Transition>
@@ -65,6 +68,7 @@
 	button {
 		display: inline-grid;
 		color: white;
+		font-weight: 500;
 
 		&[disabled] {
 			pointer-events: none;
@@ -87,6 +91,11 @@
 			--icon-behind: true;
 		}
 
+		&.warning,
+		&.danger {
+			font-weight: 600;
+		}
+
 		&:deep(*) {
 			font-variant-numeric: inherit;
 		}
@@ -102,7 +111,6 @@
 		flex-shrink: 0;
 		min-height: 36px;
 		padding: 8px 16px;
-		letter-spacing: 0.05em;
 		white-space: nowrap;
 		vertical-align: middle;
 		background-color: c(accent);
@@ -194,6 +202,77 @@
 				color: c(gray-40);
 				background-color: transparent !important;
 			}
+		}
+	}
+
+	@keyframes decoration-move {
+		0% {
+			translate: 0 150%;
+			opacity: 0;
+		}
+
+		50% {
+			opacity: 1;
+		}
+
+		100% {
+			translate: 0 -150%;
+			opacity: 0;
+		}
+	}
+
+	.decoration {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		overflow: clip;
+		opacity: 0.4;
+		pointer-events: none;
+
+		> * {
+			position: absolute;
+			scale: 1.5;
+			transition: $fallback-transitions, all $ease-out-back 1s;
+			animation: decoration-move 4s linear infinite both;
+
+			button:any-hover & {
+				scale: 2;
+			}
+
+			button.danger:any-hover & {
+				rotate: 90deg;
+			}
+		}
+
+		@for $i from 1 through 5 {
+			> :nth-child(#{$i}) {
+				animation-delay: (1.6s * ($i - 1));
+			}
+		}
+
+		> :nth-child(1) {
+			font-size: 36px;
+		}
+
+		> :nth-child(2) {
+			left: 20%;
+			font-size: 24px;
+		}
+
+		> :nth-child(3) {
+			left: 50%;
+			font-size: 48px;
+		}
+
+		> :nth-child(4) {
+			left: 60%;
+			font-size: 16px;
+		}
+
+		> :nth-child(5) {
+			left: 80%;
+			font-size: 32px;
 		}
 	}
 

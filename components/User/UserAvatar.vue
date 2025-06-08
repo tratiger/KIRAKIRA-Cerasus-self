@@ -20,6 +20,7 @@
 	});
 
 	const provider = computed(() => props.avatar?.startsWith("blob:http") ? undefined : environment.cloudflareImageProvider);
+	const appSettings = useAppSettingsStore();
 </script>
 
 <template>
@@ -36,7 +37,7 @@
 			:class="{ hoverable }"
 			:placeholder="[20, 20, 100, 2]"
 		/>
-		<Icon v-else name="person" />
+		<Icon v-else :name="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'" />
 		<div v-if="avatar" class="tint-overlay"></div>
 		<LocaleLink v-if="userLink" :to="userLink" class="lite" />
 	</Comp>
@@ -132,6 +133,10 @@
 			@include square(100%);
 			position: absolute;
 			z-index: 3;
+		}
+
+		.icon[aria-label="akkarin"] {
+			font-size: var(--size);
 		}
 	}
 </style>

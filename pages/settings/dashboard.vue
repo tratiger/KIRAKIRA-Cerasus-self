@@ -26,11 +26,11 @@
 		<div class="user-counts chip">
 			<div>
 				<span class="value">233</span>
-				<p>{{ t.follow }}</p>
+				<p>{{ t.following }}</p>
 			</div>
 			<div>
 				<span class="value">233</span>
-				<p>{{ t.fans }}</p>
+				<p>{{ t(0).follower }}</p>
 			</div>
 			<div>
 				<span class="value">233</span>

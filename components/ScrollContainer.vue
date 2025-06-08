@@ -9,6 +9,7 @@
 	const props = withDefaults(defineProps<{
 		overflowX?: "visible" | "hidden" | "clip" | "scroll" | "auto";
 		overflowY?: "visible" | "hidden" | "clip" | "scroll" | "auto";
+		scrollElId?: string;
 	}>(), {
 		overflowX: "auto",
 		overflowY: "auto",
@@ -120,8 +121,8 @@
 		mouseHovering.value = true;
 		clearTimeout(hideVerticalTimeout.value);
 		clearTimeout(hideHorizontalTimeout.value);
-		if (scrollableVertical.value) showVertical.value = true;
-		if (scrollableHorizontal.value) showHorizontal.value = true;
+		showVertical.value = scrollableVertical.value;
+		showHorizontal.value = scrollableHorizontal.value;
 	}
 
 	/**
@@ -152,8 +153,8 @@
 	 */
 	function onScrollChange() {
 		updateScrollPercentage();
-		if (scrollableVertical.value) showVertical.value = true;
-		if (scrollableHorizontal.value) showHorizontal.value = true;
+		showVertical.value = scrollableVertical.value;
+		showHorizontal.value = scrollableHorizontal.value;
 		if (!mouseHovering.value && !draggingHorizontal.value && !draggingHorizontal.value) hideAll();
 	}
 
@@ -282,8 +283,9 @@
 	>
 		<div
 			ref="scrollerEl"
+			:id="scrollElId"
 			class="scroller"
-			@scroll="onScrollChange"
+			@scroll.passive="onScrollChange"
 			:style="{ overflowX: props.overflowX, overflowY: props.overflowY }"
 		>
 			<div ref="contentEl" class="content">

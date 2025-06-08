@@ -108,7 +108,7 @@ export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRe
 		appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
 		selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
 		selfUserInfoStore.isLogined = true;
-		selfUserInfoStore.userInfo = data.value.result ?? { };
+		selfUserInfoStore.userInfo = data.value.result ?? {};
 	} else
 		await userLogout();
 	return data.value as GetSelfUserInfoResponseDto;
@@ -186,7 +186,7 @@ export async function userLogout(): Promise<UserLogoutResponseDto> {
 		selfUserInfoStore.isLogined = false;
 		selfUserInfoStore.userInfo = {};
 	} else
-		console.error("ERROR", "用户登出失败"); // TODO: 使用多语言
+		console.error("ERROR", "Logout failed.", logoutResult);
 	return logoutResult;
 }
 
@@ -209,7 +209,7 @@ export const uploadUserAvatar = async (fileName: string, avatarBlobData: Blob, s
 		await uploadFile2CloudflareImages(fileName, signedUrl, avatarBlobData, 60000);
 		return true;
 	} catch (error) {
-		console.error("用户头像上传失败，错误信息：", error, { avatarBlobData, signedUrl });
+		console.error("ERROR", "Failed to upload avatar:", error, { avatarBlobData, signedUrl });
 		return false;
 	}
 };

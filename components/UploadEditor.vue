@@ -67,7 +67,7 @@
 	 * @returns 获取符合条件的图片列表。
 	 */
 	function getValidFiles(fileList?: FileList | null) {
-		if (!fileList || !fileList.length) return [];
+		if (!fileList || fileList.length === 0) return [];
 		const files: File[] = [];
 		for (const file of fileList)
 			if (file.type.startsWith("image"))
@@ -83,7 +83,7 @@
 		const input = e.target as HTMLInputElement;
 		const thumbnails = getValidFiles(input.files);
 
-		if (thumbnails.length) {
+		if (thumbnails.length > 0) {
 			thumbnailBlob.value = fileToBlob(thumbnails[0]);
 			isCoverCropperOpen.value = true;
 			input.value = ""; // 读取完用户上传的文件后，需要清空 input，以免用户在下次上传同一个文件时无法触发 change 事件。
@@ -118,11 +118,11 @@
 				isCoverCropperOpen.value = false;
 				clearBlobUrl(); // 释放内存
 			} else {
-				useToast("封面图上传失败，请重试", "error"); // TODO: 使用多语言
+				useToast(t.toast.cover_upload_failed, "error");
 				isUploadingCover.value = false;
 			}
 		} else {
-			useToast("封面图上传失败，请重试", "error"); // TODO: 使用多语言
+			useToast(t.toast.cover_upload_failed, "error");
 			isUploadingCover.value = false;
 			isCoverCropperOpen.value = false;
 		}
@@ -133,18 +133,18 @@
 	 * @param files - 文件列表。
 	 */
 	function tusUpload(files: File[]) {
-		if (!files || files.length < 1) {
-			useToast("无法上传：未找到视频文件", "error"); // TODO: 使用多语言
+		if (!files || files.length === 0) {
+			useToast(t.toast.upload_file_not_found, "error");
 			return;
 		}
 
 		uploader = new api.video.TusFileUploader(files[0], uploadProgress, isUploadingVideo);
 		uploader.process?.then((videoId: string) => {
 			cloudflareVideoId.value = videoId;
-			useToast("上传完成", "success"); // TODO: 使用多语言
+			useToast(t.toast.uploaded, "success");
 		}).catch((error: unknown) => {
-			useToast("上传失败", "error"); // TODO: 使用多语言
-			console.error("ERROR", "上传失败：", error);
+			useToast(t.toast.upload_failed, "error");
+			console.error("ERROR", "Upload Failed:", error);
 		});
 	}
 
@@ -167,24 +167,24 @@
 	 */
 	async function commitVideo() {
 		if (!cloudflareVideoId.value) {
-			useToast("视频没有上传完成", "error"); // TODO: 使用多语言
+			useToast(t.toast.upload_not_completed, "error");
 			return;
 		}
 		const uid = useSelfUserInfoStore().userInfo.uid;
 		if (!uid) {
-			useToast("未登录用户不能上传", "error"); // TODO: 使用多语言
+			useToast(t.toast.upload_must_logged_in, "error");
 			return;
 		}
 		if (!title.value) {
-			useToast("必须填写标题", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.title, "error");
 			return;
 		}
 		if (!description.value) {
-			useToast("必须填写简介", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.description, "error");
 			return;
 		}
 		if (!category.value) {
-			useToast("必须选择分区", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.category, "error");
 			return;
 		}
 
@@ -223,8 +223,8 @@
 			}
 		} catch (error) {
 			isCommitButtonLoading.value = false;
-			useToast("视频上传失败", "error"); // TODO: 使用多语言
-			console.error("ERROR", "视频提交失败：", error);
+			useToast(t.toast.upload_failed, "error");
+			console.error("ERROR", "Video submission failed:", error);
 		}
 	}
 
@@ -299,8 +299,7 @@
 
 <template>
 	<div class="container">
-		<!-- TODO: 使用多语言 -->
-		<Modal v-model="isCoverCropperOpen" title="上传封面">
+		<Modal v-model="isCoverCropperOpen" :title="t.select_cover">
 			<div class="cover-cropper">
 				<ImageCropper
 					ref="cropper"
@@ -316,10 +315,8 @@
 				/>
 			</div>
 			<template #footer-right>
-				<!-- TODO: 使用多语言 -->
-				<Button class="secondary" @click="isCoverCropperOpen = false">取消</Button>
-				<!-- TODO: 使用多语言 -->
-				<Button :loading="isUploadingCover" :disabled="isUploadingCover" @click="handleSubmitCoverImage">上传</Button>
+				<Button class="secondary" @click="isCoverCropperOpen = false">{{ t.step.cancel }}</Button>
+				<Button :loading="isUploadingCover" :disabled="isUploadingCover" @click="handleSubmitCoverImage">{{ t.upload }}</Button>
 			</template>
 		</Modal>
 

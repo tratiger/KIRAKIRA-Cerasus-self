@@ -1,5 +1,5 @@
-import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 import type { NavigateToOptions } from "nuxt/dist/app/composables/router";
+import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 
 const localeCodes = computed(() => useNuxtApp().$i18n.localeCodes.value);
 type Route = RouteLocationNormalized | RouteLocationNormalizedLoaded;
@@ -34,7 +34,7 @@ export function getRoutePath({
  */
 export function getLocaleRouteSlug(route?: Route | string) {
 	if (typeof route !== "string") route = getRoutePath({ route });
-	return route.split("/").filter(i => i);
+	return route.split("/").filter(Boolean);
 }
 
 /**
@@ -88,26 +88,28 @@ export function switchLanguage(lang: string) {
 	// useRouter().push(switchLocalePath(value)); // 旧方法，不推荐使用。
 	if (lang === "zhs") lang = "/";
 	else lang = `/${lang}/`;
-	const update = () => useRouter().push(lang + getRoutePath());
+	const update = () => { useRouter().push(lang + getRoutePath()); };
 	if (environment.server) update();
 	else { // 切换语言动画。
-		const element = document.querySelector(".settings") ?? document.body;
-		const routerView = element.querySelector(".router-view");
-		routerView?.classList.add("stop-animation");
-		if (!document.startViewTransition)
-			element.animate([
+		const settings = document.querySelector(".settings");
+		const element = settings ?? document.body;
+		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
+		routerView?.classList.add("stop-transition");
+		if (!document.startViewTransition) {
+			update();
+			document.body.animate([
 				{ filter: "blur(10px)" },
 				{ filter: "blur(0)" },
 			], { duration: 500, easing: eases.easeOutSmooth });
-		else
-			startColorViewTransition(() => {
-				useRouter().push(lang + getRoutePath());
-			}, {
+		} else
+			startColorViewTransition(update, {
 				clipPath: ["inset(0 0 100%)", "inset(0)"],
 			}, {
 				duration: 500,
 			});
-		// nextTick(() => routerView?.classList.add("stop-animation"));
+		setTimeout(() => {
+			routerView?.classList.remove("stop-transition");
+		}, 500);
 	}
 }
 

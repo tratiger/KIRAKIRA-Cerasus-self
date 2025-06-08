@@ -37,7 +37,7 @@
 
 	const appearance = computed(() => props.appearance === "default" ? "" : props.appearance);
 	const state = ref<AnimatedIconState>([props.animatedState, false, 0]);
-	const changeState = (e: "pressed" | "lifted") => state.value = [[props.animatedState, e].filter(i => i).join(" ")];
+	const changeState = (e: "pressed" | "lifted") => state.value = [[props.animatedState, e].filter(Boolean).join(" ")];
 	const wrapper = ref<HTMLButtonElement/*  | InstanceType<typeof LocaleLink> */>();
 
 	usePressed(wrapper, () => changeState("pressed"), () => changeState("lifted"));
