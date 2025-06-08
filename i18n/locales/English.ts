@@ -39,7 +39,7 @@ export default {
 		custom: "Custom Background",
 		opacity: "Opacity",
 		tint: "Tint",
-		blur_intensity: "Blur Intensity",
+		blur: "Blurriness",
 	},
 	appearance: {
 		_: "Appearance",

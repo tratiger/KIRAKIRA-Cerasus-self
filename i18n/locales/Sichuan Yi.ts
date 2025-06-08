@@ -43,7 +43,7 @@ export default {
 		custom: "crwdns2258:0crwdne2258:0",
 		opacity: "crwdns2952:0crwdne2952:0",
 		tint: "crwdns2954:0crwdne2954:0",
-		blur_intensity: "crwdns3382:0crwdne3382:0",
+		blur: "crwdns3382:0crwdne3382:0",
 	},
 	appearance: {
 		_: "crwdns2260:0crwdne2260:0",

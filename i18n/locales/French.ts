@@ -43,7 +43,7 @@ export default {
 		custom: "Arrière-plan personnalisé",
 		opacity: "Opacité",
 		tint: "Teinte",
-		blur_intensity: "Intensité de flou",
+		blur: "Intensité de flou",
 	},
 	appearance: {
 		_: "Apparence",
