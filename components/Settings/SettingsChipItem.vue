@@ -10,6 +10,8 @@
 		details?: Readable;
 		/** 尾随操作图标。 */
 		trailingIcon?: DeclaredIcons;
+		/** 是否禁止尾随操作图片点击 */
+		trailingIconDisabled?: boolean;
 		/** 尾随操作图标单击事件。 */
 		onTrailingIconClick?: () => void;
 		/** 点击链接。支持外链和内链。 */
@@ -41,7 +43,7 @@
 			</div>
 			<template v-if="trailingIcon">
 				<Icon v-if="!onTrailingIconClick" class="trailing-icon" :name="trailingIcon" />
-				<SoftButton v-else :icon="trailingIcon" class="trailing-icon" @click.stop="onTrailingIconClick" />
+				<SoftButton v-else :icon="trailingIcon" :disabled="trailingIconDisabled" class="trailing-icon" @click.stop="onTrailingIconClick" />
 			</template>
 			<template v-if="href">
 				<a v-if="isExtenalLink" draggable="false" :href target="_blank" class="link lite"></a>

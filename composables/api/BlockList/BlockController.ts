@@ -1,5 +1,5 @@
 import { DELETE, GET, POST } from "../Common";
-import type { BlockTagRequestDto, BlockTagResponseDto, BlockUserByUidRequestDto, BlockUserByUidResponseDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidRequestDto, HideUserByUidResponseDto, ShowUserByUidRequestDto, ShowUserByUidResponseDto, UnblockTagRequestDto, UnblockTagResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
+import type { AddRegexRequestDto, AddRegexResponseDto, BlockKeywordRequestDto, BlockKeywordResponseDto, BlockTagRequestDto, BlockTagResponseDto, BlockUserByUidRequestDto, BlockUserByUidResponseDto, GetBlockListRequestDto, GetBlockListResponseDto, HideUserByUidRequestDto, HideUserByUidResponseDto, RemoveRegexRequestDto, RemoveRegexResponseDto, ShowUserByUidRequestDto, ShowUserByUidResponseDto, UnblockKeywordRequestDto, UnblockKeywordResponseDto, UnblockTagRequestDto, UnblockTagResponseDto, UnblockUserByUidRequestDto, UnblockUserByUidResponseDto } from "./BlockControllerDto";
 
 const BACK_END_URI = environment.backendUri;
 const BLOCK_API_URI = `${BACK_END_URI}block`;
@@ -57,7 +57,7 @@ export const showUserController = async (showUserByUidRequest: ShowUserByUidRequ
 /**
  * 屏蔽 TAG
  * @param blockTagRequest 屏蔽 TAG 的请求载荷
- * @returns 频闭 TAG 的请求响应
+ * @returns 屏蔽 TAG 的请求响应
  */
 export const blockTagController = async (blockTagRequest: BlockTagRequestDto): Promise<BlockTagResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
@@ -72,4 +72,44 @@ export const blockTagController = async (blockTagRequest: BlockTagRequestDto): P
 export const unblockTagController = async (unblockTagRequest: UnblockTagRequestDto): Promise<UnblockTagResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	return await DELETE(`${BLOCK_API_URI}/delete/tag`, unblockTagRequest, { credentials: "include" }) as UnblockTagResponseDto;
+};
+
+/**
+ * 屏蔽关键词
+ * @param blockKeywordRequest 屏蔽关键词的请求载荷
+ * @returns 屏蔽关键词的请求响应
+ */
+export const blockKeywordController = async (blockKeywordRequest: BlockKeywordRequestDto): Promise<BlockKeywordResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${BLOCK_API_URI}/keyword`, blockKeywordRequest, { credentials: "include" }) as BlockKeywordResponseDto;
+};
+
+/**
+ * 取消屏蔽关键词
+ * @param unblockKeywordRequest 取消屏蔽关键词的请求载荷
+ * @returns 取消屏蔽关键词的请求响应
+ */
+export const unblockKeywordController = async (unblockKeywordRequest: UnblockKeywordRequestDto): Promise<UnblockKeywordResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await DELETE(`${BLOCK_API_URI}/delete/keyword`, unblockKeywordRequest, { credentials: "include" }) as UnblockKeywordResponseDto;
+};
+
+/**
+ * 添加用于屏蔽内容的正则表达式
+ * @param addRegexRequest 添加用于屏蔽内容的正则表达式的请求载荷
+ * @returns 添加用于屏蔽内容的正则表达式的请求响应
+ */
+export const addRegexController = async (addRegexRequest: AddRegexRequestDto): Promise<AddRegexResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await POST(`${BLOCK_API_URI}/regex`, addRegexRequest, { credentials: "include" }) as AddRegexResponseDto;
+};
+
+/**
+ * 移除用于屏蔽内容的正则表达式
+ * @param removeRegexRequest 移除用于屏蔽内容的正则表达式的请求载荷
+ * @returns 移除用于屏蔽内容的正则表达式的请求响应
+ */
+export const removeRegexController = async (removeRegexRequest: RemoveRegexRequestDto): Promise<RemoveRegexResponseDto> => {
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	return await DELETE(`${BLOCK_API_URI}/delete/regex`, removeRegexRequest, { credentials: "include" }) as RemoveRegexResponseDto;
 };
