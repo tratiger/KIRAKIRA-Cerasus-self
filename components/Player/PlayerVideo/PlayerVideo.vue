@@ -179,8 +179,16 @@
 		playerConfig.danmaku.fontSizeScale = size;
 	});
 
+	watch(() => settings.controller.showStop, showStop => {
+		playerConfig.controller.showStop = showStop;
+	});
+
 	watch(() => settings.controller.showFrameByFrame, showFrameByFrame => {
 		playerConfig.controller.showFrameByFrame = showFrameByFrame;
+	});
+
+	watch(() => settings.controller.autoResumePlayAfterSeeking, autoResumePlayAfterSeeking => {
+		playerConfig.controller.autoResumePlayAfterSeeking = autoResumePlayAfterSeeking;
 	});
 
 	watch(fullscreen, fullscreen => { // 全屏时请求横屏。在设备不支持或安全问题时有可能会报错。

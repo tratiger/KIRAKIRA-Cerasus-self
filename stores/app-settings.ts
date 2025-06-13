@@ -40,7 +40,9 @@ export const useAppSettingsStore = defineStore("app-settings", {
 				fontSizeScale: 1,
 			},
 			controller: {
+				showStop: false,
 				showFrameByFrame: false,
+				autoResumePlayAfterSeeking: false,
 			},
 			quality: {
 				auto: true,
