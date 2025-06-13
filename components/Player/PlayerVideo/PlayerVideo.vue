@@ -48,7 +48,7 @@
 			opacity: 1,
 		},
 		controller: {
-			showStop: true,
+			showStop: false,
 			showFrameByFrame: false,
 			autoResumePlayAfterSeeking: false,
 		},
@@ -723,7 +723,7 @@
 		</div>
 		<audio ref="beepSoundAudio" :src="beepSound"></audio>
 
-		<div v-if="!isMobileWidth" class="panel-container">
+		<div v-if="!isMobileWidth && !fullscreen" class="panel-container">
 			<ClientOnly>
 				<LazyPlayerVideoPanel
 					v-model:insertDanmaku="willInsertDanmaku"
