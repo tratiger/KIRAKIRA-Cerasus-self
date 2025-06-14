@@ -365,6 +365,10 @@ export default [
 				"singleline": 5,
 				"multiline": 1,
 			}],
+			"vue/first-attribute-linebreak": ["error", {
+				"singleline": "ignore",
+				"multiline": "below",
+			}],
 			"no-restricted-properties": ["error", {
 				object: "arguments",
 				property: "callee",
