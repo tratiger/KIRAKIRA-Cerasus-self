@@ -1,8 +1,5 @@
 export const useAppSettingsStore = defineStore("app-settings", {
 	state: () => ({
-		sharpAppearanceMode: false,
-		flatAppearanceMode: false,
-
 		lastSettingPage: "appearance",
 		exitSettingRoute: "/",
 

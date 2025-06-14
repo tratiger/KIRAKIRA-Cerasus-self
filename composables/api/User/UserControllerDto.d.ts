@@ -392,10 +392,6 @@ export type BasicUserSettingsDto = {
 	unitSystemType?: string;
 	/** 是否进入了开发者模式 - 布尔 */
 	devMode?: boolean;
-	/** 实验性：启用直角模式 - 布尔 */
-	sharpAppearanceMode?: boolean;
-	/** 实验性：启用扁平模式 - 布尔 */
-	flatAppearanceMode?: boolean;
 	/** 用户关联网站的隐私设置 - 允许的值有：{public: 公开, following: 仅关注, private: 隐藏} */
 	userWebsitePrivacySetting?: "public" | "following" | "private";
 	/** 用户关联账户的隐私设置 */

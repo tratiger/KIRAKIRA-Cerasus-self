@@ -270,20 +270,6 @@ img.jipt-loader-logo {
 	}
 }
 
-// 直角样式
-html.sharp {
-	@include enhanced-selector {
-		border-radius: 0 !important;
-	}
-}
-
-// 扁平样式
-html.flat {
-	@include enhanced-selector {
-		box-shadow: none !important;
-	}
-}
-
 // 移除颜色过渡。
 html.no-color-transition {
 	@include enhanced-selector {

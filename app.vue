@@ -5,7 +5,6 @@
 
 	const homepage = "https://kirakira.moe/";
 	const { locale } = useI18n();
-	const appSettings = useAppSettingsStore();
 	const inContextLocalization = isInContextLocalization();
 
 	const langTag = computed(() => ({
@@ -91,12 +90,6 @@
 		] : undefined,
 	});
 
-	watch(() => appSettings.sharpAppearanceMode, enabled => {
-		setClassEnabled(document.documentElement, "sharp", enabled);
-	});
-	watch(() => appSettings.flatAppearanceMode, enabled => {
-		setClassEnabled(document.documentElement, "flat", enabled);
-	});
 	watch(inContextLocalization, enableJipt => {
 		if (enableJipt && !globalThis.jipt) {
 			const jiptLoaderLogo = document.createElement("img");
