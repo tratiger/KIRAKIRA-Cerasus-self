@@ -146,6 +146,8 @@ export default {
 			_: "Control Bar",
 			stop: "Show Stop Button",
 			stop_description: "Teleport to the first frame and stop",
+			replay: "Always Show Replay Button",
+			replay_description: "Teleport to the first frame and play",
 			first_last_frame: "Show First & Last Frame Buttons",
 			first_last_frame_description: "Teleport to the first or last frame and stop",
 			frame_by_frame: "Show Frame by Frame Control Buttons",

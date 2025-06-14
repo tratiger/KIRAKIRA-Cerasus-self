@@ -79,6 +79,9 @@ importers:
       nuxt-icons:
         specifier: ^3.2.1
         version: 3.2.1(magicast@0.3.5)
+      nuxt-site-config:
+        specifier: ^3.2.0
+        version: 3.2.0(magicast@0.3.5)(vue@3.5.14(typescript@5.8.3))
       path-browserify-es:
         specifier: ^1.1.0
         version: 1.1.0
@@ -98,8 +101,8 @@ importers:
         specifier: ^4.1.0
         version: 4.3.1
       variable-name-conversion:
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.6.0
+        version: 1.6.0
       vue-audio-visual:
         specifier: ^3.0.8
         version: 3.0.11(typescript@5.8.3)
@@ -6143,8 +6146,8 @@ packages:
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
 
-  variable-name-conversion@1.5.0:
-    resolution: {integrity: sha512-KuaPpCid8eIAezvdmgNms/a21rwVFtIOLw9sbr/dFUHPbM0LR1D0BQh1a0OkzrR4XPFvM4HQNxGZgVFx9apGdQ==}
+  variable-name-conversion@1.6.0:
+    resolution: {integrity: sha512-n15XHHfEwonS2xUuBKsNkRyp9HEBI5x9zpt0f1uiRmS1oCppnIeQmYO7Jy6icM9REMDNjZ/eCBG/EA3zajjcxQ==}
 
   vite-dev-rpc@1.0.7:
     resolution: {integrity: sha512-FxSTEofDbUi2XXujCA+hdzCDkXFG1PXktMjSk1efq9Qb5lOYaaM9zNSvKvPPF7645Bak79kSp1PTooMW2wktcA==}
@@ -13448,7 +13451,7 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  variable-name-conversion@1.5.0: {}
+  variable-name-conversion@1.6.0: {}
 
   vite-dev-rpc@1.0.7(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(less@4.3.0)(sass@1.77.6)(stylus@0.62.0)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)):
     dependencies:

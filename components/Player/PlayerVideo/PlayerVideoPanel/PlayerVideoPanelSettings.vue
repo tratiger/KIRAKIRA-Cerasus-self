@@ -10,6 +10,7 @@
 
 	type Filters = keyof PlayerVideoSettings["filter"] | "rotation90" | "rotation180" | "rotation270";
 
+	/* TODO: 多语言。 */
 	const filters: Record<Exclude<Filters, "rotation">, [string, CSSProperties]> = {
 		horizontalFlip: ["水平翻转", { scale: "-1 1" }],
 		verticalFlip: ["垂直翻转", { scale: "1 -1" }],
@@ -94,6 +95,10 @@
 							{{ !settings.controller.showFrameByFrame ? t.player.control_bar.stop : t.player.control_bar.first_last_frame }}
 							<template #details>{{ !settings.controller.showFrameByFrame ? t.player.control_bar.stop_description : t.player.control_bar.first_last_frame_description }}</template>
 						</ToggleSwitch>
+						<ToggleSwitch v-model="settings.controller.showReplay" v-ripple icon="replay">
+							{{ t.player.control_bar.replay }}
+							<template #details>{{ t.player.control_bar.replay_description }}</template>
+						</ToggleSwitch>
 						<ToggleSwitch v-model="settings.controller.showFrameByFrame" v-ripple icon="slow_forward">
 							{{ t.player.control_bar.frame_by_frame }}
 							<template #details>{{ t.player.control_bar.frame_by_frame_description }}</template>
@@ -121,14 +126,6 @@
 									/>
 								</template>
 							</CheckCard>
-							<!-- <CheckCard v-model="settings.filter.horizontalFlip">
-					水平翻转
-					<template #image><NuxtImg :src="thumbnail" alt="preview" /></template>
-				</CheckCard>
-				<CheckCard v-model="settings.filter.verticalFlip">
-					垂直翻转
-					<template #image><NuxtImg :src="thumbnail" alt="preview" /></template>
-				</CheckCard> -->
 						</div>
 					</div>
 
