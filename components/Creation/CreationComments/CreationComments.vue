@@ -81,7 +81,7 @@
 			</div>
 		</div>
 		<div v-if="!error" class="items-container" :class="{ loading }">
-			<div class="items">
+			<div class="items" :inert="loading">
 				<CreationCommentsItem
 					v-for="comment in comments"
 					:key="comment._id"
