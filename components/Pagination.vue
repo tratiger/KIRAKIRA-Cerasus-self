@@ -12,6 +12,8 @@
 		displayPageCount?: number;
 		/** 允许用户使用键盘上左右箭头键翻页。 */
 		enableArrowKeyMove?: boolean;
+		/** 是否禁用？ */
+		disabled: boolean;
 	}>(), {
 		current: 1,
 		displayPageCount: 7,
@@ -263,6 +265,7 @@
 	</DefineUnselectedItem>
 
 	<Comp
+		:inert="disabled"
 		role="slider"
 		aria-orientation="horizontal"
 		:aria-label="t.current_page_label(currentPage, pages)"
@@ -358,6 +361,10 @@
 	:comp {
 		position: relative;
 		user-select: none;
+
+		&[inert] {
+			opacity: 0.4;
+		}
 	}
 
 	.thumb {

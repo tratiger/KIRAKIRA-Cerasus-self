@@ -43,7 +43,7 @@ export default {
 		custom: "自訂背景",
 		opacity: "透光度",
 		tint: "染色",
-		blur_intensity: "模糊強度",
+		blur: "模糊強度",
 	},
 	appearance: {
 		_: "版面",

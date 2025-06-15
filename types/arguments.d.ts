@@ -76,6 +76,7 @@ declare global {
 		};
 		controller: {
 			showStop: boolean;
+			showReplay: boolean;
 			showFrameByFrame: boolean;
 			autoResumePlayAfterSeeking: boolean;
 		};

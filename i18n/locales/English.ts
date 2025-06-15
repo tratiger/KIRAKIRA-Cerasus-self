@@ -39,7 +39,7 @@ export default {
 		custom: "Custom Background",
 		opacity: "Opacity",
 		tint: "Tint",
-		blur_intensity: "Blur Intensity",
+		blur: "Blurriness",
 	},
 	appearance: {
 		_: "Appearance",
@@ -77,6 +77,7 @@ export default {
 		user: "User Settings",
 		app: "App Settings",
 		experimental_warning: "The following settings are experimental features and are not guaranteed to run stably or sync across multiple devices. Please use them with caution!",
+		no_experimental_features: "No experimental features available",
 		security: {
 			is_unsafe_2fa: "You haven't enabled two-factor authentication yet. We strongly recommend activating it immediately.\nAccounts without two-factor authentication are more vulnerable to being hacked.",
 		},
@@ -146,6 +147,8 @@ export default {
 			_: "Control Bar",
 			stop: "Show Stop Button",
 			stop_description: "Teleport to the first frame and stop",
+			replay: "Always Show Replay Button",
+			replay_description: "Teleport to the first frame and play",
 			first_last_frame: "Show First & Last Frame Buttons",
 			first_last_frame_description: "Teleport to the first or last frame and stop",
 			frame_by_frame: "Show Frame by Frame Control Buttons",

@@ -80,6 +80,13 @@
 		},
 		{
 			"type": "npm",
+			"script": "node-modules-inspector",
+			"problemMatcher": [],
+			"label": "Node Modules Inspector",
+			"detail": "Visualize your node_modules, inspect dependencies, and more - 可视化您的 node_modules、检查依赖项等等"
+		},
+		{
+			"type": "npm",
 			"script": "crowdin:update",
 			"problemMatcher": [],
 			"label": "Crowdin: Update",

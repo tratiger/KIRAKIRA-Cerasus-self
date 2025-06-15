@@ -285,6 +285,7 @@
 		<div class="left">
 			<SoftButton class="play" :disabled="splash" :icon="seekingIcon ?? (ended ? 'replay' : playing ? 'pause' : 'play')" @click="playing = !playing" />
 			<Transition><SoftButton v-if="settings?.controller.showStop && !settings?.controller.showFrameByFrame" :disabled="splash" icon="stop" @click="model = 0; playing = false;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showReplay && !ended" :disabled="splash" icon="replay" @click="model = 0; playing = true;" /></Transition>
 			<Transition><SoftButton v-if="settings?.controller.showStop && settings?.controller.showFrameByFrame" :disabled="splash" icon="skip_previous" @click="model = 0; playing = false;" /></Transition>
 			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_left" @click="model -= (1 / getCurrentFrameRate()!)" /></Transition>
 			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_right" @click="model += (1 / getCurrentFrameRate()!)" /></Transition>
@@ -351,8 +352,8 @@
 <style scoped lang="scss">
 	$thickness: 36px;
 	$twin-thickness: 60px;
-	$ripple-fix-padding: calc(($thickness * (64px / 40px) - $thickness) / 2); // 修复水波纹切割，用于padding。
-	$ripple-fix-margin: calc(($thickness * (64px / 40px) - $thickness) / -2); // 修复水波纹切割，用于margin。
+	$ripple-fix-padding: calc(($thickness * (64px / 40px) - $thickness) / 2); // 修复水波纹切割，用于 padding。
+	$ripple-fix-margin: calc(($thickness * (64px / 40px) - $thickness) / -2); // 修复水波纹切割，用于 margin。
 
 	:comp {
 		position: relative;

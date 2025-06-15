@@ -168,10 +168,10 @@
 		</ClientOnly>
 		<div class="toolbar">
 			<div class="left">
-				<ToolItem :tooltip="t.format.bold" icon="bold" active="bold" @click="toggleBold" />
-				<ToolItem :tooltip="t.format.italic" icon="italic" active="italic" @click="toggleItalic" />
-				<ToolItem :tooltip="t.format.underline" icon="underline" active="underline" @click="toggleUnderline" />
-				<ToolItem :tooltip="t.format.strikethrough" icon="strikethrough" active="strike" @click="toggleStrike" />
+				<ToolItem :tooltip="t.format.bold" icon="format_bold" active="bold" @click="toggleBold" />
+				<ToolItem :tooltip="t.format.italic" icon="format_italic" active="italic" @click="toggleItalic" />
+				<ToolItem :tooltip="t.format.underline" icon="format_underline" active="underline" @click="toggleUnderline" />
+				<ToolItem :tooltip="t.format.strikethrough" icon="format_strikethrough" active="strike" @click="toggleStrike" />
 				<ToolItem :tooltip="t.mention" icon="at" @click="showAtList" />
 				<ToolItem :tooltip="t.kaomoji" icon="kaomoji" :active="!!flyoutKaomoji" @click="e => flyoutKaomoji = [e, 'y', -3]" />
 				<ToolItem :tooltip="t.image" icon="photo" @click="addVueComponents" />

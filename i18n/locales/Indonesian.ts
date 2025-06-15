@@ -34,7 +34,7 @@ export default {
 	background: {
 		_: "Latar",
 		custom: "Sesuaikan Latar",
-		blur_intensity: "Tingkat Keburaman",
+		blur: "Tingkat Keburaman",
 	},
 	appearance: {
 		_: "Penampilan",
