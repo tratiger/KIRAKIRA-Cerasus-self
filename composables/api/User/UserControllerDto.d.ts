@@ -280,6 +280,11 @@ export type GetUserInfoByUidRequestDto = {
 };
 
 /**
+ * 用户被屏蔽的状态
+ */
+type BlockState = { isBlockedByOther: boolean; isBlocked: boolean; isHidden: boolean };
+
+/**
  * 通过 UID 获取用户信息的请求响应
  */
 export type GetUserInfoByUidResponseDto = {
@@ -315,7 +320,7 @@ export type GetUserInfoByUidResponseDto = {
 		 */
 		isSlef: boolean;
 	};
-};
+} & BlockState;
 
 /**
  * 通过 UID 和 TOKEN 校验用户的返回结果
@@ -409,16 +414,16 @@ export type BasicUserSettingsDto = {
 	unitSystemType?: string;
 	/** 是否进入了开发者模式 - 布尔 */
 	devMode?: boolean;
-	/** 实验性：启用直角模式 - 布尔 */
-	sharpAppearanceMode?: boolean;
-	/** 实验性：启用扁平模式 - 布尔 */
-	flatAppearanceMode?: boolean;
 	/** 用户关联网站的隐私设置 - 允许的值有：{public: 公开, following: 仅关注, private: 隐藏} */
 	userWebsitePrivacySetting?: "public" | "following" | "private";
 	/** 用户隐私数据可见性设置 */
 	userPrivaryVisibilitiesSetting?: UserPrivaryVisibilitiesSettingDto[];
 	/** 用户关联账户的隐私设置 */
 	userLinkedAccountsVisibilitiesSetting?: UserLinkedAccountsVisibilitiesSettingDto[];
+	// /** 实验性：启用直角模式 - 布尔 */
+	// sharpAppearanceMode?: boolean;
+	// /** 实验性：启用扁平模式 - 布尔 */
+	// flatAppearanceMode?: boolean;
 };
 
 /**
@@ -972,7 +977,7 @@ export type CheckUserHave2FAResponseDto = {
 };
 
 /**
- * 根据 UUID 校验用户是否已经存在的请求载荷
+ * 根据 UUID 校验用户是否存在的请求载荷
  */
 export type CheckUserExistsByUuidRequestDto = {
 	/** 用户的 UUID */
@@ -980,7 +985,7 @@ export type CheckUserExistsByUuidRequestDto = {
 };
 
 /**
- * 根据 UUID 校验用户是否已经存在的请求响应
+ * 根据 UUID 校验用户是否存在的请求响应
  */
 export type CheckUserExistsByUuidResponseDto = {
 	/** 执行结果 */

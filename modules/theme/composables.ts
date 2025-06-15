@@ -44,7 +44,7 @@ export async function cookieBaker() {
 				uid: uid ? parseInt(uid, 10) : -1,
 				token: token || "",
 			};
-			await api.user.getSelfUserInfo(userAuthToken, true);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: userAuthToken, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined });
 			userSettings = await api.user.getUserSettings({ getUserSettingsRequest: userAuthToken });
 
 			cookieThemeType.value = userSettings?.userSettings?.themeType || THEME_ENV.SYSTEM_THEME;

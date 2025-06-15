@@ -5,7 +5,7 @@
 	const passwordChangeDate = ref(new Date());
 	const passwordChangeDateDisplay = computed(() => formatDateWithLocale(passwordChangeDate.value));
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const appSettings = useAppSettingsStore();
+	const appSettingsStore = useAppSettingsStore();
 	const selfUserInfo = useSelfUserInfoStore();
 
 	// 修改邮箱相关
@@ -30,21 +30,21 @@
 	type TypeOf2FA = "none" | "email" | "totp";
 	const categoryOf2FAComputed = computed<TypeOf2FA>({ // 2FA 的类型，带有副作用
 		get() {
-			return appSettings.typeOf2FA === "email" || appSettings.typeOf2FA === "totp" ? appSettings.typeOf2FA : "none";
+			return appSettingsStore.typeOf2FA === "email" || appSettingsStore.typeOf2FA === "totp" ? appSettingsStore.typeOf2FA : "none";
 		},
 		set(newValue) {
-			if (appSettings.typeOf2FA === "totp" && newValue !== "totp" && checkUser2FAResult.value?.type === "totp") {
+			if (appSettingsStore.typeOf2FA === "totp" && newValue !== "totp" && checkUser2FAResult.value?.type === "totp") {
 				// 当响应式变量从 totp 改变为其他非 totp 的值，且用户的 2FA 类型为 totp 时，打开解绑 TOTP 的模态框，且不会导致导致响应式变量的变更
 				useToast(t.toast.must_remove_totp_first, "warning", 5000);
 				openDeleteTotpModel();
-			} else if (appSettings.typeOf2FA === "email" && newValue !== "email" && checkUser2FAResult.value?.type === "email") {
+			} else if (appSettingsStore.typeOf2FA === "email" && newValue !== "email" && checkUser2FAResult.value?.type === "email") {
 				// 当响应式变量从 email 改变为其他非 email 的值，且用户的 2FA 类型为 email 时，打开删除 Email 2FA 的模态框，且不会导致导致响应式变量的变更
 				openDeleteEmail2FAModel();
 				useToast(t.toast.must_verify_email_first, "warning", 5000);
-			} else if (newValue === "email" && appSettings.typeOf2FA !== "email" && checkUser2FAResult.value?.type !== "email")
+			} else if (newValue === "email" && appSettingsStore.typeOf2FA !== "email" && checkUser2FAResult.value?.type !== "email")
 				openCreateEmail2FAModel();
 			else
-				appSettings.typeOf2FA = newValue;
+				appSettingsStore.typeOf2FA = newValue;
 		},
 	});
 	const hasBoundTotp = computed(() => checkUser2FAResult.value?.success && checkUser2FAResult.value.have2FA && checkUser2FAResult.value?.type === "totp"); // 是否已经有 TOTP，当 2FA 存在且类型为 totp 时，开启编辑 TOTP 的模态框，否则开启创建 TOTP 的模态框
@@ -52,7 +52,7 @@
 	const isTotp2FADisable = computed(() => checkUser2FAResult.value?.type === "email" || categoryOf2FAComputed.value === "email");
 
 	// 警告相关
-	const isUnsafeAccount = computed(() => selfUserInfo.isLogined && (appSettings.typeOf2FA === "none" || !checkUser2FAResult.value?.have2FA));
+	const isUnsafeAccount = computed(() => selfUserInfo.isLogined && (appSettingsStore.typeOf2FA === "none" || !checkUser2FAResult.value?.have2FA));
 
 	// 创建 TOTP 2FA 相关
 	const showCreateTotpModel = ref(false); // 是否显示创建 TOTP 模态框
@@ -106,7 +106,7 @@
 		};
 		const updateUserEmailResult = await api.user.updateUserEmail(updateUserEmailRequest);
 		if (updateUserEmailResult.success) {
-			await api.user.getSelfUserInfo();
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie: undefined });
 			useToast(t.toast.email_changed, "success");
 			showChangeEmail.value = false;
 		} else
@@ -142,7 +142,7 @@
 			isChangingPassword.value = false;
 			showChangePassword.value = false;
 			useToast(t.toast.password_changed, "success");
-			await api.user.userLogout();
+			await api.user.userLogout({ appSettingsStore, selfUserInfoStore });
 			useEvent("app:requestLogin");
 		} else
 			useToast(t.toast.something_went_wrong, "error");
@@ -194,7 +194,7 @@
 
 			isCreatingEmail2FA.value = false;
 			showCreateEmail2FAModel.value = false;
-			appSettings.typeOf2FA = "email";
+			appSettingsStore.typeOf2FA = "email";
 			useToast(t.toast.email_2fa_enabled, "success", 3000);
 			checkUserHave2FAByUUID();
 		} catch (error) {

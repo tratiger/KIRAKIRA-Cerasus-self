@@ -40,6 +40,7 @@
 	const htmlTitle = computed(() => title.value + " - " + settingsString);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
+	const appSettingsStore = useAppSettingsStore();
 	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
@@ -95,7 +96,7 @@
 	 * 登出。
 	 */
 	async function logout() {
-		const logoutResult = await api.user.userLogout();
+		const logoutResult = await api.user.userLogout({ appSettingsStore, selfUserInfoStore });
 		if (logoutResult.success) {
 			const curPage = currentSettingsPage();
 			if (settings.general.findIndex(({ id }) => id === curPage) === -1)
@@ -114,7 +115,7 @@
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: useAppSettingsStore().backgroundImage.image.data }">
+	<div v-bind="$attrs" class="settings" :class="{ transparent: appSettingsStore.backgroundImage.image.data }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">

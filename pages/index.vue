@@ -32,10 +32,10 @@
 	 */
 	function homePageDaemon() {
 		observeEmptyVarbAndRequestData(
-			videos,
-			(value: typeof videos) => value.value?.videos.length === 0,
-			fetchHomePageVideoData,
-			{ delay: 3000, intervalTime: 3000, attempts: 3 },
+			videos, // 要监听的响应式变量
+			(value: typeof videos) => value.value?.videos.length === 0, // 检测方法
+			fetchHomePageVideoData, // 如果不成功要执行的操作
+			{ delay: 3000, intervalTime: 3000, attempts: 3 }, // 配置
 		);
 	}
 
@@ -47,6 +47,12 @@
 	const categoryList = ["Anime", "Music", "Otomad", "Tech", "Design", "Game", "Misc"];
 	const categories = ref<Map<string | undefined, number | undefined>>();
 	const resultTimestamp = ref(0);
+
+	// 发生用户登录事件时重新获取主页视频数据
+	useListen("user:login", async loginStatus => {
+		if (loginStatus)
+			await fetchHomePageVideoData();
+	});
 </script>
 
 <template>

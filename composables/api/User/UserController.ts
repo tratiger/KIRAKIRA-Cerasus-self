@@ -85,34 +85,37 @@ export const updateOrCreateUserInfo = async (updateOrCreateUserInfoRequest: Upda
 	return await POST(`${USER_API_URI}/update/info`, updateOrCreateUserInfoRequest, { credentials: "include" }) as UpdateOrCreateUserInfoResponseDto;
 };
 
+type AppSettingsStoreType = ReturnType<typeof useAppSettingsStore>;
+type SelfUserInfoStoreType = ReturnType<typeof useSelfUserInfoStore>;
 /**
  * 获取当前登录的用户信息，前提是 token 中包含正确的 uid 和 token，同时丰富全局变量中的用户信息
  * @param getSelfUserInfoRequest 获取当前登录的用户信息的请求参数
  * @param pinia pinia
  * @returns 用户信息
  */
-export const getSelfUserInfo = async (getSelfUserInfoRequest?: GetSelfUserInfoRequestDto, isNoPiniaStore: boolean = false): Promise<GetSelfUserInfoResponseDto> => {
+export const getSelfUserInfo = async (props: { getSelfUserInfoRequest: GetSelfUserInfoRequestDto | undefined; appSettingsStore: AppSettingsStoreType | undefined; selfUserInfoStore: SelfUserInfoStoreType | undefined; headerCookie: { cookie?: string | undefined } | undefined }): Promise<GetSelfUserInfoResponseDto> => {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
 	const { data } = await useFetch<GetSelfUserInfoResponseDto>(
 		`${USER_API_URI}/self`,
 		{
 			method: "POST",
-			body: { ...getSelfUserInfoRequest },
+			headers: props.headerCookie,
+			body: { ...props.getSelfUserInfoRequest },
 			credentials: "include",
 		},
 	);
 	const selfUserInfoResult = data.value?.result;
 	if (data.value?.success && selfUserInfoResult) {
-		if (!isNoPiniaStore) { // 某些情况下不能使用 Pinia store，例如当 SSR 的早期阶段同步主题设置时
-			const appSettings = useAppSettingsStore();
-			const selfUserInfoStore = useSelfUserInfoStore();
-			appSettings.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
-			selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
-			selfUserInfoStore.isLogined = true;
-			selfUserInfoStore.userInfo = data.value.result ?? {};
+		if (props.appSettingsStore)
+			props.appSettingsStore.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
+		if (props.selfUserInfoStore) {
+			props.selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
+			props.selfUserInfoStore.isLogined = true;
+			props.selfUserInfoStore.userInfo = data.value.result ?? {};
 		}
-	} else
-		await userLogout();
+	} else if (props.appSettingsStore && props.selfUserInfoStore)
+		await userLogout({ appSettingsStore: props.appSettingsStore, selfUserInfoStore: props.selfUserInfoStore });
 	return data.value as GetSelfUserInfoResponseDto;
 };
 
@@ -178,15 +181,16 @@ export const checkUserToken = async (): Promise<CheckUserTokenResponseDto> => {
  * 用户登出
  * @returns 什么也不返回，但是会携带立即清除的 cookie 并覆盖原本的 cookie，同时将全局变量中的用户信息置空
  */
-export async function userLogout(): Promise<UserLogoutResponseDto> {
+export async function userLogout(props: { appSettingsStore: AppSettingsStoreType | undefined; selfUserInfoStore: SelfUserInfoStoreType | undefined }): Promise<UserLogoutResponseDto> {
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
 	const logoutResult = await GET(`${USER_API_URI}/logout`, { credentials: "include" }) as UserLogoutResponseDto;
 	if (logoutResult.success) {
-		const appSettings = useAppSettingsStore();
-		const selfUserInfoStore = useSelfUserInfoStore();
-		appSettings.typeOf2FA = "none";
-		selfUserInfoStore.isLogined = false;
-		selfUserInfoStore.userInfo = {};
+		if (props.appSettingsStore)
+			props.appSettingsStore.typeOf2FA = "none";
+		if (props.selfUserInfoStore) {
+			props.selfUserInfoStore.isLogined = false;
+			props.selfUserInfoStore.userInfo = {};
+		}
 	} else
 		console.error("ERROR", "Logout failed.", logoutResult);
 	return logoutResult;

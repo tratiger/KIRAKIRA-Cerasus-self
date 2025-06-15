@@ -49,9 +49,9 @@ export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidReques
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取视频失败" };
+			return { success: false, message: "获取视频失败", isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 KVID" };
+		return { success: false, message: "未提供 KVID", isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
@@ -65,9 +65,9 @@ export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDt
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [] };
+			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 UID", videosCount: 0, videos: [] };
+		return { success: false, message: "未提供 UID", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
@@ -156,10 +156,10 @@ export class TusFileUploader {
 				onProgress: (bytesUploaded, bytesTotal) => {
 					const percentage = bytesUploaded / bytesTotal * 100;
 					progress.value = percentage;
-					console.log(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // DELETE ME
+					console.info(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // useless
 				},
 				onSuccess: () => {
-					console.log("Download %s from %s", (uploader.file as File)?.name, uploader.url); // DELETE ME
+					console.info("Video upload success");
 					if (videoId) {
 						this.step = "success";
 						resolve(videoId);
