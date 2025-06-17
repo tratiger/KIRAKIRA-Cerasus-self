@@ -71,7 +71,7 @@
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
 			{ id: "account-linking", icon: "groups" },
-			{ id: "block_and_hide", icon: "block" },
+			{ id: "block-and-hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],
 		general: [
@@ -129,14 +129,35 @@
 						<TabBar v-model="currentSettingsRequested" vertical>
 							<Subheader v-if="selfUserInfoStore.isLogined" icon="person">{{ t.settings.user }}</Subheader>
 							<template v-if="selfUserInfoStore.isLogined">
-								<TabItem v-for="setting in settings.personal" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+								<TabItem
+									v-for="setting in settings.personal"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
 							</template>
 							<Subheader icon="apps">{{ t.settings.app }}</Subheader>
-							<TabItem v-for="setting in settings.general" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+							<TabItem
+								v-for="setting in settings.general"
+								:id="setting.id"
+								:key="setting.id"
+								:icon="setting.icon"
+								:to="`/settings/${setting.id}`"
+								@click="showDrawer = false"
+							>{{ ti(setting.id) }}</TabItem>
 							<!-- DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。 -->
 							<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
 							<template v-if="isAdmin">
-								<TabItem v-for="setting in settings.admin" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+								<TabItem
+									v-for="setting in settings.admin"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
 							</template>
 						</TabBar>
 						<div class="nav-bottom-buttons">
