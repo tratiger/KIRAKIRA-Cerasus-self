@@ -40,7 +40,7 @@
 	const isFollowing = ref(false); // 当前页面中的用户是否已经关注
 	const isFollowingUser = ref(false); // 是否正在发送关注用户的请求
 	const userInfo = ref<GetUserInfoByUidResponseDto>(); // 用户信息（并非自己的用户信息）
-	const followButton = ref<HTMLButtonElement>();
+	const followButton = ref<InstanceType<typeof Button>>();
 	const actionMenu = ref<FlyoutModel>();
 	const unfollowMenu = ref<FlyoutModel>();
 	const currentTab = computed(() => currentUserTab());
@@ -73,8 +73,7 @@
 	 */
 	async function onUnfollowButtonClick() {
 		if (!followButton.value) return;
-		const button = followButton.value;
-		console.log(button);
+		const button = followButton.value.$el as HTMLButtonElement;
 		await animateSize(button, async () => {
 			await unfollowingUser();
 		});
