@@ -687,7 +687,7 @@
 
 		<Subheader icon="tag">{{ t(2).tag }}</Subheader>
 		<span>{{ t.block_and_hide.tag.description }}</span>
-		
+
 		<div class="tags">
 			<Tag
 				v-for="tag in displayBlockTagList"
@@ -751,63 +751,63 @@
 			<TextBox v-model="inputPendingAddRegex" :invalid="isInvalidRegex" icon="regexp" />
 			<Button icon="add" :disabled="isAddButtonUnclickalbe || isAddRegex" :loading="isAddRegex" @click="addRegex">{{ t.step.add }}</Button>
 		</div>
+
+		<Alert v-model="isShowAddBlockUserAlert" static>
+			<!-- TODO: 使用多语言 -->
+			<h4>确定要屏蔽这个用户吗？</h4>
+			<div class="user-info-alert-display">
+				<div class="user">
+					<UserAvatar :avatar="pendingBlockUserInfo?.avatar" />
+					<div class="texts">
+						<div class="names">
+							<span class="username">{{ pendingBlockUserInfo?.username }}</span> <span v-if="pendingBlockUserInfo?.userNickname">/{{ pendingBlockUserInfo?.userNickname }}</span>
+							<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ user?.bio }}</span> -->
+							<span class="icons">
+								<Icon v-if="pendingBlockUserInfo?.gender === 'male'" name="male" class="male" />
+								<Icon v-else-if="pendingBlockUserInfo?.gender === 'female'" name="female" class="female" />
+								<span v-else class="other-gender">{{ pendingBlockUserInfo?.gender }}</span>
+							</span>
+						</div>
+						<div class="bio">{{ pendingBlockUserInfo?.signature }}</div>
+					</div>
+				</div>
+			</div>
+			<template #footer-left>
+				<Button @click="blockUser" :loading="isBlockingUser" :disabled="isBlockingUser">确认屏蔽</Button>
+			</template>
+			<template #footer-right>
+				<Button @click="closeBlockUserAlert" class="secondary">取消</Button>
+			</template>
+		</Alert>
+
+		<Alert v-model="isShowAddHideUserAlert" static>
+			<!-- TODO: 使用多语言 -->
+			<h4>确定要隐藏这个用户吗？</h4>
+			<div class="user-info-alert-display">
+				<div class="user">
+					<UserAvatar :avatar="pendingHideUserInfo?.avatar" />
+					<div class="texts">
+						<div class="names">
+							<span class="username">{{ pendingHideUserInfo?.username }}</span> <span v-if="pendingHideUserInfo?.userNickname">/{{ pendingHideUserInfo?.userNickname }}</span>
+							<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ user?.bio }}</span> -->
+							<span class="icons">
+								<Icon v-if="pendingHideUserInfo?.gender === 'male'" name="male" class="male" />
+								<Icon v-else-if="pendingHideUserInfo?.gender === 'female'" name="female" class="female" />
+								<span v-else class="other-gender">{{ pendingHideUserInfo?.gender }}</span>
+							</span>
+						</div>
+						<div class="bio">{{ pendingHideUserInfo?.signature }}</div>
+					</div>
+				</div>
+			</div>
+			<template #footer-left>
+				<Button @click="hideUser" :loading="isHidingUser" :disabled="isHidingUser">确认隐藏</Button>
+			</template>
+			<template #footer-right>
+				<Button @click="closeHideUserAlert" class="secondary">取消</Button>
+			</template>
+		</Alert>
 	</div>
-
-	<Alert v-model="isShowAddBlockUserAlert" static>
-		<!-- TODO: 使用多语言 -->
-		<h4>确定要屏蔽这个用户吗？</h4>
-		<div class="user-info-alert-display">
-			<div class="user">
-				<UserAvatar :avatar="pendingBlockUserInfo?.avatar" />
-				<div class="texts">
-					<div class="names">
-						<span class="username">{{ pendingBlockUserInfo?.username }}</span> <span v-if="pendingBlockUserInfo?.userNickname">/{{ pendingBlockUserInfo?.userNickname }}</span>
-						<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ user?.bio }}</span> -->
-						<span class="icons">
-							<Icon v-if="pendingBlockUserInfo?.gender === 'male'" name="male" class="male" />
-							<Icon v-else-if="pendingBlockUserInfo?.gender === 'female'" name="female" class="female" />
-							<span v-else class="other-gender">{{ pendingBlockUserInfo?.gender }}</span>
-						</span>
-					</div>
-					<div class="bio">{{ pendingBlockUserInfo?.signature }}</div>
-				</div>
-			</div>
-		</div>
-		<template #footer-left>
-			<Button @click="blockUser" :loading="isBlockingUser" :disabled="isBlockingUser">确认屏蔽</Button>
-		</template>
-		<template #footer-right>
-			<Button @click="closeBlockUserAlert" class="secondary">取消</Button>
-		</template>
-	</Alert>
-
-	<Alert v-model="isShowAddHideUserAlert" static>
-		<!-- TODO: 使用多语言 -->
-		<h4>确定要隐藏这个用户吗？</h4>
-		<div class="user-info-alert-display">
-			<div class="user">
-				<UserAvatar :avatar="pendingHideUserInfo?.avatar" />
-				<div class="texts">
-					<div class="names">
-						<span class="username">{{ pendingHideUserInfo?.username }}</span> <span v-if="pendingHideUserInfo?.userNickname">/{{ pendingHideUserInfo?.userNickname }}</span>
-						<!-- <span v-if="memoParen" class="memo" :class="[memoParen]">{{ user?.bio }}</span> -->
-						<span class="icons">
-							<Icon v-if="pendingHideUserInfo?.gender === 'male'" name="male" class="male" />
-							<Icon v-else-if="pendingHideUserInfo?.gender === 'female'" name="female" class="female" />
-							<span v-else class="other-gender">{{ pendingHideUserInfo?.gender }}</span>
-						</span>
-					</div>
-					<div class="bio">{{ pendingHideUserInfo?.signature }}</div>
-				</div>
-			</div>
-		</div>
-		<template #footer-left>
-			<Button @click="hideUser" :loading="isHidingUser" :disabled="isHidingUser">确认隐藏</Button>
-		</template>
-		<template #footer-right>
-			<Button @click="closeHideUserAlert" class="secondary">取消</Button>
-		</template>
-	</Alert>
 </template>
 
 <style scoped lang="scss">
@@ -839,7 +839,7 @@
 	hr {
 		margin-top: 1rem;
 	}
-	
+
 	.user-info-alert-display {
 		height: 60px;
 
