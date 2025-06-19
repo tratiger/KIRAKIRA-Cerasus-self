@@ -40,7 +40,9 @@
 	const isFollowing = ref(false); // 当前页面中的用户是否已经关注
 	const isFollowingUser = ref(false); // 是否正在发送关注用户的请求
 	const userInfo = ref<GetUserInfoByUidResponseDto>(); // 用户信息（并非自己的用户信息）
+	const followButton = ref<HTMLButtonElement>();
 	const actionMenu = ref<FlyoutModel>();
+	const unfollowMenu = ref<FlyoutModel>();
 	const currentTab = computed(() => currentUserTab());
 
 	const urlUid = ref(); // URL 中的 UID
@@ -49,8 +51,34 @@
 	nuxtApp.hook("page:finish", () => {
 		urlUid.value = currentUserUid(); // CSR
 	});
-	
+
 	const selfUid = computed(() => selfUserInfoStore.userInfo.uid); // 自己的 UID（如果已经登陆）
+
+	/**
+	 * 关注按钮点击事件。
+	 * @param e - 鼠标事件。
+	 */
+	async function onFollowButtonClick(e: MouseEvent) {
+		const button = e.target as HTMLButtonElement;
+		if (!isFollowing.value)
+			await animateSize(button, async () => {
+				await followingUser();
+			});
+		else
+			unfollowMenu.value = [e, "y"];
+	}
+
+	/**
+	 * 取消关注按钮点击事件。
+	 */
+	async function onUnfollowButtonClick() {
+		if (!followButton.value) return;
+		const button = followButton.value;
+		console.log(button);
+		await animateSize(button, async () => {
+			await unfollowingUser();
+		});
+	}
 
 	/**
 	 * 关注当前 URL 所对应的用户。
@@ -62,16 +90,12 @@
 				followingUid: urlUid.value ?? -1,
 			};
 			const { data } = await api.feed.followingUploader(followingUploaderRequest);
-			if (data.value?.success) {
+			if (data.value?.success)
 				isFollowing.value = true;
-				// TODO: 使用多语言
-				useToast("关注成功", "success");
-			} else
-				// TODO: 使用多语言
-				useToast("关注失败，请刷新页面后重试", "error", 5000);
+			else
+				useToast(t.toast.something_went_wrong, "error", 5000);
 		} catch (error) {
-			// TODO: 使用多语言
-			useToast("关注用户时出错，请刷新页面后重试", "error", 5000);
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			console.error("ERROR", "关注用户时出错：", error);
 		}
 		isFollowingUser.value = false;
@@ -81,26 +105,24 @@
 	 * 取关当前 URL 所对应的用户。
 	 */
 	async function unfollowingUser() {
-		isFollowing.value = false;
+		isFollowingUser.value = true;
 		try {
 			const unfollowingUploaderRequest: UnfollowingUploaderRequestDto = {
 				unfollowingUid: urlUid.value ?? -1,
 			};
 			const { data } = await api.feed.unfollowingUploader(unfollowingUploaderRequest);
 			if (data.value?.success)
-				// TODO: 使用多语言
-				useToast("取消关注成功", "success", 5000);
+				isFollowing.value = false;
 			else {
 				isFollowing.value = true;
-				// TODO: 使用多语言
-				useToast("取消关注失败，请刷新页面后重试", "error", 5000);
+				useToast(t.toast.something_went_wrong, "error", 5000);
 			}
 		} catch (error) {
 			isFollowing.value = true;
-			// TODO: 使用多语言
-			useToast("取消关注用户时出错，请刷新页面后重试", "error", 5000);
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			console.error("ERROR", "取消关注用户时出错：", error);
 		}
+		isFollowingUser.value = false;
 	}
 
 	/**
@@ -196,20 +218,26 @@
 						<!-- <SoftButton v-tooltip:top="'私信'" icon="email" /> -->
 						<SoftButton v-if="!isSelf" v-tooltip:top="t.more" icon="more_vert" @click="e => actionMenu = [e, 'y']" />
 						<Menu v-if="!isSelf" v-model="actionMenu">
-							<MenuItem icon="badge">{{ t.modify_memo }}</MenuItem>
 							<MenuItem icon="groups">{{ t.add_to_group }}</MenuItem>
+							<MenuItem icon="badge">{{ t.modify_memo }}</MenuItem>
 							<hr />
-							<!-- TODO: 使用多语言 -->
-							<MenuItem v-if="isFollowing" icon="close" @click="unfollowingUser">取消关注</MenuItem>
-							<MenuItem v-tooltip:x="'老铁们，给我举报他！'" icon="flag">{{ t.report }}</MenuItem>
+							<MenuItem icon="flag">{{ t.report }}</MenuItem>
 							<MenuItem icon="block" @click="blockUser">{{ t.block_user }}</MenuItem>
 						</Menu>
 						<div v-if="!isSelf" class="follow-button">
-							<Button v-if="!isFollowing" icon="add" :disabled="isFollowingUser" :loading="isFollowingUser" @click="followingUser">{{ t.follow_verb }}</Button>
+							<Button
+								ref="followButton"
+								:icon="isFollowing ? 'check' : 'add'"
+								:disabled="isFollowingUser"
+								:loading="isFollowingUser"
+								@click="onFollowButtonClick"
+							>{{ isFollowing ? t.following : t.follow_verb }}</Button>
+							<Menu v-model="unfollowMenu">
+								<MenuItem icon="close" @click="onUnfollowButtonClick">{{ t.unfollow_verb }}</MenuItem>
+							</Menu>
 							<!-- TODO: !user.isFollowing -->
-							<Button v-else icon="check" disabled>{{ t.following }}</Button>
 						</div>
-						<Button v-if="isSelf">{{ t.manage_content }}</Button>
+						<Button v-if="isSelf" href="/upload">{{ t.manage_content }}</Button>
 					</div>
 				</div>
 				<TabBar v-model="currentTab">

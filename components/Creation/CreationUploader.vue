@@ -38,16 +38,12 @@
 				followingUid: props.uid ?? -1,
 			};
 			const { data } = await api.feed.followingUploader(followingUploaderRequest);
-			if (data.value?.success) {
+			if (data.value?.success)
 				isFollowing.value = true;
-				// TODO: 使用多语言
-				useToast("关注成功", "success");
-			} else
-				// TODO: 使用多语言
-				useToast("关注失败，请刷新页面后重试", "error", 5000);
+			else
+				useToast(t.toast.something_went_wrong, "error", 5000);
 		} catch (error) {
-			// TODO: 使用多语言
-			useToast("关注用户时出错，请刷新页面后重试", "error", 5000);
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			console.error("ERROR", "关注用户时出错：", error);
 		}
 		isFollowingUploader.value = false;
