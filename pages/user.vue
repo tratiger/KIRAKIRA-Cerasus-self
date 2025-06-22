@@ -38,11 +38,8 @@
 
 	const isSelf = ref(false); // 当前页面是否是自己
 	const isFollowing = ref(false); // 当前页面中的用户是否已经关注
-	const isFollowingUser = ref(false); // 是否正在发送关注用户的请求
 	const userInfo = ref<GetUserInfoByUidResponseDto>(); // 用户信息（并非自己的用户信息）
-	const followButton = ref<InstanceType<typeof Button>>();
 	const actionMenu = ref<FlyoutModel>();
-	const unfollowMenu = ref<FlyoutModel>();
 	const currentTab = computed(() => currentUserTab());
 
 	const urlUid = ref(); // URL 中的 UID
@@ -53,76 +50,6 @@
 	});
 
 	const selfUid = computed(() => selfUserInfoStore.userInfo.uid); // 自己的 UID（如果已经登陆）
-
-	/**
-	 * 关注按钮点击事件。
-	 * @param e - 鼠标事件。
-	 */
-	async function onFollowButtonClick(e: MouseEvent) {
-		const button = e.target as HTMLButtonElement;
-		if (!isFollowing.value)
-			await animateSize(button, async () => {
-				await followingUser();
-			});
-		else
-			unfollowMenu.value = [e, "y"];
-	}
-
-	/**
-	 * 取消关注按钮点击事件。
-	 */
-	async function onUnfollowButtonClick() {
-		if (!followButton.value) return;
-		const button = followButton.value.$el as HTMLButtonElement;
-		await animateSize(button, async () => {
-			await unfollowingUser();
-		});
-	}
-
-	/**
-	 * 关注当前 URL 所对应的用户。
-	 */
-	async function followingUser() {
-		isFollowingUser.value = true;
-		try {
-			const followingUploaderRequest: FollowingUploaderRequestDto = {
-				followingUid: urlUid.value ?? -1,
-			};
-			const { data } = await api.feed.followingUploader(followingUploaderRequest);
-			if (data.value?.success)
-				isFollowing.value = true;
-			else
-				useToast(t.toast.something_went_wrong, "error", 5000);
-		} catch (error) {
-			useToast(t.toast.something_went_wrong, "error", 5000);
-			console.error("ERROR", "关注用户时出错：", error);
-		}
-		isFollowingUser.value = false;
-	}
-
-	/**
-	 * 取关当前 URL 所对应的用户。
-	 */
-	async function unfollowingUser() {
-		isFollowingUser.value = true;
-		try {
-			const unfollowingUploaderRequest: UnfollowingUploaderRequestDto = {
-				unfollowingUid: urlUid.value ?? -1,
-			};
-			const { data } = await api.feed.unfollowingUploader(unfollowingUploaderRequest);
-			if (data.value?.success)
-				isFollowing.value = false;
-			else {
-				isFollowing.value = true;
-				useToast(t.toast.something_went_wrong, "error", 5000);
-			}
-		} catch (error) {
-			isFollowing.value = true;
-			useToast(t.toast.something_went_wrong, "error", 5000);
-			console.error("ERROR", "取消关注用户时出错：", error);
-		}
-		isFollowingUser.value = false;
-	}
 
 	/**
 	 * 屏蔽一个用户
@@ -223,19 +150,7 @@
 							<MenuItem icon="flag">{{ t.report }}</MenuItem>
 							<MenuItem icon="block" @click="blockUser">{{ t.block_user }}</MenuItem>
 						</Menu>
-						<div v-if="!isSelf" class="follow-button">
-							<Button
-								ref="followButton"
-								:icon="isFollowing ? 'check' : 'add'"
-								:disabled="isFollowingUser"
-								:loading="isFollowingUser"
-								@click="onFollowButtonClick"
-							>{{ isFollowing ? t.following : t.follow_verb }}</Button>
-							<Menu v-model="unfollowMenu">
-								<MenuItem icon="close" @click="onUnfollowButtonClick">{{ t.unfollow_verb }}</MenuItem>
-							</Menu>
-							<!-- TODO: !user.isFollowing -->
-						</div>
+						<FollowButton v-if="!isSelf" :uid="urlUid" :isFollowing />
 						<Button v-if="isSelf" href="/upload">{{ t.manage_content }}</Button>
 					</div>
 				</div>
