@@ -40,7 +40,9 @@
 			<div v-if="severity === 'warning' || severity === 'danger'" class="decoration">
 				<Icon v-for="i in 5" :name="severity === 'danger' ? 'close' : 'exclamation'" :key="i" />
 			</div>
-			<Icon v-if="icon" :name="icon" />
+			<Transition name="icon" mode="out-in">
+				<Icon v-if="icon" :name="icon" :key="icon" />
+			</Transition>
 			<span class="caption"><span><slot></slot></span></span>
 			<Transition>
 				<ProgressBar v-if="loading" />

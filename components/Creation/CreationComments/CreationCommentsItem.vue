@@ -46,8 +46,8 @@
 	const voteLock = ref(false);
 
 	const userSelfInfoStore = useSelfUserInfoStore();
-	const isSelfComment = computed(() => props.uid === userSelfInfoStore.uid); // 这条评论是否是自己发送的
-	const isAdmin = computed(() => userSelfInfoStore.roles.includes("administrator")); // 用户是否是管理员
+	const isSelfComment = computed(() => props.uid === userSelfInfoStore.userInfo.uid); // 这条评论是否是自己发送的
+	const isAdmin = computed(() => userSelfInfoStore.userInfo.roles?.includes("administrator")); // 用户是否是管理员
 
 	/**
 	 * 点击加分、减分按钮事件。

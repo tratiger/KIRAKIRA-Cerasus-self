@@ -5,7 +5,7 @@ const navigate = (path: string) => navigateTo(useLocalePath()(path));
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 	if (environment.client && environment.development)
-		console.log("to", to, "\nfrom", from, "\nrouteBaseName", useNuxtApp().$getRouteBaseName());
+		console.log("to", to, "\nfrom", from, "\nrouteBaseName(to)", useNuxtApp().$getRouteBaseName(to));
 
 	if (environment.client)
 		document.getElementById(STOP_TRANSITION_ID)?.remove();
@@ -120,9 +120,9 @@ async function getUserInfo(uid?: string) {
 	if (checkUserResult.success && checkUserResult.userTokenOk)
 		try {
 			const selfUserInfoStore = useSelfUserInfoStore();
-			await api.user.getSelfUserInfo();
-			if (!selfUserInfoStore.isLogined || selfUserInfoStore.uid === undefined) throw new Error("Unlogined");
-			return BigInt(selfUserInfoStore.uid);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore, headerCookie: undefined });
+			if (!selfUserInfoStore.isLogined || selfUserInfoStore.userInfo.uid === undefined) throw new Error("Unlogined");
+			return BigInt(selfUserInfoStore.userInfo.uid);
 		} catch (error) { return new Error("你的登录信息已失效，请重新登录"); }
 	else return new Error("你尚未登录，请登录后再试");
 }

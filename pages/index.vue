@@ -12,13 +12,47 @@
 		page: +(query.page ?? 1),
 	});
 
-	videos.value = await api.video.getHomePageThumbVideo();
+	/**
+	 * 请求主页视频数据。
+	 */
+	async function fetchHomePageVideoData() {
+		try {
+			const headerCookie = useRequestHeaders(["cookie"]);
+			videos.value = await api.video.getHomePageThumbVideo(headerCookie);
+		} catch (error) {
+			// TODO: anyting can do if data fetch field in the home page? -add a 'refresh' button?
+			console.error("ERROR", "Unable to fetch home page video data", error);
+			useToast("获取视频数据失败，请刷新页面。", "error", 5000);
+		}
+	}
+
+	/**
+	 * 首页视频的守卫进程。
+	 * 如果首页视频没有数据，则等待三秒后每隔五秒重新请求视频数据，尝试三次。
+	 */
+	function homePageDaemon() {
+		observeEmptyVarbAndRequestData(
+			videos, // 要监听的响应式变量
+			(value: typeof videos) => value.value?.videos.length === 0, // 检测方法
+			fetchHomePageVideoData, // 如果不成功要执行的操作
+			{ delay: 3000, intervalTime: 3000, attempts: 3 }, // 配置
+		);
+	}
+
+	await fetchHomePageVideoData(); // SSR
+	onMounted(homePageDaemon); // Client Mounted
 
 	const categoryItemCount = ref(0);
 	const pageCount = ref(1);
 	const categoryList = ["Anime", "Music", "Otomad", "Tech", "Design", "Game", "Misc"];
 	const categories = ref<Map<string | undefined, number | undefined>>();
 	const resultTimestamp = ref(0);
+
+	// 发生用户登录事件时重新获取主页视频数据
+	useListen("user:login", async loginStatus => {
+		if (loginStatus)
+			await fetchHomePageVideoData();
+	});
 </script>
 
 <template>
@@ -50,7 +84,7 @@
 					v-for="video in videos?.videos"
 					:key="video.videoId"
 					:videoId="video.videoId"
-					:uploader="video.uploader ?? ''"
+					:uploader="video.uploaderNickname ?? video.uploader ?? 'Unknown uploader'"
 					:uploaderId="video.uploaderId"
 					:image="video.image"
 					:date="new Date(video.uploadDate || 0)"

@@ -3,7 +3,8 @@
 		icon?: DeclaredIcons;
 	}>();
 
-	const privacy = defineModel<PrivacyType>();
+	type PrivacyRadioButtonType = { id: string; visibilitiesType: PrivacyType };
+	const privacy = defineModel<PrivacyRadioButtonType>({ required: true });
 	const privacies = ["public", "following", "private"] as PrivacyType[];
 </script>
 
@@ -15,7 +16,8 @@
 			<RadioButton
 				v-for="item in privacies"
 				:key="item"
-				v-model="privacy"
+				:modelValue="privacy.visibilitiesType"
+				@update:modelValue="$event => privacy = { ...privacy, visibilitiesType: $event }"
 				:value="item"
 			/>
 		</div>

@@ -11,9 +11,11 @@
 		/** 粉丝数。 */
 		followers: number;
 		/** 是否已关注？ */
-		isFollowing?: boolean;
+		isFollowing: boolean;
+		/** 是否是自己？ */
+		isSelf?: boolean;
 		/** 用户 UID。 */
-		uid?: number;
+		uid: number;
 	}>();
 </script>
 
@@ -24,8 +26,7 @@
 				{{ followers }} {{ t(followers).follower }}
 			</template>
 		</UserContent>
-		<Button v-if="!isFollowing" icon="add">{{ t.follow_verb }}</Button>
-		<Button v-else disabled icon="check">{{ t.following }}</Button>
+		<FollowButton v-if="!isSelf" :uid :isFollowing />
 	</Comp>
 </template>
 

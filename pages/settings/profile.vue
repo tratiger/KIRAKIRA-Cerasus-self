@@ -3,9 +3,10 @@
 
 	// const avatar = "/static/images/avatars/aira.webp";
 	const selfUserInfoStore = useSelfUserInfoStore();
+	const appSettingsStore = useAppSettingsStore();
 
 	const newAvatar = ref<string>(); // 新上传的头像
-	const correctAvatar = computed(() => newAvatar.value ?? selfUserInfoStore.userAvatar); // 正确显示的头像（如果用户没有新上传头像，则使用全局变量中的旧头像）
+	const correctAvatar = computed(() => newAvatar.value ?? selfUserInfoStore.userInfo.avatar); // 正确显示的头像（如果用户没有新上传头像，则使用全局变量中的旧头像）
 	const userAvatarUploadFile = ref<string | undefined>(); // 用户上传的头像文件 Blob
 	const isAvatarCropperOpen = ref(false); // 用户头像图片裁剪器是否开启
 	const newAvatarImageBlob = ref<Blob>(); // 用户裁剪后的头像
@@ -13,12 +14,12 @@
 	const isUpdateUserInfo = ref<boolean>(false); // 是否正在上传用户信息
 	const isResetUserInfo = ref<boolean>(false); // 是否正在重置用户信息
 	const profile = reactive({
-		name: selfUserInfoStore.username,
-		nickname: selfUserInfoStore.userNickname,
-		bio: selfUserInfoStore.signature,
-		gender: selfUserInfoStore.gender,
+		name: selfUserInfoStore.userInfo.username ?? "",
+		nickname: selfUserInfoStore.userInfo.userNickname ?? "",
+		bio: selfUserInfoStore.userInfo.signature ?? "",
+		gender: selfUserInfoStore.userInfo.gender ?? "",
 		birthday: new Date(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-		tags: selfUserInfoStore.tags,
+		tags: selfUserInfoStore.userInfo.label?.map(label => label.labelName) ?? [],
 	});
 	const cropper = ref<InstanceType<typeof ImageCropper>>(); // 图片裁剪器实例
 	const isUploadingUserAvatar = ref(false); // 是否正在上传头像
@@ -108,9 +109,10 @@
 	 *
 	 * 同时具有验证用户 token 的功能。
 	 */
-	async function getUserInfo() {
+	async function getSelfUserInfoController() {
 		try {
-			await api.user.getSelfUserInfo();
+			const headerCookie = useRequestHeaders(["cookie"]);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie });
 		} catch (error) {
 			console.error("无法获取用户信息，请尝试重新登录", error);
 		}
@@ -146,12 +148,12 @@
 			signature: profile.bio,
 			gender: profile.gender,
 			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-			label: profile.tags.map((tag, index) => ({ id: index, labelName: tag })),
+			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag })),
 		};
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie: undefined });
 				isUpdateUserInfo.value = false;
 				newAvatarImageBlob.value = undefined;
 				useToast(t.toast.profile_updated, "success");
@@ -191,7 +193,7 @@
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie: undefined });
 				isResetUserInfo.value = false;
 				showConfirmResetAlert.value = false;
 			} else {
@@ -209,20 +211,21 @@
 	 * 将 Pinia 中的用户数据拷贝到当前组件的响应式变量 "profile" 中
 	 */
 	function copyPiniaUserInfo2Profile() {
-		profile.name = selfUserInfoStore.username;
-		profile.nickname = selfUserInfoStore.userNickname;
-		profile.bio = selfUserInfoStore.signature;
-		profile.gender = selfUserInfoStore.gender;
-		profile.tags = selfUserInfoStore.tags;
+		profile.name = selfUserInfoStore.userInfo.username ?? "";
+		profile.nickname = selfUserInfoStore.userInfo.userNickname ?? "";
+		profile.bio = selfUserInfoStore.userInfo.signature ?? "";
+		profile.gender = selfUserInfoStore.userInfo.gender ?? "";
+		profile.tags = selfUserInfoStore.userInfo.label?.map(label => label.labelName) ?? [];
 	}
 
 	useEventListener(userAvatarFileInput, "change", handleOpenAvatarCropper); // 监听头像文件变化事件
-	onMounted(async () => { await api.user.getSelfUserInfo(); });
+	
+	onMounted(async () => await getSelfUserInfoController());
 	onBeforeUnmount(clearBlobUrl); // 释放内存
 	watch(selfUserInfoStore, copyPiniaUserInfo2Profile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
 	useListen("user:login", async loginStatus => { // 发生用户登录事件，请求最新用户信息，并修改 Pinia 中的用户数据，然后触发上方的监听
 		if (loginStatus)
-			await api.user.getSelfUserInfo();
+			await getSelfUserInfoController();
 	});
 </script>
 
@@ -258,7 +261,7 @@
 		</Modal>
 
 		<div v-ripple class="banner">
-			<NuxtImg :src="banner" alt="banner" draggable="false" format="avif" placeholder />
+			<NuxtImg :src="banner" alt="banner" draggable="false" format="avif" />
 			<span>{{ t.profile.edit_banner }}</span>
 		</div>
 

@@ -4,8 +4,6 @@
 	const totalUsedInvitationCode = computed(() => myInvitationCode.value?.filter(invitationCode => !!invitationCode.assignee)?.length ?? 0);
 	const totalUnusedInvitationCode = computed(() => myInvitationCode.value?.filter(invitationCode => !invitationCode.assignee)?.length ?? 0);
 
-	const selfUserInfoStore = useSelfUserInfoStore();
-
 	/**
 	 * 生成邀请码
 	 */

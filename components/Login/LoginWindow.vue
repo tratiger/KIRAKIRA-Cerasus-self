@@ -317,7 +317,7 @@
 			const registrationResponse = await api.user.registration(userRegistrationRequest);
 
 			if (registrationResponse.success) { // 如果注册成功
-				await api.user.getSelfUserInfo(); // 根据获取到的用户 UID 和 Token 获取用户数据，相当于自动登录
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined }); // 根据获取到的用户 UID 和 Token 获取用户数据，相当于自动登录
 				isTryingRegistration.value = false; // 停止注册按钮加载动画
 				open.value = false; // 关闭登录页
 				currentPage.value = "login1"; // 将登录页设为登录窗口默认页
@@ -393,7 +393,7 @@
 			>
 
 				<div class="main left">
-					<!-- 登录 Login -->
+					<!-- 登录 其一 Login #1 -->
 					<div class="login1">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<form class="form">
@@ -431,6 +431,7 @@
 						</div>
 					</div>
 
+					<!-- 登录 其二点一 Login #2.1 -->
 					<div class="login2-2fa">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<span><Preserves>{{ t.loginwindow.login_totp_info }}</Preserves></span>
@@ -441,7 +442,7 @@
 								:placeholder="t.totp_verification_code"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
@@ -453,6 +454,7 @@
 							<Button>{{ t.need_help }}</Button>
 						</div>
 					</div>
+					<!-- 登录 其二点二 Login #2.2 -->
 					<div class="login2-email">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<span>{{ t.loginwindow.login_email_info }}</span>
@@ -463,7 +465,7 @@
 								:placeholder="t.verification_code"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
@@ -641,12 +643,12 @@
 						<div class="line"></div>
 					</div>
 					<div class="avatar">
-						<NuxtImg v-if="selfUserInfoStore.userAvatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userAvatar" alt="avatar" />
+						<NuxtImg v-if="selfUserInfoStore.userInfo.avatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userInfo.avatar" alt="avatar" />
 						<Icon v-else name="person" />
 					</div>
 					<div ref="loginAnimationText" class="texts">
 						<div class="welcome">{{ t.loginwindow.login_welcome }}</div>
-						<div class="name">{{ selfUserInfoStore.userNickname }}</div>
+						<div class="name">{{ selfUserInfoStore.userInfo.userNickname }}</div>
 					</div>
 				</div>
 			</Comp>

@@ -69,7 +69,7 @@
 				:class="{ 'router-link-active': active, disabled }"
 				@click="(e: MouseEvent) => emits('click', e)"
 			>
-				<Transition mode="out-in">
+				<Transition name="icon" mode="out-in">
 					<Icon v-if="icon" :name="icon" :key="icon" />
 				</Transition>
 				<AnimatedIcon v-if="animatedIcon" :name="animatedIcon" :state />
@@ -106,22 +106,6 @@
 	.icon,
 	.animated-icon {
 		font-size: var(--icon-size);
-	}
-
-	.icon {
-		&.v-enter-from,
-		&.v-leave-to {
-			transform: scale(0.2);
-			opacity: 0;
-		}
-
-		&.v-enter-active {
-			transition: 500ms $ease-out-spring;
-		}
-
-		&.v-leave-active {
-			transition: 100ms $ease-in-max;
-		}
 	}
 
 	:comp {

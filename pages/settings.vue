@@ -40,7 +40,8 @@
 	const htmlTitle = computed(() => title.value + " - " + settingsString);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.roles.includes("administrator"));
+	const appSettingsStore = useAppSettingsStore();
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
 
@@ -70,7 +71,7 @@
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
 			{ id: "account-linking", icon: "groups" },
-			{ id: "block_and_hide", icon: "block" },
+			{ id: "block-and-hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],
 		general: [
@@ -95,7 +96,7 @@
 	 * 登出。
 	 */
 	async function logout() {
-		const logoutResult = await api.user.userLogout();
+		const logoutResult = await api.user.userLogout({ appSettingsStore, selfUserInfoStore });
 		if (logoutResult.success) {
 			const curPage = currentSettingsPage();
 			if (settings.general.findIndex(({ id }) => id === curPage) === -1)
@@ -114,7 +115,7 @@
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: useAppSettingsStore().backgroundImage.image.data }">
+	<div v-bind="$attrs" class="settings" :class="{ transparent: appSettingsStore.backgroundImage.image.data }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">
@@ -128,14 +129,35 @@
 						<TabBar v-model="currentSettingsRequested" vertical>
 							<Subheader v-if="selfUserInfoStore.isLogined" icon="person">{{ t.settings.user }}</Subheader>
 							<template v-if="selfUserInfoStore.isLogined">
-								<TabItem v-for="setting in settings.personal" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+								<TabItem
+									v-for="setting in settings.personal"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
 							</template>
 							<Subheader icon="apps">{{ t.settings.app }}</Subheader>
-							<TabItem v-for="setting in settings.general" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+							<TabItem
+								v-for="setting in settings.general"
+								:id="setting.id"
+								:key="setting.id"
+								:icon="setting.icon"
+								:to="`/settings/${setting.id}`"
+								@click="showDrawer = false"
+							>{{ ti(setting.id) }}</TabItem>
 							<!-- DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。 -->
 							<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
 							<template v-if="isAdmin">
-								<TabItem v-for="setting in settings.admin" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
+								<TabItem
+									v-for="setting in settings.admin"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
 							</template>
 						</TabBar>
 						<div class="nav-bottom-buttons">

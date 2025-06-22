@@ -94,6 +94,9 @@ importers:
       qrcode.vue:
         specifier: ^3.4.1
         version: 3.6.0(vue@3.5.14(typescript@5.8.3))
+      safe-regex:
+        specifier: ^2.1.1
+        version: 2.1.1
       shaka-player:
         specifier: ^4.10.11
         version: 4.14.14(patch_hash=1617016766d722e88f42cfca83158be6d72d306612dd01cb81b9442aa5c1e289)
@@ -155,6 +158,9 @@ importers:
       '@types/html-minifier-terser':
         specifier: ^7.0.2
         version: 7.0.2
+      '@types/safe-regex':
+        specifier: ^1.1.6
+        version: 1.1.6
       commitizen:
         specifier: ^4.3.0
         version: 4.3.1(@types/node@22.15.21)(typescript@5.8.3)
@@ -1782,6 +1788,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/safe-regex@1.1.6':
+    resolution: {integrity: sha512-CQ/uPB9fLOPKwDsrTeVbNIkwfUthTWOx0l6uIGwVFjZxv7e68pCW5gtTYFzdJi3EBJp8h8zYhJbTasAbX7gEMQ==}
 
   '@types/triple-beam@1.3.5':
     resolution: {integrity: sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==}
@@ -5433,6 +5442,9 @@ packages:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
 
+  safe-regex@2.1.1:
+    resolution: {integrity: sha512-rx+x8AMzKb5Q5lQ95Zoi6ZbJqwCLkqi3XuJXp5P3rT8OEc6sZCJG5AE5dU3lsgRr/F4Bs31jSlVN+j5KrsGu9A==}
+
   safe-stable-stringify@2.5.0:
     resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
     engines: {node: '>=10'}
@@ -8241,6 +8253,8 @@ snapshots:
       postcss: 8.5.3
 
   '@types/resolve@1.20.2': {}
+
+  '@types/safe-regex@1.1.6': {}
 
   '@types/triple-beam@1.3.5': {}
 
@@ -12570,6 +12584,10 @@ snapshots:
       call-bound: 1.0.4
       es-errors: 1.3.0
       is-regex: 1.2.1
+
+  safe-regex@2.1.1:
+    dependencies:
+      regexp-tree: 0.1.27
 
   safe-stable-stringify@2.5.0: {}
 

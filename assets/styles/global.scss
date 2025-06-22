@@ -390,6 +390,20 @@ html.no-color-transition {
 	}
 }
 
+.icon-enter-from,
+.icon-leave-to {
+	transform: scale(0.2);
+	opacity: 0;
+}
+
+.icon-enter-active {
+	transition: 500ms $ease-out-spring;
+}
+
+.icon-leave-active {
+	transition: 100ms $ease-in-max;
+}
+
 .right-enter-from,
 .left-leave-to {
 	translate: 2rem;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const userBirthdayDisplay = computed(() => selfUserInfoStore.birthday ? formatDateWithLocale(new Date(selfUserInfoStore.birthday)) : "Unknown");
-	const registerDateDisplay = computed(() => selfUserInfoStore.userCreateDateTime ? formatDateWithLocale(new Date(selfUserInfoStore.userCreateDateTime)) : "Unknown");
+	const userBirthdayDisplay = computed(() => selfUserInfoStore.userInfo.birthday ? formatDateWithLocale(new Date(selfUserInfoStore.userInfo.birthday)) : "Unknown"); // TODO: 生日功能
+	const registerDateDisplay = computed(() => selfUserInfoStore.userInfo.userCreateDateTime ? formatDateWithLocale(new Date(selfUserInfoStore.userInfo.userCreateDateTime)) : "Unknown");
 </script>
 
 <template>
@@ -9,16 +9,16 @@
 		<div class="user-profile">
 			<UserContent
 				v-tooltip="t.profile.edit"
-				:avatar="selfUserInfoStore.userAvatar"
-				:username="selfUserInfoStore.username"
-				:nickname="selfUserInfoStore.userNickname"
-				:gender="selfUserInfoStore.gender"
+				:avatar="selfUserInfoStore.userInfo.avatar"
+				:username="selfUserInfoStore.userInfo.username"
+				:nickname="selfUserInfoStore.userInfo.userNickname"
+				:gender="selfUserInfoStore.userInfo.gender"
 				:to="'/settings/profile'"
 				size="huge"
 				center
 			>
 				<template #description>
-					{{ selfUserInfoStore.signature }}
+					{{ selfUserInfoStore.userInfo.signature }}
 				</template>
 			</UserContent>
 		</div>

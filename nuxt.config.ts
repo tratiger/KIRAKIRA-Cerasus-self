@@ -114,6 +114,7 @@ export default defineNuxtConfig({
 				"@tiptap/starter-kit",
 				"@tiptap/extension-underline",
 				"@tiptap/core",
+				"safe-regex",
 			],
 			needsInterop: [
 				"mediainfo.js",

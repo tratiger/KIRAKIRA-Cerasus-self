@@ -170,7 +170,7 @@
 			useToast(t.toast.upload_not_completed, "error");
 			return;
 		}
-		const uid = useSelfUserInfoStore().uid;
+		const uid = useSelfUserInfoStore().userInfo.uid;
 		if (!uid) {
 			useToast(t.toast.upload_must_logged_in, "error");
 			return;

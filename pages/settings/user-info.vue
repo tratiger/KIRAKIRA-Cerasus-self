@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.roles.includes("administrator"));
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 
 	const isOnlyShowUserInfoUpdatedAfterReview = ref(false); // 是否只展示在上一次审核通过后修改了用户信息的用户
 	const users = ref<AdminGetUserInfoResponseDto>(); // 用户信息
@@ -134,7 +134,7 @@
 				(to: unknown) => {
 					// WARN: 此处需要重新创建 Store
 					const selfUserInfoStore = useSelfUserInfoStore();
-					if (!selfUserInfoStore.roles.includes("administrator"))
+					if (!selfUserInfoStore.userInfo.roles?.includes("administrator"))
 						return navigate("/settings/appearance");
 
 					if (to && typeof to === "object" && "path" in to && to.path !== "/settings/user-info")

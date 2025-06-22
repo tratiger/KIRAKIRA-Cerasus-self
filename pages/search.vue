@@ -182,7 +182,6 @@
 	watch(() => displayTags.value, tags => {
 		if (searchMode.value === "tag") {
 			const tagIds = tags.map(tag => tag.tagId);
-			console.log("rrrrrrrr", route.query);
 			router.push({ path: route.path, query: { ...route.query, tagId: tagIds } });
 		}
 	});

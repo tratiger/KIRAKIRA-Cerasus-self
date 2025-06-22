@@ -37,13 +37,13 @@
 	<Comp>
 		<div class="user">
 			<UserAvatar
-				v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.login"
-				:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userAvatar : undefined"
+				v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
+				:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.avatar : undefined"
 				@click="onClickUser"
 			/>
-			<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.pleaseLogin }}</p>
-			<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.username }}</p>
-			<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.signature" class="bio">{{ selfUserInfoStore.signature }}</p>
+			<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.pleaseLogin }}</p>
+			<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.userInfo.username }}</p>
+			<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.userInfo.signature" class="bio">{{ selfUserInfoStore.userInfo.signature }}</p>
 		</div>
 		<div class="grid">
 			<div v-for="item in drawerItems" :key="item.icon" v-ripple class="drawer-item" @click="to(item.route)">

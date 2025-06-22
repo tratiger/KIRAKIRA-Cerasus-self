@@ -13,6 +13,7 @@
 	}>();
 
 	const selfUserInfoStore = useSelfUserInfoStore();
+	const appSettingsStore = useAppSettingsStore();
 	const showLogin = ref(false);
 	const [DefineAvatar, Avatar] = createReusableTemplate();
 	const scopeId = useParentScopeId()!;
@@ -34,14 +35,15 @@
 		const checkUserResult = await checkUser();
 		if (checkUserResult)
 			try {
-				await api.user.getSelfUserInfo();
+				const headerCookie = useRequestHeaders(["cookie"]);
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie });
 			} catch (error) {
 				console.error("ERROR", "Failed to get current logged in user info:", error);
 				useToast(t.toast.get_current_logged_in_user_info_failed, "error", 7000);
 			}
 		else {
 			// TODO: 如果用户未登录，要怎样？要引导登录吗？
-			api.user.userLogout(); // 如果未登录或验证不成功，则清空全局变量中的用户信息并清空残留 cookie
+			api.user.userLogout({ appSettingsStore, selfUserInfoStore }); // 如果未登录或验证不成功，则清空全局变量中的用户信息并清空残留 cookie
 			console.warn("WARN", "User not logged in or authentication failed.");
 		}
 	}
@@ -51,7 +53,7 @@
 	 */
 	function onClickUser() {
 		if (!selfUserInfoStore.isLogined) showLogin.value = true;
-		else navigate(`/user/${selfUserInfoStore.uid}`);
+		else navigate(`/user/${selfUserInfoStore.userInfo.uid}`);
 	}
 
 	/**
@@ -70,16 +72,16 @@
 			await getUserInfo();
 	});
 
-	// 生命周期钩子
-	// mounted 时获取用户信息
-	onMounted(async () => { await getUserInfo(); });
+	// 获取用户信息
+	onMounted(async () => await getUserInfo());
 </script>
 
 <template>
 	<DefineAvatar>
-		<UserAvatar v-if="selfUserInfoStore.isEffectiveCheckOnce"
-			v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.login"
-			:avatar="selfUserInfoStore.isLogined && !selfUserInfoStore.tempHideAvatarFromSidebar ? selfUserInfoStore.userAvatar : undefined"
+		<UserAvatar
+			v-if="selfUserInfoStore.isEffectiveCheckOnce"
+			v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
+			:avatar="selfUserInfoStore.isLogined && !selfUserInfoStore.tempHideAvatarFromSidebar ? selfUserInfoStore.userInfo.avatar : undefined"
 			hoverable
 		/>
 	</DefineAvatar>

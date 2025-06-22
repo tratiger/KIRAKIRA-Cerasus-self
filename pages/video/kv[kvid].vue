@@ -39,7 +39,8 @@
 
 		if (Number.isFinite(kvid)) {
 			const getVideoByKvidRequest: GetVideoByKvidRequestDto = { videoId: kvid };
-			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest);
+			const headerCookie = useRequestHeaders(["cookie"]);
+			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest, headerCookie);
 			if (videoDataResponse.success) {
 				const videoData = videoDataResponse.video;
 				const videoPartData = videoData?.videoPart?.[0]; // TODO: 因为要做 分P 视频，所以这里获取到的视频是一个数组，这里暂时取了数组第 0 位。应改进为读取数组中的所有视频，并根据 id 排序渲染成 分P 列表
@@ -148,27 +149,11 @@
 								:avatar="videoDetails?.uploaderInfo?.avatar"
 								:nickname="videoDetails?.uploaderInfo?.userNickname ?? ''"
 								:username="videoDetails?.uploaderInfo?.username ?? ''"
+								:fans="videoDetails?.uploaderSubscribers ?? 0"
 								:followers="videoDetails?.uploaderFollowers ?? 0"
-								isFollowing
+								:isFollowing="videoDetails?.uploaderInfo?.isFollowing"
+								:isSelf="videoDetails?.uploaderInfo?.isSelf"
 							/>
-						<!-- <Subheader
-					v-if="(recommendations?.length ?? 0) > 0"
-					class="recommendations-header"
-					icon="movie"
-					:badge="recommendations?.length"
-				>{{ t.video_recommendations }}</Subheader>
-
-				<ThumbVideo
-					v-for="video in recommendations"
-					:key="video.videoID"
-					class="video-recomendation"
-					:videoId="video.videoID"
-					:uploader="video.authorName ?? ''"
-					:image="video.thumbnailLoc"
-					:date="new Date()"
-					:watchedCount="video.views"
-					:duration="new Duration(video.videoDuration ?? 0)"
-				>{{ video.title }}</ThumbVideo> -->
 						</div>
 					</div>
 					<div v-else-if="selectedTab === 'comments'">

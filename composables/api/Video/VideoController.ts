@@ -9,8 +9,10 @@ const VIDEO_API_URI = `${BACK_END_URI}video`;
  * 获取主页中显示的视频
  * @returns 展示视频卡片需要的返回参数
  */
-export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> => {
-	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`);
+export const getHomePageThumbVideo = async (headerCookie: { cookie?: string | undefined }): Promise<ThumbVideoResponseDto> => {
+	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`, { headers: headerCookie, credentials: "include" });
 	if (result.value)
 		return result.value;
 	else
@@ -36,17 +38,20 @@ export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoEx
 /**
  * 根据视频 ID (KVID) 获取视频的数据
  * @param getVideoByKvidRequest 从视频 ID 获取视频的请求参数
+ * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 视频页面需要的响应
  */
-export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto): Promise<GetVideoByKvidResponseDto> => {
+export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetVideoByKvidResponseDto> => {
 	if (getVideoByKvidRequest && getVideoByKvidRequest.videoId) {
-		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { credentials: "include" });
+		// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+		// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { headers: headerCookie, credentials: "include" });
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取视频失败" };
+			return { success: false, message: "获取视频失败", isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 KVID" };
+		return { success: false, message: "未提供 KVID", isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
@@ -60,9 +65,9 @@ export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDt
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [] };
+			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 UID", videosCount: 0, videos: [] };
+		return { success: false, message: "未提供 UID", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
@@ -151,10 +156,10 @@ export class TusFileUploader {
 				onProgress: (bytesUploaded, bytesTotal) => {
 					const percentage = bytesUploaded / bytesTotal * 100;
 					progress.value = percentage;
-					console.log(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // DELETE ME
+					console.info(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // useless
 				},
 				onSuccess: () => {
-					console.log("Download %s from %s", (uploader.file as File)?.name, uploader.url); // DELETE ME
+					console.info("Video upload success");
 					if (videoId) {
 						this.step = "success";
 						resolve(videoId);

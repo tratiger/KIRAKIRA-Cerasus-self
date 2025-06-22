@@ -4,7 +4,10 @@
 
 <script setup lang="ts">
 	useHead({ title: "欢迎加入KIRAKIRA☆DOUGA大家庭" });
-	const next = useRoute().query.next || "/";
+	const next = Array.isArray(useRoute().query.next)
+		? useRoute().query.next?.[0] ?? "/"
+		: useRoute().query.next as string ?? "/"; // FIXME: Array.isArray 为什么推断不出来问号表达式第三位一定不是 Array 类型
+
 	const container = ref<HTMLDivElement>();
 
 	const profile = reactive({
@@ -44,7 +47,7 @@
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined });
 				isUpdateUserInfo.value = false;
 			}
 		} catch (error) {
