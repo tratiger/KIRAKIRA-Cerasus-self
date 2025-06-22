@@ -159,9 +159,6 @@
 				</TabBar>
 			</div>
 		</header>
-		{{ !userInfo?.isBlocked && !userInfo?.isBlockedByOther }}
-		{{ !userInfo?.isBlocked }}
-		{{ !userInfo?.isBlockedByOther }}
 		<div v-if="!userInfo?.isBlocked && !userInfo?.isBlockedByOther" class="slot">
 			<NuxtPage />
 		</div>
