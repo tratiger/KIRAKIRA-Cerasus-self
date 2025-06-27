@@ -421,7 +421,7 @@ $t(variable)
 <td>位置参数</td>
 <td>
 
-```typescripthttps://img.shields.io
+```typescript
 t.welcome("hello", "world")
 ```
 
