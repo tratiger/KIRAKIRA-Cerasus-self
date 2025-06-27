@@ -1,6 +1,4 @@
 <script setup lang="ts">
-	import NumberFlow from "@number-flow/vue";
-
 	const props = defineProps<{
 		/** 视频 ID。 */
 		videoId: number;

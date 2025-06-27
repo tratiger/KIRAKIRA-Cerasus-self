@@ -1,6 +1,4 @@
 <script setup lang="ts">
-	import NumberFlow from "@number-flow/vue";
-
 	const props = withDefaults(defineProps<{
 		/** 评论唯一 ID */
 		commentId: string;
@@ -227,7 +225,15 @@
 
 <template>
 	<Comp>
-		<UserContent :avatar :uid :nickname :username :date :index :pinned>
+		<UserContent
+			:avatar
+			:uid
+			:nickname
+			:username
+			:date
+			:index
+			:pinned
+		>
 			<div class="comments">
 				<slot></slot>
 			</div>
