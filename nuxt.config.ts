@@ -42,7 +42,6 @@ export default defineNuxtConfig({
 		dev && "modules/components-globalized/module.ts",
 		"@nuxtjs/robots",
 		"@nuxtjs/sitemap",
-		"@nuxthub/core",
 	],
 
 	alias: defineAlias(__dirname,
