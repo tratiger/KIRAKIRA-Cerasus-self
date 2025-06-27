@@ -6,9 +6,9 @@
 
 <script setup lang="ts">
 	const props = withDefaults(defineProps<{
-		/** 滚动容器 querySelector。 */
+		/** 滚动容器选择器。 */
 		scrollContainerSelector?: string;
-		/** 滚动内容 querySelector。 */
+		/** 滚动内容选择器。 */
 		scrollContentSelector?: string;
 	}>(), {
 		scrollContainerSelector: "#mainScroller",
@@ -73,17 +73,13 @@
 	onMounted(() => {
 		scrollContainer.value = document.querySelector(props.scrollContainerSelector);
 		scrollContent.value = document.querySelector(props.scrollContentSelector);
-		if (scrollContainer) {
-			scrollContainer.value?.addEventListener("touchstart", onTouchStart as EventListener);
-			scrollContainer.value?.addEventListener("touchend", onTouchEnd as EventListener);
-		}
+		scrollContainer.value?.addEventListener("touchstart", onTouchStart as EventListener);
+		scrollContainer.value?.addEventListener("touchend", onTouchEnd as EventListener);
 	});
 
 	onBeforeUnmount(() => {
-		if (scrollContainer.value) {
-			scrollContainer.value.removeEventListener("touchstart", onTouchStart as EventListener);
-			scrollContainer.value.removeEventListener("touchend", onTouchEnd as EventListener);
-		}
+		scrollContainer.value?.removeEventListener("touchstart", onTouchStart as EventListener);
+		scrollContainer.value?.removeEventListener("touchend", onTouchEnd as EventListener);
 	});
 </script>
 
@@ -92,7 +88,7 @@
 		<Transition>
 			<div v-if="pulling || refreshing" ref="indicatorWrapper" class="indicator-container" :style="{ transform: `translateY(${indicatorWrapperTranslateY}px)` }">
 				<div class="indicator">
-					<Icon v-if="!refreshing" name="refresh" :class="{ ready: (pullDistance >= REFRESH_THRESHOLD) }" :style="{ rotate: `${indicatorRotate}deg` }" />
+					<Icon v-if="!refreshing" name="refresh" :class="{ ready: pullDistance >= REFRESH_THRESHOLD }" :style="{ rotate: `${indicatorRotate}deg` }" />
 					<ProgressRing v-else />
 				</div>
 			</div>

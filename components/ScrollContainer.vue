@@ -348,6 +348,7 @@
 	.scroller {
 		@include square(100%);
 		padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
+		overscroll-behavior-y: none;
 		scrollbar-width: none;
 
 		&::-webkit-scrollbar {
