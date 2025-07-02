@@ -37,16 +37,18 @@
 	 * 初始化弹幕组件。
 	 */
 	function initDanmaku() {
-		const media = toValue(props.media);
-		if (!media || !danmakuContainer.value) return;
-		danmaku.value?.destroy();
-		danmaku.value = new Danmaku({
-			container: danmakuContainer.value,
-			media,
-			comments: props.comments,
-			engine: props.engine,
-			speed: props.speed,
-		});
+		if (import.meta.client) { // FIXME: 02: idk why `environment.client` not working here...
+			const media = toValue(props.media);
+			if (!media || !danmakuContainer.value) return;
+			danmaku.value?.destroy();
+			danmaku.value = new Danmaku({
+				container: danmakuContainer.value,
+				media,
+				comments: props.comments,
+				engine: props.engine,
+				speed: props.speed,
+			});
+		}
 	}
 
 	watch(() => props.media, initDanmaku);
