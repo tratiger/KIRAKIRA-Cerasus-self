@@ -13,10 +13,11 @@
 		/** 允许用户使用键盘上左右箭头键翻页。 */
 		enableArrowKeyMove?: boolean;
 		/** 是否禁用？ */
-		disabled: boolean;
+		disabled?: boolean;
 	}>(), {
 		current: 1,
 		displayPageCount: 7,
+		disabled: false,
 	});
 
 	const model = defineModel<number>();

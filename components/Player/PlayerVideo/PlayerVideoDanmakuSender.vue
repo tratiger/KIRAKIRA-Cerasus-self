@@ -43,12 +43,16 @@
 </script>
 
 <script setup lang="ts">
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		/** 当前视频时间。 */
 		currentTime: number;
 		/** 视频 ID。 */
 		videoId: number;
-	}>();
+		/** 是否可以填写弹幕（用户如果被屏蔽等情况下无法填写弹幕） */
+		editable?: boolean;
+	}>(), {
+		editable: true,
+	});
 
 	const sendDanmaku = defineModel<DanmakuComment[]>();
 
@@ -115,7 +119,8 @@
 	<FlyoutDanmakuFormat v-model="flyoutFormat" v-model:format="format" />
 
 	<Comp role="textbox">
-		<TextBox ref="textBox" v-model="content" :placeholder="t.danmaku.send">
+		<!-- // TODO: 使用多语言 -->
+		<TextBox ref="textBox" v-model="content" :placeholder="editable ? t.danmaku.send : '您已被该用户屏蔽，无法发送弹幕。'" :disabled="!editable">
 			<template #actions>
 				<SoftButton
 					v-tooltip:bottom="t.kaomoji"

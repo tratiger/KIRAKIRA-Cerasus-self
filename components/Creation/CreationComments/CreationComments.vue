@@ -3,7 +3,14 @@
 </docs>
 
 <script setup lang="ts">
-	const props = defineProps<{ videoId: number }>();
+	const props = withDefaults(defineProps<{
+		/** 视频 ID。 */
+		videoId: number;
+		/** 是否可以编辑（用户如果被屏蔽等情况下无法编辑） */
+		editable?: boolean;
+	}>(), {
+		editable: true,
+	});
 
 	const pageSize = 20; // 每页评论数
 	const comments = ref<GetVideoCommentByKvidResponseDto["videoCommentList"]>([]); // 评论数据
@@ -65,7 +72,7 @@
 		<HeadingComments :count="commentsCount" />
 		<div class="send">
 			<UserAvatar :avatar="selfUserInfoStore.userAvatar" />
-			<TextEditorRtf :videoId />
+			<TextEditorRtf :videoId :editable />
 		</div>
 		<div class="toolbar">
 			<div class="left">

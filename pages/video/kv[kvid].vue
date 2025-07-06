@@ -14,6 +14,7 @@
 	const kvid = +route.params.kvid;
 	const videoSource = ref<string>();
 	const videoDetails = ref<VideoData>();
+	const isBlockedByUploader = ref(false);
 	const selectedTab = ref("info");
 	const transitionName = ref("page-jump-in");
 	const title = computed(() => videoDetails.value?.title ?? "");
@@ -42,6 +43,7 @@
 			const headerCookie = useRequestHeaders(["cookie"]);
 			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest, headerCookie);
 			if (videoDataResponse.success) {
+				isBlockedByUploader.value = videoDataResponse.isBlockedByOther;
 				const videoData = videoDataResponse.video;
 				const videoPartData = videoData?.videoPart?.[0]; // TODO: 因为要做 分P 视频，所以这里获取到的视频是一个数组，这里暂时取了数组第 0 位。应改进为读取数组中的所有视频，并根据 id 排序渲染成 分P 列表
 				if (videoData?.title && videoPartData?.link) {
@@ -91,14 +93,14 @@
 	<div class="container" :class="{ playing }">
 		<DefineComments>
 			<ClientOnly>
-				<LazyCreationComments :videoId="kvid" />
+				<LazyCreationComments :videoId="kvid" :editable="!isBlockedByUploader" />
 			</ClientOnly>
 		</DefineComments>
 
 		<DefineDanmakus>
 			<ClientOnly>
 				<PlayerVideoDanmakuList v-model="insertDanmaku" />
-				<PlayerVideoDanmakuSender v-model="sendDanmaku" :videoId="videoDetails?.videoId ?? 0" :currentTime />
+				<PlayerVideoDanmakuSender v-model="sendDanmaku" :videoId="videoDetails?.videoId ?? 0" :currentTime :editable="!isBlockedByUploader" />
 			</ClientOnly>
 		</DefineDanmakus>
 

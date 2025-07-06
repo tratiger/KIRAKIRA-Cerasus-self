@@ -8,6 +8,8 @@
 	const props = defineProps<{
 		/** 视频 ID。 */
 		videoId: number;
+		/** 是否可以编辑 */
+		editable: boolean;
 	}>();
 
 	const emits = defineEmits<{
@@ -30,12 +32,13 @@
 			VueComponent.ThumbVideo,
 			VueComponent.CursorShadow,
 		],
+		content: !props.editable ? '您已被该用户屏蔽，无法发送评论。' : undefined, // TODO: 使用多语言
 		/* content: `
 			<p>我正在用 Vue.js 运行 Tiptap。🎉</p>
 			<p>你看到了吗？这是 Vue 组件。我们真的生活在未来。</p>
 		`, */
 		autofocus: false,
-		editable: true,
+		editable: props.editable,
 		injectCSS: false,
 		onUpdate(props) {
 			textLength.value = props.editor.getText().length;

@@ -79,7 +79,7 @@
 	async function getPendingBlockUserInfo() {
 		isClickAddButton.value = true;
 		try {
-			const blockUid = parseInt(inputPendingBlockUid.value, 10);
+			const blockUid = parseInt(inputPendingBlockUid.value || "-1", 10);
 
 			if (blockUid === undefined || blockUid === null || blockUid < 1) {
 				console.error("ERROR", "待屏蔽用户的 UID 格式不正确，不能为空或小于零");
@@ -116,7 +116,7 @@
 	async function blockUser() {
 		isBlockingUser.value = true;
 		try {
-			const blockUid = parseInt(inputPendingBlockUid.value, 10);
+			const blockUid = parseInt(inputPendingBlockUid.value || "-1", 10);
 
 			if (blockUid === undefined || blockUid === null || blockUid < 1) {
 				console.error("ERROR", "屏蔽用户的 UID 格式不正确，不能为空或小于零");
@@ -210,7 +210,7 @@
 	async function getPendingHideUserInfo() {
 		isClickAddButton.value = true;
 		try {
-			const hideUid = parseInt(inputPendingHideUid.value, 10);
+			const hideUid = parseInt(inputPendingHideUid.value || "-1", 10);
 
 			if (hideUid === undefined || hideUid === null || hideUid < 1) {
 				console.error("ERROR", "待隐藏用户的 UID 格式不正确，不能为空或小于零");
@@ -247,7 +247,7 @@
 	async function hideUser() {
 		isHidingUser.value = true;
 		try {
-			const hideUid = parseInt(inputPendingHideUid.value, 10);
+			const hideUid = parseInt(inputPendingHideUid.value || "-1", 10);
 
 			if (hideUid === undefined || hideUid === null || hideUid < 1) {
 				console.error("ERROR", "隐藏用户的 UID 格式不正确，不能为空或小于零");
