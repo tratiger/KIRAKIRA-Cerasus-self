@@ -45,8 +45,8 @@
 		<div class="user-info chip">
 			<SettingsChipItem icon="birthday" :details="userBirthdayDisplay">{{ t.user.birthday }}</SettingsChipItem>
 			<SettingsChipItem icon="history" :details="registerDateDisplay">{{ t.user.join_time }}</SettingsChipItem>
-			<SettingsChipItem icon="fingerprint" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.uid : undefined">UID</SettingsChipItem>
-			<SettingsChipItem icon="gift" :details="`TODO`">使用邀请码</SettingsChipItem>
+			<SettingsChipItem icon="fingerprint" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.uid : undefined">UID</SettingsChipItem>
+			<SettingsChipItem icon="gift" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.invitationCode : undefined">使用邀请码</SettingsChipItem>
 		</div>
 	</div>
 </template>
