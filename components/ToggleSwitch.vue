@@ -144,6 +144,7 @@
 
 		.base {
 			@include oval;
+			@include control-inner-shadow;
 			position: absolute;
 			top: calc(($thumb-size - $base-height) / 2);
 			width: $width;
@@ -173,7 +174,9 @@
 			left: 0;
 			background-color: c(white);
 
-			@include tablet { // 增加移动端大小以便拖拽。
+			@include tablet {
+
+				// 增加移动端大小以便拖拽。
 				&::before {
 					@include square(40px);
 					@include circle;
