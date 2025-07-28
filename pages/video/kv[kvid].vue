@@ -42,27 +42,33 @@
 			const getVideoByKvidRequest: GetVideoByKvidRequestDto = { videoId: kvid };
 			const headerCookie = useRequestHeaders(["cookie"]);
 			const videoDataResponse = await api.video.getVideoByKvid(getVideoByKvidRequest, headerCookie);
-			if (videoDataResponse.success) {
-				isBlockedByUploader.value = videoDataResponse.isBlockedByOther;
-				const videoData = videoDataResponse.video;
-				const videoPartData = videoData?.videoPart?.[0]; // TODO: 因为要做 分P 视频，所以这里获取到的视频是一个数组，这里暂时取了数组第 0 位。应改进为读取数组中的所有视频，并根据 id 排序渲染成 分P 列表
-				if (videoData?.title && videoPartData?.link) {
-					videoSource.value = videoPartData.link;
-					videoDetails.value = {
-						videoPart: videoData.videoPart ?? [],
-						title: videoData.title ?? "",
-						videoTagList: videoData.videoTagList ?? [],
-						uploaderInfo: videoData.uploaderInfo,
-						uploadDate: videoData.uploadDate,
-						videoId: kvid,
-						videoCategory: videoData.videoCategory ?? "",
-						copyright: videoData.copyright,
-						image: videoData.image,
-					};
-				} else
-					handleError(t.toast.video_invalid_result);
-			} else
+
+			if (!videoDataResponse.success)
 				handleError(t.toast.video_request_failed);
+
+			if (videoDataResponse.isBlocked)
+				navigateToErrorPage(404);
+			
+			isBlockedByUploader.value = videoDataResponse.isBlockedByOther;
+			console.log("videoDataResponse");
+			console.dir(videoDataResponse, { depth: null });
+			const videoData = videoDataResponse.video;
+			const videoPartData = videoData?.videoPart?.[0]; // TODO: 因为要做 分P 视频，所以这里获取到的视频是一个数组，这里暂时取了数组第 0 位。应改进为读取数组中的所有视频，并根据 id 排序渲染成 分P 列表
+			if (videoData?.title && videoPartData?.link) {
+				videoSource.value = videoPartData.link;
+				videoDetails.value = {
+					videoPart: videoData.videoPart ?? [],
+					title: videoData.title ?? "",
+					videoTagList: videoData.videoTagList ?? [],
+					uploaderInfo: videoData.uploaderInfo,
+					uploadDate: videoData.uploadDate,
+					videoId: kvid,
+					videoCategory: videoData.videoCategory ?? "",
+					copyright: videoData.copyright,
+					image: videoData.image,
+				};
+			} else
+				handleError(t.toast.video_invalid_result);
 		} else
 			handleError(t.toast.video_no_id);
 	}
@@ -153,7 +159,7 @@
 								:username="videoDetails?.uploaderInfo?.username ?? ''"
 								:fans="videoDetails?.uploaderSubscribers ?? 0"
 								:followers="videoDetails?.uploaderFollowers ?? 0"
-								:isFollowing="videoDetails?.uploaderInfo?.isFollowing"
+								:isFollowing="!!videoDetails?.uploaderInfo?.isFollowing"
 								:isSelf="videoDetails?.uploaderInfo?.isSelf"
 							/>
 						</div>

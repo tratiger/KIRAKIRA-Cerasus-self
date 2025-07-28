@@ -105,10 +105,14 @@
 			};
 			const headerCookie = useRequestHeaders(["cookie"]);
 			const userInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest, headerCookie);
-			if (userInfoResult.success) {
-				isFollowing.value = !!userInfoResult.result?.isFollowing;
-				userInfo.value = userInfoResult;
-			}
+			if (!userInfoResult.success)
+				useToast("获取用户信息失败", "error", 5000); // TODO: 使用多语言
+
+			if (userInfoResult.isBlocked)
+				navigateToErrorPage(404);
+
+			isFollowing.value = !!userInfoResult.result?.isFollowing;
+			userInfo.value = userInfoResult;
 		}
 	}
 
@@ -159,7 +163,7 @@
 				</TabBar>
 			</div>
 		</header>
-		<div v-if="!userInfo?.isBlocked && !userInfo?.isBlockedByOther" class="slot">
+		<div v-if="!userInfo?.isBlocked" class="slot">
 			<NuxtPage />
 		</div>
 	</div>

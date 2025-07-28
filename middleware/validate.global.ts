@@ -1,7 +1,7 @@
 import { httpResponseStatusCodes } from "helpers/http-status";
 
 const MEDIA_INFO_MODULE_WASM = "MediaInfoModule.wasm";
-const navigate = (path: string) => navigateTo(useLocalePath()(path));
+// const navigate = (path: string) => navigateTo(useLocalePath()(path));
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 	if (environment.client && environment.development)
@@ -26,14 +26,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 	}
 	if (routeSlug[0] === "video") {
 		const checkKvidResult = await checkKvid(routeSlug[1]);
-		if (checkKvidResult === true) {
+		if (checkKvidResult === true) { // `checkKvidResult === true` is necessary!
 			if (!routeSlug[1] || routeSlug.length >= 3 && !to.name)
 				return navigate(`/video/${routeSlug[1]}`);
 		} else
-			return abortNavigation({
-				statusCode: 301,
-				message: checkKvidResult.message,
-			});
+			return navigateToErrorPage(301);
 	}
 	if (routeSlug[0] === "user") {
 		const uid = await getUserInfo(routeSlug[1]);
@@ -41,10 +38,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 			if (!routeSlug[1] || routeSlug.length >= 3 && !to.name)
 				return navigate(`/user/${uid}`);
 		} else
-			return abortNavigation({
-				statusCode: 404,
-				message: uid.message,
-			});
+			return navigateToErrorPage(404);
 	}
 	if (routeSlug.at(-1) === MEDIA_INFO_MODULE_WASM)
 		return navigateTo(`/${MEDIA_INFO_MODULE_WASM}`);
