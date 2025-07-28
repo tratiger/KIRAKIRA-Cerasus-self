@@ -43,7 +43,7 @@
 		<div class="card-wrapper">
 			<div v-ripple class="card">
 				<div class="cover-wrapper">
-					<NuxtImg
+					<NuxtPicture
 						v-if="image"
 						:provider="environment.cloudflareImageProvider"
 						:src="image"
@@ -148,10 +148,13 @@
 		margin-bottom: 8px;
 		overflow: clip;
 
-		img.cover {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+		picture.cover {
+			&,
+			:deep(img) {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		}
 
 		.list &,
@@ -178,7 +181,8 @@
 			text-overflow: "⋯⋯";
 		}
 
-		@supports (display: -webkit-box) { // 只有 -webkit-box 才能支持多行省略号
+		@supports (display: -webkit-box) {
+			// 只有 -webkit-box 才能支持多行省略号
 			$title-line-height: 22px;
 			// stylelint-disable-next-line value-no-vendor-prefix
 			display: -webkit-box;

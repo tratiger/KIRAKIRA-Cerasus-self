@@ -230,7 +230,7 @@
 
 	/**
 	 * 用户在修改版权选项时，清理其反向对应的版权设置的相关信息。例如，用户在选择为「原创」时，清理“原作者名”和“原视频地址”数据，用户在选择为「搬运」时，将“我声明为原创”取消勾选
-	 * @param copyright 版权选项
+	 * @param copyright - 版权选项
 	 */
 	function clearCopyrightData(copyright: Copyright) {
 		if (copyright === "original") {
@@ -277,7 +277,7 @@
 
 	/**
 	 * 从视频 TAG 列表中移除一个 TAG（注意，此时 TAG 列表没有传递给后端数据库存储）
-	 * @param tagId TAG 编号
+	 * @param tagId - TAG 编号
 	 */
 	function removeTag(tagId: number) {
 		if (tagId !== undefined || tagId !== null) tags.delete(tagId);
@@ -326,7 +326,7 @@
 			<div class="toolbox-card left">
 				<div v-ripple class="cover" @click="thumbnailInput?.click()">
 					<div class="mask">{{ t.select_cover }}</div>
-					<NuxtImg
+					<NuxtPicture
 						v-if="thumbnailUrl"
 						:provider
 						:src="thumbnailUrl"
@@ -525,17 +525,17 @@
 				opacity: 1;
 			}
 
-			img {
+			img { // TODO: 转换为 picture 元素。
 				scale: 115%;
 				filter: brightness(0.75) blur(2px);
 			}
 		}
 
-		&:not(:any-hover) img {
+		&:not(:any-hover) img { // TODO: 转换为 picture 元素。
 			transition-duration: 1s;
 		}
 
-		img {
+		img { // TODO: 转换为 picture 元素。
 			width: 100%;
 			aspect-ratio: 16 / 9;
 			object-fit: cover;

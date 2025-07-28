@@ -4,14 +4,15 @@
 
 <template>
 	<div class="content">
-		<NuxtImg src="/static/images/palettes/blue.png" />
+		<NuxtPicture src="/static/images/palettes/blue.png" />
 		<div v-for="i in 100" :key="i" class="item">Item {{ i }}</div>
-		<NuxtImg src="/static/images/palettes/pink.png" />
+		<NuxtPicture src="/static/images/palettes/pink.png" />
 	</div>
 </template>
 
 <style scoped lang="scss">
-	img {
+	picture,
+	picture :deep(img) {
 		width: 120%;
 	}
 </style>

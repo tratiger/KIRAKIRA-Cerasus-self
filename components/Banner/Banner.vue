@@ -50,7 +50,7 @@
 			</div>
 			<Transition name="page-jump-in">
 				<LogoCover v-if="currentPage === 'home'" noAnimation />
-				<NuxtImg v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
+				<NuxtPicture v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
 				<BannerStandard
 					v-else
 					:name="t(2)[pageListStandard.find(i => i.id === currentPage)!.name]"

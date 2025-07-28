@@ -1,2 +1,2 @@
-export * from './image'
-export * from './module'
+export * from "./image";
+export * from "./module";

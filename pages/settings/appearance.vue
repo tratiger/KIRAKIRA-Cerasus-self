@@ -108,7 +108,7 @@
 				:class="[item.color]"
 			>
 				<div class="palette-card">
-					<NuxtImg
+					<NuxtPicture
 						:src="getPaletteImage(item.color)"
 						alt="Is the Order a Rabbit?"
 						format="avif"
@@ -268,7 +268,8 @@
 			margin-top: calc(8px + 0.1cqh);
 		}
 
-		img,
+		picture,
+		picture :deep(img),
 		.overlay,
 		.hue-gradient {
 			@include square(100%);
@@ -278,7 +279,7 @@
 			object-fit: cover;
 		}
 
-		img {
+		picture :deep(img) {
 			object-position: 50% 8%;
 			opacity: 0.6;
 		}

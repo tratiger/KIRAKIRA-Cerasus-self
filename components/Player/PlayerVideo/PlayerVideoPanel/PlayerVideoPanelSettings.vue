@@ -113,7 +113,7 @@
 							<CheckCard v-for="([filter, style], key) in filters" :key="key" v-model="filterBooleanProxy[key]">
 								{{ filter }}
 								<template #image>
-									<NuxtImg
+									<NuxtPicture
 										:style
 										:provider="environment.cloudflareImageProvider"
 										:src="thumbnail"

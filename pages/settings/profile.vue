@@ -219,7 +219,7 @@
 	}
 
 	useEventListener(userAvatarFileInput, "change", handleOpenAvatarCropper); // 监听头像文件变化事件
-	
+
 	onMounted(async () => await getSelfUserInfoController());
 	onBeforeUnmount(clearBlobUrl); // 释放内存
 	watch(selfUserInfoStore, copyPiniaUserInfo2Profile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
@@ -261,7 +261,7 @@
 		</Modal>
 
 		<div v-ripple class="banner">
-			<NuxtImg :src="banner" alt="banner" draggable="false" format="avif" />
+			<NuxtPicture :src="banner" alt="banner" draggable="false" format="avif" />
 			<span>{{ t.profile.edit_banner }}</span>
 		</div>
 
@@ -289,7 +289,8 @@
 		overflow: clip;
 		background-color: c(gray-5);
 
-		>img {
+		> picture,
+		> picture :deep(img) {
 			z-index: 1;
 			width: 100%;
 			height: 150px;
