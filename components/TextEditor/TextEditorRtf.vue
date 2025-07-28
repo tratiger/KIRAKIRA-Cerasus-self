@@ -171,17 +171,17 @@
 		</ClientOnly>
 		<div class="toolbar">
 			<div class="left">
-				<ToolItem :tooltip="t.format.bold" icon="format_bold" active="bold" @click="toggleBold" />
-				<ToolItem :tooltip="t.format.italic" icon="format_italic" active="italic" @click="toggleItalic" />
-				<ToolItem :tooltip="t.format.underline" icon="format_underline" active="underline" @click="toggleUnderline" />
-				<ToolItem :tooltip="t.format.strikethrough" icon="format_strikethrough" active="strike" @click="toggleStrike" />
-				<ToolItem :tooltip="t.mention" icon="at" @click="showAtList" />
-				<ToolItem :tooltip="t.kaomoji" icon="kaomoji" :active="!!flyoutKaomoji" @click="e => flyoutKaomoji = [e, 'y', -3]" />
-				<ToolItem :tooltip="t.image" icon="photo" @click="addVueComponents" />
+				<ToolItem :tooltip="t.format.bold" icon="format_bold" active="bold" @click="toggleBold" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.italic" icon="format_italic" active="italic" @click="toggleItalic" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.underline" icon="format_underline" active="underline" @click="toggleUnderline" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.strikethrough" icon="format_strikethrough" active="strike" @click="toggleStrike" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.mention" icon="at" @click="showAtList" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.kaomoji" icon="kaomoji" :active="!!flyoutKaomoji" @click="e => flyoutKaomoji = [e, 'y', -3]" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.image" icon="photo" @click="addVueComponents" :disabled="!props.editable" />
 			</div>
 			<div class="right">
 				<span class="text-length">{{ textLength }}</span>
-				<ToolItem :tooltip="t.send" icon="send" :disabled="!textLength || isSendingComment" :loading="isSendingComment" @click="sendComment" />
+				<ToolItem :tooltip="t.send" icon="send" :disabled="!textLength || isSendingComment || !props.editable" :loading="isSendingComment" @click="sendComment" />
 			</div>
 		</div>
 	</Comp>

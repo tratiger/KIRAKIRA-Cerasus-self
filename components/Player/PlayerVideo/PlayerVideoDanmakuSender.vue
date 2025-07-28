@@ -127,6 +127,7 @@
 					icon="kaomoji"
 					appearance="textbox-trailingicon"
 					:active="!!flyoutKaomoji"
+					:disabled="!editable"
 					@click="e => flyoutKaomoji = [e, 'y', OFFSET_Y]"
 				/>
 				<SoftButton
@@ -134,11 +135,12 @@
 					icon="text_format"
 					appearance="textbox-trailingicon"
 					:active="!!flyoutFormat"
+					:disabled="!editable"
 					@click="e => flyoutFormat = [e.currentTarget, 'y', OFFSET_Y]"
 				/>
 				<SoftButton
 					v-tooltip:bottom="t.send"
-					:disabled="!content"
+					:disabled="!content || !editable"
 					icon="send"
 					appearance="textbox-trailingicon"
 					@click="onSend"
