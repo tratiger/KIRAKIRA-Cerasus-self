@@ -1,6 +1,6 @@
 <script setup lang="ts">
-	import { httpResponseStatusCodes } from "helpers/http-status";
 	import music from "assets/audios/全都是你的所作所为.aac";
+	import { httpResponseStatusCodes } from "helpers/http-status";
 
 	const props = withDefaults(defineProps<{
 		statusCode?: 301;
@@ -18,9 +18,8 @@
 	});
 
 	const musicEl = ref<HTMLAudioElement>();
-	const playMusic = () => musicEl.value?.play().catch(useNoop);
-	onMounted(() => playMusic());
-	useEventListener("document", "click", () => playMusic());
+	const playMusic = (play: boolean) => Promise.try(() => musicEl.value?.[play ? "play" : "pause"]()).catch(useNoop);
+	const togglePlayMusic = () => playMusic(musicEl.value?.paused !== false); // Play when it is true or undefined.
 
 	const INVERSE_BULLET_SIZE = 90;
 	const inverseBulletMaskId = useId();
@@ -41,7 +40,12 @@
 				<rect v-for="i in 8" :key="i" />
 			</svg>
 		</div>
-		<div class="ellipsis-container">
+	</div>
+	<div class="foreground">
+		<div class="top">
+			<h1>啊？不见了‽</h1>
+		</div>
+		<div class="ellipsis-container" @click="togglePlayMusic">
 			<div class="ellipsis-container-relative">
 				<div class="circle"></div>
 				<div class="triangle triangle-up"></div>
@@ -51,11 +55,6 @@
 					<div v-for="j in 3" :key="j" class="ellipsis-dot"></div>
 				</section>
 			</div>
-		</div>
-	</div>
-	<div class="foreground">
-		<div class="top">
-			<h1>啊？不见了‽</h1>
 		</div>
 		<div class="ellipsis-container-shadow"></div>
 		<div class="bottom">
@@ -87,11 +86,14 @@
 	.ellipsis-container {
 		@extend %ellipsis-container-size;
 		@include absolute-center(fixed);
+		@include circle;
 		container: ellipsis-container / size;
+		cursor: pointer;
 		animation: ellipsis-container-emphasize $beat $ease-out-material-emphasized infinite forwards;
 
 		.ellipsis-container-relative {
 			@include square(100%);
+			@include circle;
 			position: relative;
 		}
 
@@ -156,6 +158,12 @@
 				}
 			}
 		}
+
+		&:any-hover:not(:active) {
+			.circle {
+				background-color: c(accent, 20%);
+			}
+		}
 	}
 
 	.ellipsis-container-shadow {
@@ -198,6 +206,7 @@
 						$stroke-width: calc($base-stroke-width / $depth);
 						--height: #{$height};
 						--stroke-width: #{$stroke-width};
+						transition: $fallback-transitions, x 0s; // 避免水合阶段突然过渡改变 x 方向的位置。
 						animation-duration: $base-animation-duration * $depth;
 						animation-delay: math.random() * (-$base-animation-duration);
 						animation-direction: if(not $reversed, normal, reverse);
@@ -245,6 +254,7 @@
 			flex-direction: column;
 			gap: 20px;
 			align-items: center;
+			text-align: center;
 
 			> * {
 				transition: $fallback-transitions, translate $ease-out-smooth 1s;
@@ -253,6 +263,27 @@
 
 		.top {
 			justify-content: flex-end;
+		}
+
+		// 高度太窄时改成绝对定位。
+		@media (height < 560px) {
+			.top,
+			.bottom {
+				position: absolute;
+				width: 100dvw;
+			}
+
+			.top {
+				top: 0;
+			}
+
+			.bottom {
+				bottom: 0;
+			}
+
+			.ellipsis-container-shadow {
+				display: none;
+			}
 		}
 
 		h1 {
