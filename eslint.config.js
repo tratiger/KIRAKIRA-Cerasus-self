@@ -1,13 +1,14 @@
 // env
+import globals from "globals";
 // extends
 import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
-import unicorn from "eslint-plugin-unicorn";
 import pluginVue from "eslint-plugin-vue";
+import jsdoc from "eslint-plugin-jsdoc";
 // plugins
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import unicorn from "eslint-plugin-unicorn";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
@@ -15,6 +16,7 @@ export default [
 	...tseslint.configs.recommended,
 	...pluginVue.configs["flat/essential"],
 	importPlugin.flatConfigs.warnings,
+	jsdoc.configs["flat/recommended-typescript"],
 	stylistic.configs.customize({
 		indent: "tab",
 		quotes: "double",
@@ -50,6 +52,19 @@ export default [
 			},
 		},
 		files: ["**/*.{js,jsx,ts,tsx,vue}"],
+		settings: {
+			react: {
+				version: "detect",
+			},
+			jsdoc: {
+				tagNamePreference: {
+					arg: "param",
+					return: "returns",
+					typeParam: "template",
+					params: "param",
+				},
+			},
+		},
 		rules: {
 			"@stylistic/indent": ["error", "tab", {
 				"SwitchCase": 1,
@@ -99,7 +114,7 @@ export default [
 			"require-await": "error",
 			"yoda": "error",
 			"@stylistic/block-spacing": "error",
-			"@stylistic/func-call-spacing": ["error", "never"],
+			"@stylistic/function-call-spacing": ["error", "never"],
 			"@stylistic/computed-property-spacing": ["error", "never"],
 			"@stylistic/no-whitespace-before-property": "error",
 			"@stylistic/object-curly-spacing": ["error", "always"],
@@ -134,7 +149,7 @@ export default [
 			"@stylistic/template-curly-spacing": "error",
 			"no-undef": "off", // 这波 nuxt 的锅。
 			"@stylistic/multiline-ternary": "off",
-			"@stylistic/operator-linebreak": "off",
+			"@stylistic/operator-linebreak": ["error", "after"],
 			"@stylistic/no-trailing-spaces": ["error", { "skipBlankLines": true }],
 			"one-var": "off",
 			"@stylistic/arrow-parens": ["error", "as-needed"],
@@ -149,12 +164,6 @@ export default [
 			"no-use-before-define": "off",
 			"accessor-pairs": "off",
 			"no-empty-function": "off",
-			"require-jsdoc": "off", // 两个 JSDoc 相关的规则已被 ESLint 弃用了。
-			"valid-jsdoc": ["off", {
-				"requireReturn": false,
-				"requireParamType": false, // TypeScript 不需要 JSDoc 的 type。
-				"requireReturnType": false,
-			}],
 			"no-inner-declarations": "warn",
 			"no-unmodified-loop-condition": "off",
 			"no-return-assign": "off",
@@ -163,6 +172,7 @@ export default [
 			"@stylistic/no-extra-parens": ["error", "all", { "ignoreJSX": "multi-line", "conditionalAssign": false }],
 			"no-void": ["off", { "allowAsStatement": true }], // 我就是要使用 void。
 			"no-labels": "off",
+			"no-label-var": "error",
 			"default-case-last": "off",
 			"no-useless-constructor": "off", // private constructor() { } 你跟我说无用？
 			"@stylistic/no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
@@ -176,6 +186,12 @@ export default [
 			// "no-useless-assignment": "error", // 不支持 Vue 模板变量引用。
 			"no-control-regex": "off",
 			"prefer-numeric-literals": "error",
+			"@stylistic/generator-star-spacing": ["error", {
+				"before": false,
+				"after": true,
+				"method": { "before": true, "after": false },
+			}],
+			"prefer-rest-params": "off",
 			"import/order": ["warn", {
 				"alphabetize": { "order": "asc", "orderImportKind": "asc", "caseInsensitive": false },
 				"named": true,
@@ -197,6 +213,32 @@ export default [
 			"unicorn/no-document-cookie": "error",
 			"unicorn/prefer-string-replace-all": "error",
 			"unicorn/no-useless-length-check": "error",
+			"jsdoc/require-jsdoc": "off",
+			"jsdoc/tag-lines": "off",
+			"jsdoc/require-param": ["warn", {
+				"enableFixer": false,
+				"checkDestructuredRoots": false,
+			}],
+			"jsdoc/check-param-names": ["warn", {
+				"checkDestructured": false,
+				"allowExtraTrailingParamDocs": true,
+				"disableExtraPropertyReporting": true,
+			}],
+			"jsdoc/check-tag-names": ["error", {
+				"definedTags": ["note", "remarks", "memberOf", "category", "warn", "notdeprecated"],
+			}],
+			"jsdoc/require-hyphen-before-param-description": ["error", "always", { "tags": { "template": "always" } }],
+			"jsdoc/require-returns": ["warn", {
+				"checkGetters": false,
+				"exemptedBy": ["inheritdoc", "deprecated"],
+			}],
+			"jsdoc/require-asterisk-prefix": "error",
+			"jsdoc/no-multi-asterisks": ["error", { "allowWhitespace": true }],
+			// "jsdoc/check-examples": ["error", {
+			// 	"exampleCodeRegex": "```",
+			// }],
+			"jsdoc/require-returns-check": "off",
+			"jsdoc/empty-tags": "off",
 			"@typescript-eslint/no-unused-vars": ["warn", { // 非要使用未使用变量，前面加下划线。
 				"argsIgnorePattern": "^_",
 				"varsIgnorePattern": "^_|^props$|^emits$",
@@ -487,6 +529,12 @@ export default [
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-unused-vars": "off",
 			"no-var": "off", // 在 globalThis 中声明成员时必须要用 var（不能使用 let 或 const）！参见：https://stackoverflow.com/a/69429093/19553213
+		},
+	},
+	{
+		files: ["*.{js,jsx}"],
+		rules: {
+			"jsdoc/check-tag-names": "off",
 		},
 	},
 	{

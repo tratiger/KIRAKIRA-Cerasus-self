@@ -11,10 +11,10 @@
  *   1. 计数器数量大于等于 option.attempts，即达到尝试次数上限。
  *   2. 被检查的变量 verb（通常是 Vue 响应式变量）值不为 undefined.
  *
- * @param verb 被检查的变量。
- * @param dataValidator 用于检查变量是否不合法的函数，如果不合法返回 true，合法返回 false。
- * @param requestDataFn 副作用，该副作用中应该请求数据并修改上面的 value 值。如果包含网络请求或其他副作用，应该保证幂等或只包含 GET 请求。
- * @param option { delay: 延迟多久后才开始监视（默认 3 秒），intervalTime: 间隔时间（默认 5 秒）， attempts: 尝试次数（默认 1 次） }
+ * @param verb - 被检查的变量。
+ * @param dataValidator - 用于检查变量是否不合法的函数，如果不合法返回 true，合法返回 false。
+ * @param requestDataFn - 副作用，该副作用中应该请求数据并修改上面的 value 值。如果包含网络请求或其他副作用，应该保证幂等或只包含 GET 请求。
+ * @param option - { delay: 延迟多久后才开始监视（默认 3 秒），intervalTime: 间隔时间（默认 5 秒）， attempts: 尝试次数（默认 1 次） }
  *
  * @returns 一个对象，包含取消该 observeEmptyVarbAndRequestData 监听的函数。
  */

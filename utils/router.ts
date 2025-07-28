@@ -84,7 +84,7 @@ export function navigate(to: RouteLocationRaw, options?: NavigateToOptions) {
 export function switchLanguage(lang: string) {
 	if (getCurrentLocale() === lang) return;
 	const switchLocalePath = useSwitchLocalePath();
-	switchLocalePath(lang);
+	switchLocalePath(lang as never);
 	// useRouter().push(switchLocalePath(value)); // 旧方法，不推荐使用。
 	if (lang === "zhs") lang = "/";
 	else lang = `/${lang}/`;

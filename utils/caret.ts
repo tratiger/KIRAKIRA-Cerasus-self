@@ -19,17 +19,17 @@ export const Caret = {
 
 	/**
 	 * 设置文本光标的坐标。
-	 * @param element HTML DOM 元素。
-	 * @param offset 文本光标的坐标。
+	 * @param element - HTML DOM 元素。
+	 * @param offset - 文本光标的坐标。
 	 */
 	set(element: MaybeRef<Element>, offset: number) {
 		element = toValue(element);
-		
+
 		if (element instanceof HTMLInputElement) {
 			element.setSelectionRange(offset, offset);
 			return;
 		}
-		
+
 		const range = document.createRange();
 		const selection = window.getSelection();
 		if (selection === null) return;

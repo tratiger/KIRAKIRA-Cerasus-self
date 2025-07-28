@@ -84,7 +84,7 @@ export function arrayToggle<T>(array: T[], item: T): void {
  * @returns 数组其中的随机一个项目。
  */
 export function randomOne<T>(array: T[], record?: MaybeRef<number[]>): T {
-	if (!array.length) return null as T;
+	if (array.length === 0) return null as T;
 	record = toValue(record);
 	let index = randBetween(0, array.length - 1);
 	if (record !== undefined) {
@@ -105,8 +105,8 @@ export function randomOne<T>(array: T[], record?: MaybeRef<number[]>): T {
 /**
  * 通过一个常量数组映射到一个对象。
  * @remarks 此 JSDoc 的 `@param` 部分参数后故意没加 “-”，否则会出现 bug。
- * @param array **常量**字符串数组。
- * @param callbackFn 生成作为对象的值。
+ * @param array - **常量**字符串数组。
+ * @param callbackFn - 生成作为对象的值。
  * @returns 映射的对象。
  */
 export function arrayMapObjectConst<const T extends string, U>(array: T[], callbackFn: (value: T, index: number, array: T[]) => U) {

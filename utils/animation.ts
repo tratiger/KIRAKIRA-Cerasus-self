@@ -7,7 +7,7 @@ export function removeExistAnimations(...elements: Element[]) {
 	let hasExistAnimations = false;
 	for (const element of elements) {
 		const existAnimations = element.getAnimations();
-		if (existAnimations.length !== 0) {
+		if (existAnimations.length > 0) {
 			hasExistAnimations = true;
 			existAnimations.forEach(animation => animation.cancel());
 		}

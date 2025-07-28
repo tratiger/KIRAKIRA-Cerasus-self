@@ -9,9 +9,13 @@ const { isArray } = Array;
 export class Color {
 	private hsva: FourD;
 
-	// eslint-disable-next-line valid-jsdoc
 	/**
-	 * @access private
+	 * 从色饱明创建颜色类实例。
+	 * @param h - 色相分量 ∈ [0 ~ 360)。
+	 * @param s - 饱和度分量 ∈ [0 ~ 100]。
+	 * @param v - 明度分量 ∈ [0 ~ 100]。
+	 * @param a - 不透明度 ∈ [0 ~ 1]。
+	 * @returns 颜色类实例。
 	 */
 	private constructor(h: number, s: number, v: number, a: number) {
 		this.hsva = [h, s, v, a];
@@ -229,7 +233,7 @@ type ColorSetter<K extends string> = Record<K, number> & { a?: number } | ThreeD
 /**
  * Converts an HEX color value to RGB.
  * @param hex - The hex color.
- * @return The RGB representation.
+ * @returns The RGB representation.
  */
 function hexToRgb(hex: string): FourD | undefined {
 	hex = hex.toLowerCase();
@@ -253,10 +257,10 @@ function hexToRgb(hex: string): FourD | undefined {
  * @param h - The hue.
  * @param s - The saturation.
  * @param l - The lightness.
- * @return The RGB representation.
+ * @returns The RGB representation.
  */
 function hslToRgb(h: number, s: number, l: number): ThreeD {
-	let r, g, b;
+	let r: number, g: number, b: number;
 
 	h /= 360;
 	s /= 100;
@@ -275,7 +279,6 @@ function hslToRgb(h: number, s: number, l: number): ThreeD {
 	return [r * 255, g * 255, b * 255];
 }
 
-// eslint-disable-next-line require-jsdoc
 function hueToRgb(p: number, q: number, t: number) {
 	if (t < 0) t += 1;
 	if (t > 1) t -= 1;
@@ -294,7 +297,7 @@ function hueToRgb(p: number, q: number, t: number) {
  * @param r - The red color value
  * @param g - The green color value
  * @param b - The blue color value
- * @return The HSL representation
+ * @returns The HSL representation
  */
 function rgbToHsl(r: number, g: number, b: number): ThreeD {
 	r /= 255;
@@ -326,7 +329,7 @@ function rgbToHsl(r: number, g: number, b: number): ThreeD {
  * @returns The RGB representation.
  */
 function hsvToRgb(h: number, s: number, v: number): ThreeD {
-	let r, g, b;
+	let r: number, g: number, b: number;
 
 	h /= 360;
 	s /= 100;
@@ -356,7 +359,7 @@ function hsvToRgb(h: number, s: number, v: number): ThreeD {
  * @param r - The red color value
  * @param g - The green color value
  * @param b - The blue color value
- * @return The HSB/HSV representation
+ * @returns The HSB/HSV representation
  */
 function rgbToHsv(r: number, g: number, b: number): ThreeD {
 	const
@@ -365,14 +368,14 @@ function rgbToHsv(r: number, g: number, b: number): ThreeD {
 		d = max - min,
 		s = max === 0 ? 0 : d / max,
 		v = max / 255;
-	let h;
+	let h: number;
 
 	switch (max) {
 		default:
 		case min: h = 0; break;
-		case r: h = (g - b) + d * (g < b ? 6 : 0); h /= 6 * d; break;
-		case g: h = (b - r) + d * 2; h /= 6 * d; break;
-		case b: h = (r - g) + d * 4; h /= 6 * d; break;
+		case r: h = g - b + d * (g < b ? 6 : 0); h /= 6 * d; break;
+		case g: h = b - r + d * 2; h /= 6 * d; break;
+		case b: h = r - g + d * 4; h /= 6 * d; break;
 	}
 
 	return [h * 360, s * 100, v * 100];

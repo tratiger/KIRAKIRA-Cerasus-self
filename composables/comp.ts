@@ -49,7 +49,7 @@ export function useBaseComponentShowHide<T extends { show: UnknownFunctionType; 
 	if (!base) base = ref<T>();
 	return {
 		ref: base,
-		show: (...args: Parameters<T["show"]>): ReturnType<T["show"]> => base!.value?.show(...args),
-		hide: (...args: Parameters<T["hide"]>): ReturnType<T["hide"]> => base!.value?.hide(...args),
+		show: (...args: Parameters<T["show"]>): ReturnType<T["show"]> => base.value?.show(...args),
+		hide: (...args: Parameters<T["hide"]>): ReturnType<T["hide"]> => base.value?.hide(...args),
 	};
 }

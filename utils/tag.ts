@@ -37,13 +37,13 @@ function getVideoTagNameWithCurrentLanguage(language: string, tagData?: VideoTag
 	if (tagData && language) {
 		const currentLanguageTagNameList = srcTags.filter(tag => tag.lang === language);
 
-		if (currentLanguageTagNameList.length) {
+		if (currentLanguageTagNameList.length > 0) {
 			const curLangTags = srcTags.filter(tag => tag.lang === language);
 			tagNameList = curLangTags[0]?.tagName.map(tagName => tagName.name);
 			defaultTagName = curLangTags[0]?.tagName.filter(tagName => tagName.isDefault)[0]?.name;
 		} else {
 			const otherLangTags = srcTags.filter(tag => tag.lang === "other");
-			if (otherLangTags.length) {
+			if (otherLangTags.length > 0) {
 				tagNameList = otherLangTags[0].tagName.map(tagName => tagName.name);
 				defaultTagName = otherLangTags[0].tagName.filter(tagName => tagName.isDefault)[0]?.name;
 			} else isSingleLang = true;

@@ -29,8 +29,8 @@ export function keys<K extends object>(obj: K) {
  * 相较于 `Object.assign`，当您键入源对象时，您将享受 TypeScript 从源对象获得的属性类型提示。此外，由于 TypeScript
  * 内置库的实现是将目标对象的类型与每个源对象的类型合并，事实上，我们只需要维护目标对象的原始类型。
  *
- * @param target — 要复制到的目标对象 — 将源属性应用于什么，在修改后返回。
- * @param source — 从中复制属性的源对象 — 包含要应用的属性的对象。
+ * @param target - 要复制到的目标对象 — 将源属性应用于什么，在修改后返回。
+ * @param sources - 从中复制属性的源对象 — 包含要应用的属性的对象。
  * @returns 返回目标对象。
  */
 export function assign<T extends object>(target: T, ...sources: Partial<T>[]): T {
@@ -52,7 +52,7 @@ export function forMap<T>(length: number, callback: (index: number) => T, startI
 
 /**
  * 将 MaybeRef、Getter 或 ComputedRef 转换为独立的新 Ref。
- * @param existedRef — 存在的 MaybeRef、Getter 或 ComputedRef。
+ * @param existedRef - 存在的 MaybeRef、Getter 或 ComputedRef。
  * @returns 一个独立的新 Ref。
  */
 export function toNewRef<T>(existedRef: MaybeRefOrGetter<T> | ComputedRef<T>) {

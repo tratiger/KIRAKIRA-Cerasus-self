@@ -55,8 +55,8 @@ export function formatDateWithLocale(
 
 /**
  * 根据当前语言所对应的时区格式化具有语义的日期。
- * @param timestamp number - 时间戳。
- * @param semanticDays number - 设定前 n 天可以按语义化转化，例如，设定为 2 只会有“今天”和“昨天”，设定为 3 则会有“今天”、“昨天”和“前天”。
+ * @param timestamp - 时间戳。
+ * @param semanticDays - 设定前 n 天可以按语义化转化，例如，设定为 2 只会有“今天”和“昨天”，设定为 3 则会有“今天”、“昨天”和“前天”。
  * @returns 格式化后的字符串。
  */
 export function formatLocalizationSemanticDateTime(timestamp: number, semanticDays: number): string {
@@ -85,7 +85,7 @@ export function formatLocalizationSemanticDateTime(timestamp: number, semanticDa
 
 /**
  * 生成符合 Cloudflare 风格的过期日期字符串，例如："2024-03-17T13:47:28Z"
- * @param expiresIn 有效期限，单位：秒。
+ * @param expiresIn - 有效期限，单位：秒。
  * @returns 符合 Cloudflare 风格的过期日期字符串
  */
 export function getCloudflareRFC3339ExpiryDateTime(expiresIn: number): string {

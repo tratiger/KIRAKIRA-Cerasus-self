@@ -8,7 +8,7 @@
  * @returns 如当前不是设置页面则返回空字符串，反之则获取当前设置页面的 ID 名称。
  */
 export function currentSettingsPage(routeSlug?: string[]) {
-	routeSlug = routeSlug && routeSlug.length ? routeSlug : getLocaleRouteSlug();
+	routeSlug = routeSlug && routeSlug.length > 0 ? routeSlug : getLocaleRouteSlug();
 	return routeSlug[0] === "settings" ? routeSlug[1] ?? "" : "";
 }
 
