@@ -11,6 +11,7 @@ export class Color {
 
 	/**
 	 * 从色饱明创建颜色类实例。
+	 * @access private
 	 * @param h - 色相分量 ∈ [0 ~ 360)。
 	 * @param s - 饱和度分量 ∈ [0 ~ 100]。
 	 * @param v - 明度分量 ∈ [0 ~ 100]。
