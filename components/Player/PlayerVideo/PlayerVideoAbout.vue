@@ -1,7 +1,4 @@
 <script setup lang="ts">
-	import startSound from "assets/audios/NOVA 2022.1 Alert Quick.ogg";
-	const startSoundAudio = ref<HTMLAudioElement>();
-
 	const props = defineProps<{
 		/** 视频是否正在播放？ */
 		playing?: boolean;
@@ -9,16 +6,6 @@
 
 	/** 是否显示？ */
 	const shown = defineModel<boolean>();
-
-	/**
-	 * 播放声音。
-	 */
-	function playSound() {
-		if (startSoundAudio.value) {
-			startSoundAudio.value.currentTime = 0;
-			startSoundAudio.value.play();
-		}
-	}
 </script>
 
 <template>
@@ -28,11 +15,10 @@
 			<div class="center">
 				<Icon class="logo" name="yozora_big" />
 				<div class="right-wrapper">
-					<p class="name" @animationstart="playSound">YOZORA PLAYER</p>
+					<p class="name">YOZORA PLAYER</p>
 				</div>
 			</div>
 			<p class="powered-by">POWERED BY OPEN SOURCES</p>
-			<audio ref="startSoundAudio" :src="startSound"></audio>
 		</Comp>
 	</Transition>
 </template>
@@ -116,8 +102,8 @@
 	:comp.v-leave-to {
 		&,
 		* {
-			transition-timing-function: $ease-in-smooth;
 			transition-duration: 250ms;
+			transition-timing-function: $ease-in-smooth;
 		}
 
 		.logo-text {
