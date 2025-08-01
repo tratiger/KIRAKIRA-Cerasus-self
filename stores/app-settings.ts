@@ -38,6 +38,7 @@ export const useAppSettingsStore = defineStore("app-settings", {
 			},
 			controller: {
 				showStop: false,
+				showReplay: false,
 				showFrameByFrame: false,
 				autoResumePlayAfterSeeking: false,
 			},

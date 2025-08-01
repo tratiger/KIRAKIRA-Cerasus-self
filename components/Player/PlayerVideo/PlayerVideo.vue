@@ -47,6 +47,7 @@
 		},
 		controller: {
 			showStop: false,
+			showReplay: false,
 			showFrameByFrame: false,
 			autoResumePlayAfterSeeking: false,
 		},
@@ -164,6 +165,10 @@
 		playerConfig.controller.showStop = showStop;
 	});
 
+	watch(() => settings.controller.showReplay, showReplay => {
+		playerConfig.controller.showReplay = showReplay;
+	});
+
 	watch(() => settings.controller.showFrameByFrame, showFrameByFrame => {
 		playerConfig.controller.showFrameByFrame = showFrameByFrame;
 	});
@@ -244,7 +249,10 @@
 	settings.autoplay = playerConfig.autoplay;
 	settings.danmaku.opacity = playerConfig.danmaku.opacity;
 	settings.danmaku.fontSizeScale = playerConfig.danmaku.fontSizeScale;
+	settings.controller.showStop = playerConfig.controller.showStop;
+	settings.controller.showReplay = playerConfig.controller.showReplay;
 	settings.controller.showFrameByFrame = playerConfig.controller.showFrameByFrame;
+	settings.controller.autoResumePlayAfterSeeking = playerConfig.controller.autoResumePlayAfterSeeking;
 
 	const player = ref<shaka.Player>();
 	const playerVersion = ref("");
