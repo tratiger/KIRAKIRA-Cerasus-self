@@ -64,7 +64,7 @@
 			const interpolations = this.$slots;
 			const keys = Object.keys(interpolations);
 			const withInterpolations = arrayMapObject(keys, (key, index) => [key, encodeKeyToTag(index)] as const);
-			const translatedString: string = this.i18nKey(withInterpolations).toString();
+			const translatedString: string = typeof this.i18nKey === "function" as never ? this.i18nKey(withInterpolations).toString() : this.i18nKey?.toString();
 			const lines = translatedString.split("\n");
 			const split = interpose(lines
 				.map((line, lineIndex) => line
