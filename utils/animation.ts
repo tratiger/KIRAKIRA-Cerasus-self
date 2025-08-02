@@ -260,24 +260,32 @@ export function simpleAnimateSize(specified: "width" | "height" = "height", dura
 export const STOP_TRANSITION_ID = "stop-transition";
 
 /**
- * 为整个页面添加视图过渡动画。
- * @param changeFunc - 使页面变化的回调函数。
- * @param keyframes - 动画关键帧。
- * @param options - 动画选项。
- * @returns 在动画播放完成之后可执行析构函数。
+ * 通过注入一个 `<style>` 元素，为所有元素（包括伪元素）设置 `transition: none !important;`，暂时禁用页面上的所有 CSS 过渡。
+ *
+ * @returns 一个清场函数，当被调用时，它会删除注入的 `<style>` 元素并恢复过渡。
+ *
+ * @remarks
+ * 此函数可用于在 DOM 更新或 UI 更改期间防止不必要的转换。
+ * 确保调用返回的清理函数，以避免使页面处于转换禁用状态。
+ *
+ * @example
+ * ```typescript
+ * const restoreTransitions = stopTransition(); // 禁用过渡！
+ * // 执行 DOM 更新……
+ * restoreTransitions(); // 重启过渡！
+ * ```
  */
-export async function startColorViewTransition(changeFunc: () => MaybePromise<void>, keyframes: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions = {}) {
-	if (!document.startViewTransition) {
-		await changeFunc();
-		return;
-	}
-
+export function stopTransition({ includesViewTransitions = false }: {
+	/** Includes `view-transition-old` and `view-transition-new`? */
+	includesViewTransitions?: boolean;
+} = {}) {
 	const style = document.createElement("style");
 	style.id = STOP_TRANSITION_ID;
-	style.textContent = `
+	style.textContent = String(`
 		*,
-		*::before,
-		*::after {
+		::before,
+		::after,
+		::-webkit-progress-value {
 			-webkit-transition: none !important;
 			-moz-transition: none !important;
 			-o-transition: none !important;
@@ -285,32 +293,79 @@ export async function startColorViewTransition(changeFunc: () => MaybePromise<vo
 			transition: none !important;
 		}
 
-		::view-transition-old(root),
-		::view-transition-new(root) {
-			mix-blend-mode: normal;
+		/* Chromium 不爱将 webkit 和 moz 写在一起（写一起的话就 Chromium 异常，Firefox 不会）。 */
+		::-moz-progress-bar {
+			-moz-transition: none !important;
 			transition: none !important;
-			animation: none !important;
 		}
 
-		::view-transition-old(*),
-		::view-transition-new(*),
-		::view-transition-old(*::before),
-		::view-transition-new(*::after) {
-			transition: none !important;
-		}
-	`;
+		${includesViewTransitions ? `
+			::view-transition-old(root),
+			::view-transition-new(root) {
+				mix-blend-mode: normal;
+				transition: none !important;
+				animation: none !important;
+			}
+
+			::view-transition-old(*),
+			::view-transition-new(*),
+			::view-transition-old(::before),
+			::view-transition-new(::before),
+			::view-transition-old(::after),
+			::view-transition-new(::after) {
+				transition: none !important;
+			}
+		` : ""}
+	`);
 	document.head.appendChild(style);
 
-	options.duration ??= 300;
-	options.easing ??= eases.easeInOutSmooth;
-	options.pseudoElement ??= "::view-transition-new(root)";
+	return () => {
+		style.remove();
+		document.querySelectorAll(`style#${STOP_TRANSITION_ID}`).forEach(node => node.remove());
+	};
+}
 
-	const transition = document.startViewTransition(changeFunc);
-	await transition.ready;
+type ColorViewTransitionAnimationOption = Override<KeyframeAnimationOptions, {
+	pseudoElement?: "::view-transition-new(root)" | "::view-transition-old(root)" | (string & {}) | null;
+}>;
 
-	const animation = document.documentElement.animate(keyframes, options);
-	await animation.finished;
-	document.head.removeChild(style);
+interface ColorViewTransitionAnimationFallbackDefaultOption extends ColorViewTransitionAnimationOption {
+	/** 设置过渡时的光标指针。 */
+	cursor?: Cursor;
+}
+
+/**
+ * 为整个页面添加视图过渡动画。
+ * @param changeFunc - 使页面变化的回调函数。
+ * @param animations - 包含动画关键帧和各动画选项的元组的数组。
+ * @param defaultOptions - 缺省设定各动画选项。你还可以设置过渡时的光标指针。
+ * @returns 在动画播放完成之后可执行析构函数。
+ */
+export async function startColorViewTransition(changeFunc: () => MaybePromise<void | unknown>, animations: [keyframes: Keyframe[] | PropertyIndexedKeyframes, options?: ColorViewTransitionAnimationOption][], defaultOptions: ColorViewTransitionAnimationFallbackDefaultOption = {}) {
+	if (!document.startViewTransition) {
+		await changeFunc();
+		return;
+	}
+
+	defaultOptions.duration ??= 300;
+	defaultOptions.easing ??= eases.easeInOutSmooth;
+	defaultOptions.pseudoElement ??= "::view-transition-new(root)";
+
+	const restoreTransitions = stopTransition({ includesViewTransitions: true });
+
+	try {
+		if (defaultOptions.cursor) forceCursor(defaultOptions.cursor);
+		const transition = document.startViewTransition(changeFunc);
+		await transition.ready;
+
+		await Promise.all(animations.map(async ([keyframes, options]) => {
+			options = supplement(options ?? {}, defaultOptions);
+			return await document.documentElement.animate(keyframes, options).finished;
+		}));
+	} finally {
+		restoreTransitions();
+		if (defaultOptions.cursor) forceCursor(null);
+	}
 }
 
 /**

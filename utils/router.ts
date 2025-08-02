@@ -95,21 +95,57 @@ export function switchLanguage(lang: string) {
 		const element = settings ?? document.body;
 		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
 		routerView?.classList.add("stop-transition");
+		const TRANSITION_DURATION = 500;
 		if (!document.startViewTransition) {
 			update();
 			document.body.animate([
 				{ filter: "blur(10px)" },
 				{ filter: "blur(0)" },
-			], { duration: 500, easing: eases.easeOutSmooth });
+			], { duration: TRANSITION_DURATION, easing: eases.easeOutSmooth });
 		} else
-			startColorViewTransition(update, {
-				clipPath: ["inset(0 0 100%)", "inset(0)"],
-			}, {
-				duration: 500,
+			startColorViewTransition(update, [
+				[{
+					clipPath: ["inset(0 0 calc(100% + 1rlh))", "inset(0)"],
+				}],
+				[{
+					clipPath: ["inset(0 0 0)", "inset(calc(100% + 1rlh) 0 0)"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+				}],
+				[{
+					filter: ["", "grayscale(1)"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+					easing: eases.easeOutSmooth,
+				}],
+				[{
+					filter: ["grayscale(1) blur(var(--view-transition-blurriness))", "grayscale(0) blur(var(--view-transition-blurriness))"],
+				}, {
+					pseudoElement: "::view-transition-new(root)",
+					easing: eases.easeInSmooth,
+				}],
+				[{
+					scale: ["", "1.05"],
+					transformOrigin: ["bottom", "bottom"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+					easing: eases.easeInMax,
+				}],
+				[{
+					"--view-transition-blurriness": ["5px", ""],
+					scale: ["1.05", ""],
+					transformOrigin: ["top", "top"],
+				}, {
+					pseudoElement: "::view-transition-new(root)",
+					easing: eases.easeOutMax,
+				}],
+			], {
+				duration: TRANSITION_DURATION,
+				cursor: "wait",
 			});
 		setTimeout(() => {
 			routerView?.classList.remove("stop-transition");
-		}, 500);
+		}, TRANSITION_DURATION);
 	}
 }
 

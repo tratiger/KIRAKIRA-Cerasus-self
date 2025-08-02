@@ -1,3 +1,4 @@
+import type CSSType from "csstype";
 import * as _lottieWeb from "lottie-web";
 import * as _nuxt_app from "nuxt/app";
 import { VTooltipBindingValue } from "plugins/vue/tooltip";
@@ -84,6 +85,9 @@ declare global {
 	export type DirectiveEffectHook<D extends Directive, T = void> = (element: DirectiveEffectHookInferElement<D>, binding: DirectiveBinding<DirectiveEffectHookInferBinding<D>>) => T;
 
 	export type LayoutKey = PageMeta["layout"];
+
+	/** All available cursor type. */
+	export type Cursor = ObtainLiterals<Exclude<CSSType.Property.Cursor, CSSType.Globals>>;
 
 	export { RouteLocation } from "#vue-router";
 	export { Editor } from "@tiptap/vue-3";

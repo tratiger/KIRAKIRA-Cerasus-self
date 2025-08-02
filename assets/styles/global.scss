@@ -277,6 +277,26 @@ html.no-color-transition {
 	}
 }
 
+// 强行指定光标声明。
+html[style*="--cursor"] {
+	&,
+	* {
+		&,
+		::before,
+		::after {
+			cursor: var(--cursor) !important;
+		}
+	}
+}
+
+// #region 自定义属性
+@property --view-transition-blurriness {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 0;
+}
+// #endregion
+
 // #region 主题过渡
 ::view-transition-old(root),
 ::view-transition-new(root) {

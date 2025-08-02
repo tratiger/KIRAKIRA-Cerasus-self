@@ -22,7 +22,7 @@ KIRAKIRA's Front-end
 
 [简体中文](README.md) | **English**
 
-[![Figma Design Menuscript][figma-design-shield]](figma-design-url)
+[![Figma Design Menuscript][figma-design-shield]][figma-design-url]
 [![Discord Server][discord-server-shield]][discord-server-url]
 
 ## Star History

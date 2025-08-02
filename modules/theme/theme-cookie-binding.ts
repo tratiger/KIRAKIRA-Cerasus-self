@@ -64,8 +64,8 @@ export function cookieBinding() {
 
 	/**
 	 * 创建或更新一个 meta 标签
-	 * @param name meta 标签的 name
-	 * @param content meta 标签的 content
+	 * @param name - meta 标签的 name
+	 * @param content - meta 标签的 content
 	 */
 	function updateOrCreateMetaTag(name: string, content: string) {
 		// 尝试找到已存在的 meta 标签
@@ -205,13 +205,13 @@ export function cookieBinding() {
 				];
 				const CHANGING_THEME_CLASS = "changing-theme";
 				rootNode.classList.add(CHANGING_THEME_CLASS);
-				startColorViewTransition(updateThemeSettings, {
-					clipPath: actualThemeType === "light" ? clipPath : clipPath.toReversed(),
-				}, {
-					duration: 300,
-					easing: eases.easeInOutSmooth,
-					pseudoElement: actualThemeType === "light" ? "::view-transition-new(root)" : "::view-transition-old(root)",
-				}).then(() => {
+				startColorViewTransition(updateThemeSettings, [[
+					{
+						clipPath: actualThemeType === "light" ? clipPath : clipPath.toReversed(),
+					}, {
+						pseudoElement: actualThemeType === "light" ? "::view-transition-new(root)" : "::view-transition-old(root)",
+					},
+				]], { cursor: "progress" }).then(() => {
 					rootNode.classList.remove(CHANGING_THEME_CLASS);
 				});
 			} else updateThemeSettings();
