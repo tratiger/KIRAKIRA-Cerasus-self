@@ -19,6 +19,14 @@
 @mixin round-small($position: full) {
 	@include set-border-radius(4px, $position);
 }
+
+/// 达伦专属。
+/// 使用 12px 大小的圆角。
+/// @param {String} $position [full] - 圆角的位置。
+/// @output border-radius
+@mixin round-extra-large($position: full) {
+	@include set-border-radius(12px, $position);
+}
 // #endregion
 
 // #region 响应式布局

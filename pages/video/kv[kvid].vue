@@ -3,8 +3,8 @@
 	import { ScrollContainer } from "#components";
 
 	definePageMeta({
-		flatAppBar: true,
-		hideBottomNavigation: true,
+		flatTopBar: true,
+		hideBottomNav: true,
 	});
 
 	const windowSize = useWindowSize();
@@ -48,7 +48,7 @@
 
 			if (videoDataResponse.isBlocked)
 				navigateToErrorPage(404);
-			
+
 			isBlockedByUploader.value = videoDataResponse.isBlockedByOther;
 			console.log("videoDataResponse");
 			console.dir(videoDataResponse, { depth: null });

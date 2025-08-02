@@ -6,10 +6,16 @@
 	// 以后使用以上代码可获取在 SCSS 文件中定义的移动端宽度值。
 
 	const props = defineProps<{
-		hideAppBar?: boolean;
-		flatAppBar?: boolean;
-		hideBottomNavigation?: boolean;
+		/** 隐藏移动端导航顶栏？ */
+		hideTopBar?: boolean;
+		/** 使移动端导航顶栏无阴影？ */
+		flatTopBar?: boolean;
+		/** 隐藏移动端导航底栏？ */
+		hideBottomNav?: boolean;
+		/** 已进入设置页面？ */
 		isSettingsPage?: boolean;
+		/** 使用自定义文本替换掉徽标文本。 */
+		overrideLogoText?: string;
 	}>();
 
 	const selfUserInfoStore = useSelfUserInfoStore();
@@ -20,7 +26,8 @@
 	const flyoutNotifications = ref<FlyoutModel>();
 
 	/**
-	 * 判断用户是否合法，或者判断用户是否已经登录
+	 * 判断用户是否合法，或者判断用户是否已经登录？
+	 * @returns 用户已经登录？
 	 */
 	async function checkUser(): Promise<boolean> {
 		const checkUserResult = await api.user.checkUserToken();
@@ -90,10 +97,13 @@
 
 	<aside
 		:class="{
-			'hide-appbar': hideAppBar,
-			'flat-appbar': flatAppBar,
+			'hide-topbar': hideTopBar,
+			'flat-topbar': flatTopBar,
 		}"
-		:[scopeId]="''" role="toolbar" aria-label="side bar" aria-orientation="vertical"
+		:[scopeId]="''"
+		role="toolbar"
+		aria-label="side bar"
+		aria-orientation="vertical"
 	>
 		<div class="top icons">
 			<SoftButton v-tooltip="t.home" icon="home" href="/" />
@@ -112,15 +122,26 @@
 			<div class="stripes">
 				<div v-for="i in 2" :key="i" class="stripe"></div>
 			</div>
-			<LogoText />
+			<Transition mode="out-in">
+				<p v-if="props.overrideLogoText" class="logo-text">{{ props.overrideLogoText }}</p>
+				<LogoText v-else />
+			</Transition>
 		</div>
 
 		<div class="bottom icons">
 			<Avatar class="pc" @click="onClickUser" />
-			<SoftButton v-if="selfUserInfoStore.isLogined" v-tooltip="t.notification" icon="notifications"
-				:active="!!flyoutNotifications" @click="e => flyoutNotifications = [e]"
+			<SoftButton
+				v-if="selfUserInfoStore.isLogined"
+				v-tooltip="t.notification"
+				icon="notifications"
+				:active="!!flyoutNotifications"
+				@click="e => flyoutNotifications = [e]"
 			/>
-			<SoftButton v-tooltip="t.settings" class="pc icon-settings" icon="settings" href="/settings"
+			<SoftButton
+				v-tooltip="t.settings"
+				class="pc icon-settings"
+				icon="settings"
+				href="/settings"
 				:active="isSettingsPage"
 			/>
 			<SoftButton v-tooltip="t.search" class="pe" icon="search" href="/search" />
@@ -129,7 +150,7 @@
 		<LoginWindow v-model="showLogin" />
 	</aside>
 
-	<nav v-show="!hideBottomNavigation" :[scopeId]="''">
+	<nav v-show="!hideBottomNav" :[scopeId]="''">
 		<div class="icons">
 			<BottomNavItem icon="home" href="/">{{ t.home }}</BottomNavItem>
 			<BottomNavItem icon="category" href="/category">{{ t.category }}</BottomNavItem>
@@ -159,7 +180,7 @@
 			background-color: c(main-bg, 75%);
 			backdrop-filter: blur(16px);
 
-			&:not(.flat-appbar) {
+			&:not(.flat-topbar) {
 				@include sidebar-shadow;
 			}
 		}
@@ -221,6 +242,9 @@
 
 			.logo-text {
 				--form: hidden;
+				color: c(accent);
+				font-size: 20px;
+				font-weight: 600;
 
 				@media (height >= 678px) {
 					--form: half;
@@ -228,6 +252,11 @@
 
 				@media (height >= 765px) {
 					--form: full;
+				}
+
+				&.v-enter-from,
+				&.v-leave-to {
+					opacity: 0;
 				}
 			}
 
@@ -322,7 +351,7 @@
 				margin-right: 4px;
 			}
 
-			&.hide-appbar {
+			&.hide-topbar {
 				display: none;
 
 				~ :deep(.container) {

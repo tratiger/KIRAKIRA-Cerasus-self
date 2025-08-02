@@ -8,16 +8,16 @@
 	const isSettingsPage = ref(false);
 
 	const route = useRoute();
-	const hideAppBar = ref(false);
-	const flatAppBar = ref(false);
-	const hideBottomNavigation = ref(false);
+	const hideTopBar = ref(false);
+	const flatTopBar = ref(false);
+	const hideBottomNav = ref(false);
 	const appBarTitle = ref<string | undefined>();
 
 	function pageLoaded() {
 		isSettingsPage.value = !!currentSettingsPage();
-		hideAppBar.value = Boolean(route.meta.hideAppBar);
-		flatAppBar.value = Boolean(route.meta.flatAppBar);
-		hideBottomNavigation.value = Boolean(route.meta.hideBottomNavigation);
+		hideTopBar.value = Boolean(route.meta.hideTopBar);
+		flatTopBar.value = Boolean(route.meta.flatTopBar);
+		hideBottomNav.value = Boolean(route.meta.hideBottomNav);
 
 		const appBarTitleTemp = route.meta.appBarTitle as string | undefined;
 		if (appBarTitleTemp?.startsWith("t.")) appBarTitle.value = t(2)[appBarTitleTemp.slice(2)];
@@ -36,22 +36,25 @@
 </script>
 
 <template>
+	<ClientOnly>
+		<div v-if="backgroundImageSettingsStore.image.data" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
+			<img :src="backgroundImageSettingsStore.image.data" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
+			<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
+		</div>
+	</ClientOnly>
+	<Transition>
+		<LogoOffcanvasStar v-if="showDrawer" />
+	</Transition>
 	<Transition>
 		<Offcanvas v-if="showDrawer" v-model="showDrawer" />
 	</Transition>
 	<div class="viewport">
-		<ClientOnly>
-			<div v-if="backgroundImageSettingsStore.image.data" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
-				<img :src="backgroundImageSettingsStore.image.data" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
-				<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
-			</div>
-		</ClientOnly>
-		<SideBar :hideAppBar :flatAppBar :hideBottomNavigation :isSettingsPage />
+		<SideBar :hideTopBar :flatTopBar :hideBottomNav :isSettingsPage :overrideLogoText="showDrawer ? t.navigation.back : undefined" />
 		<ScrollContainer
 			scrollElId="mainScroller"
 			class="container"
 			:overflowX="isSettingsPage ? 'hidden' : undefined"
-			:style="{ '--padding-top': hideAppBar ? '0' : undefined, '--padding-bottom': hideBottomNavigation ? '0' : undefined }"
+			:style="{ '--padding-top': hideTopBar ? '0' : undefined, '--padding-bottom': hideBottomNav ? '0' : undefined }"
 		>
 			<Banner />
 			<div class="router-view">
@@ -126,6 +129,7 @@
 		inset: 0;
 		z-index: 0;
 		opacity: 0.2;
+		transition: $fallback-transitions, scale $ease-out-max 1s;
 
 		img {
 			@include square(100%);
@@ -141,6 +145,11 @@
 			background-color: c(accent);
 			opacity: 0.75;
 			mix-blend-mode: screen;
+		}
+
+		&:has(+ .offcanvas:not(.v-leave-to)) {
+			scale: 1.08;
+			transition: $fallback-transitions, scale $ease-out-max 500ms;
 		}
 	}
 
@@ -158,30 +167,27 @@
 		}
 	}
 
-	.viewport {
-		background-color: c(main-bg);
+	.viewport:has(> .hide-drawer-mask) {
+		transition-duration: 600ms;
 
-		&:has(> .hide-drawer-mask) {
-			transition-duration: 600ms;
-
-			&:any-hover:active {
-				transform-origin: left center !important;
-				scale: 0.975;
-			}
+		&:any-hover:active {
+			transform-origin: 7% center !important;
+			scale: 0.975;
 		}
 	}
 
 	.offcanvas {
 		position: fixed;
-		height: 100dvh;
+		top: 10dvh;
+		height: 80dvh;
 		transform-origin: -100% center;
 
 		&:not(.v-leave-active) ~ .viewport {
 			@include system-card;
-			@include round-large;
+			@include round-extra-large;
 			position: relative;
 			overflow: clip;
-			transform: translateX(60dvw) scale(0.8);
+			transform: translateX(70dvw) scale(0.8);
 			transform-origin: left center;
 		}
 
