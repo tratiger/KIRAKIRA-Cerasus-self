@@ -7,9 +7,9 @@
 
 	const props = defineProps<{
 		/** 隐藏移动端导航顶栏？ */
-		hideTopBar?: boolean;
+		hideAppBar?: boolean;
 		/** 使移动端导航顶栏无阴影？ */
-		flatTopBar?: boolean;
+		flatAppBar?: boolean;
 		/** 隐藏移动端导航底栏？ */
 		hideBottomNav?: boolean;
 		/** 已进入设置页面？ */
@@ -97,8 +97,8 @@
 
 	<aside
 		:class="{
-			'hide-topbar': hideTopBar,
-			'flat-topbar': flatTopBar,
+			'hide-appbar': hideAppBar,
+			'flat-appbar': flatAppBar,
 		}"
 		:[scopeId]="''"
 		role="toolbar"
@@ -180,7 +180,7 @@
 			background-color: c(main-bg, 75%);
 			backdrop-filter: blur(16px);
 
-			&:not(.flat-topbar) {
+			&:not(.flat-appbar) {
 				@include sidebar-shadow;
 			}
 		}
@@ -351,7 +351,7 @@
 				margin-right: 4px;
 			}
 
-			&.hide-topbar {
+			&.hide-appbar {
 				display: none;
 
 				~ :deep(.container) {

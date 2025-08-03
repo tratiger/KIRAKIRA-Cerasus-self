@@ -8,15 +8,15 @@
 	const isSettingsPage = ref(false);
 
 	const route = useRoute();
-	const hideTopBar = ref(false);
-	const flatTopBar = ref(false);
+	const hideAppBar = ref(false);
+	const flatAppBar = ref(false);
 	const hideBottomNav = ref(false);
 	const appBarTitle = ref<string | undefined>();
 
 	function pageLoaded() {
 		isSettingsPage.value = !!currentSettingsPage();
-		hideTopBar.value = Boolean(route.meta.hideTopBar);
-		flatTopBar.value = Boolean(route.meta.flatTopBar);
+		hideAppBar.value = Boolean(route.meta.hideAppBar);
+		flatAppBar.value = Boolean(route.meta.flatAppBar);
 		hideBottomNav.value = Boolean(route.meta.hideBottomNav);
 
 		const appBarTitleTemp = route.meta.appBarTitle as string | undefined;
@@ -49,12 +49,12 @@
 		<Offcanvas v-if="showDrawer" v-model="showDrawer" />
 	</Transition>
 	<div class="viewport">
-		<SideBar :hideTopBar :flatTopBar :hideBottomNav :isSettingsPage :overrideLogoText="showDrawer ? t.navigation.back : undefined" />
+		<SideBar :hideAppBar :flatAppBar :hideBottomNav :isSettingsPage :overrideLogoText="showDrawer ? t.navigation.back : undefined" />
 		<ScrollContainer
 			scrollElId="mainScroller"
 			class="container"
 			:overflowX="isSettingsPage ? 'hidden' : undefined"
-			:style="{ '--padding-top': hideTopBar ? '0' : undefined, '--padding-bottom': hideBottomNav ? '0' : undefined }"
+			:style="{ '--padding-top': hideAppBar ? '0' : undefined, '--padding-bottom': hideBottomNav ? '0' : undefined }"
 		>
 			<Banner />
 			<div class="router-view">
@@ -147,7 +147,7 @@
 			mix-blend-mode: screen;
 		}
 
-		&:has(+ .offcanvas:not(.v-leave-to)) {
+		&:has(~ .offcanvas:not(.v-leave-to)) {
 			scale: 1.08;
 			transition: $fallback-transitions, scale $ease-out-max 500ms;
 		}
@@ -178,16 +178,15 @@
 
 	.offcanvas {
 		position: fixed;
-		top: 10dvh;
-		height: 80dvh;
+		height: 100dvh;
 		transform-origin: -100% center;
 
 		&:not(.v-leave-active) ~ .viewport {
 			@include system-card;
-			@include round-extra-large;
+			@include round-large;
 			position: relative;
 			overflow: clip;
-			transform: translateX(70dvw) scale(0.8);
+			transform: translateX(60dvw) scale(0.8);
 			transform-origin: left center;
 		}
 

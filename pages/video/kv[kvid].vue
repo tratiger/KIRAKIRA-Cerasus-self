@@ -3,7 +3,7 @@
 	import { ScrollContainer } from "#components";
 
 	definePageMeta({
-		flatTopBar: true,
+		flatAppBar: true,
 		hideBottomNav: true,
 	});
 

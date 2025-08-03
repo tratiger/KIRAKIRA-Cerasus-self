@@ -35,23 +35,15 @@
 
 <template>
 	<Comp>
-		<div class="top">
-			<div class="logo">
-				<LogoText />
-				<div class="stripes"></div>
-			</div>
-			<div class="user" @click="onClickUser">
-				<UserAvatar
-					v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
-					:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.avatar : undefined"
-				/>
-				<div class="user-info">
-					<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.pleaseLogin }}</p>
-					<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.userInfo.username }}</p>
-					<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.userInfo.signature" class="bio">{{ selfUserInfoStore.userInfo.signature }}</p>
-				</div>
-				<Icon name="chevron_right" />
-			</div>
+		<div class="user">
+			<UserAvatar
+				v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
+				:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.avatar : undefined"
+				@click="onClickUser"
+			/>
+			<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.pleaseLogin }}</p>
+			<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.userInfo.username }}</p>
+			<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.userInfo.signature" class="bio">{{ selfUserInfoStore.userInfo.signature }}</p>
 		</div>
 		<div class="grid">
 			<div v-for="item in drawerItems" :key="item.icon" v-ripple class="drawer-item" @click="to(item.route)">
@@ -69,24 +61,14 @@
 	:comp {
 		display: flex;
 		flex-direction: column;
-		justify-content: start;
-		width: 70dvw;
-		padding-inline: 24px;
+		justify-content: center;
+		width: 60dvw;
+		padding: 24px;
 	}
 
 	.user {
-		display: flex;
-		gap: 12px;
-		align-items: center;
-		padding: 12px 8px;
-		background-color: c(accent, 20%);
-		cursor: pointer;
-
-		.user-info {
-			width: 100%;
-		}
-
 		.nickname {
+			margin-top: 16px;
 			font-size: 16px;
 			font-weight: bold;
 		}
@@ -98,36 +80,20 @@
 		}
 
 		.bio {
+			margin-top: 12px;
 			font-size: 12px;
-		}
-
-		.icon {
-			color: c(icon-color);
-			font-size: 20px;
-		}
-
-		&:any-hover:not(:active) {
-			--hover: true;
-			background-color: c(accent, 40%);
 		}
 	}
 
 	.tab-bar {
-		margin: 0 -14px -12px;
+		margin-inline: -14px;
 	}
 
 	.grid {
-		@include round-extra-large;
-		@include system-card;
-		@include mini-card-shadow;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 8px;
-		align-items: start;
-		height: 100%;
-		margin-block: 48px 4px;
-		padding: 14px;
-		background-color: c(accent, 40%);
+		margin-block: 12px;
 
 		.drawer-item {
 			@include round-large;
@@ -152,50 +118,6 @@
 
 			&:active {
 				@include button-scale-pressed;
-			}
-
-			&:nth-child(3n + 1) {
-				border-top-left-radius: 12px;
-				border-bottom-left-radius: 12px;
-			}
-
-			&:nth-child(3n + 3) {
-				border-top-right-radius: 12px;
-				border-bottom-right-radius: 12px;
-			}
-		}
-	}
-
-	.top {
-		@include round-extra-large;
-		@include system-card;
-		@include mini-card-shadow;
-		flex-shrink: 0;
-		overflow: hidden;
-
-		.logo {
-			--fill-color: #{c(accent-10)};
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			height: 50px;
-			padding-inline: 16px 32px;
-			background-color: c(accent, 80%);
-
-			html.dark & {
-				--fill-color: #{c(accent-90)};
-			}
-
-			.logo-text {
-				--form: half;
-				color: c(fill-color);
-			}
-
-			.stripes {
-				width: 39px;
-				height: 100%;
-				border-inline: 11px solid c(fill-color);
-				transform: skewX(33deg);
 			}
 		}
 	}

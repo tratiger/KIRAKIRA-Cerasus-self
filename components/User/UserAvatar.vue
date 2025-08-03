@@ -126,11 +126,7 @@
 			}
 		}
 
-		&:any-hover:not(:active) {
-			background-color: c(gray-30);
-		}
-
-		@container style(--hover: true) {
+		&:any-hover {
 			background-color: c(gray-30);
 		}
 

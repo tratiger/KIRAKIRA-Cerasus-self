@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	definePageMeta({
-		hideTopBar: true,
+		hideAppBar: true,
 		hideBottomNav: true,
 		pageTransition: {
 			name: "settings",
