@@ -54,6 +54,7 @@
 	const comboBoxValue = ref("obtuse angle");
 	const settingsGridItemSelect = ref("");
 	const color = ref(Color.fromHex("#f00"));
+	const timecode = ref(new Duration(0));
 
 	/**
 	 * 单击按钮事件。
@@ -183,6 +184,8 @@
 				<ComboBoxItem id="snap">咔哄呃昵吖</ComboBoxItem>
 				<ComboBoxItem id="eyelid scrub">轮刮眼眶</ComboBoxItem>
 			</ComboBox>
+			<hr />
+			<TimecodePicker v-model="timecode" />
 			<hr />
 			<HeadingComments :count="233" />
 			<hr />

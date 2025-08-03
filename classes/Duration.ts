@@ -10,6 +10,8 @@ export class Duration {
 	private seconds: number;
 	/** 时间中间的分隔符。 */
 	private static colon = "∶" as const;
+	/** 负号。 */
+	private static minus = "−" as const;
 	/** 当没有时间数据时显示的占位符字符串。 */
 	static placeholder = "‒‒∶‒‒" as const;
 
@@ -43,25 +45,29 @@ export class Duration {
 			this.seconds = this.seconds * 60 + v3;
 	}
 
+	/** 获取秒的绝对值。 */
+	private get abs() { return Math.abs(this.seconds); }
+	/** 获取秒钟 (0~59)。 */
+	get s() { return this.abs % 60 | 0; }
+	/** 获取分钟 (0~59)。 */
+	get m() { return this.abs / 60 % 60 | 0; }
+	/** 获取小时。 */
+	get h() { return this.abs / 60 / 60 % 60 | 0; }
+	/** 是否是负数？ */
+	get negative() { return this.seconds < 0; }
+	/** 是否有时间数据？ */
+	get valid() { return Number.isFinite(this.seconds); }
+
 	/**
 	 * 返回对象的字符串表示形式。
 	 * @returns 对象的字符串表示形式。
 	 */
 	toString() {
-		let negative = false, value = this.seconds;
-		if (value < 0) {
-			negative = true;
-			value = -value;
-		}
-		if (!Number.isFinite(value))
+		if (!this.valid)
 			return Duration.placeholder; // 当没有时间数据时显示占位符字符串。
-		const seconds = value % 60 | 0;
-		const minutes = value / 60 % 60 | 0;
-		const hours = value / 60 / 60 % 60 | 0;
-		const padStart = (n: number) => String(n).padStart(2, "0");
-		let result = `${padStart(minutes)}${Duration.colon}${padStart(seconds)}`;
-		if (hours) result = `${padStart(hours)}:${result}`;
-		if (negative) result = "-" + result;
+		let result = `${padTo2Digit(this.m)}${Duration.colon}${padTo2Digit(this.s)}`;
+		if (this.h) result = `${padTo2Digit(this.h)}${Duration.colon}${result}`;
+		if (this.negative) result = Duration.minus + result;
 		return result;
 	}
 
@@ -69,7 +75,5 @@ export class Duration {
 	 * 将对象转换成基本类型值。
 	 * @returns 转换成对象的 this 值。
 	 */
-	valueOf() {
-		return this.seconds;
-	}
+	valueOf() { return this.seconds; }
 }

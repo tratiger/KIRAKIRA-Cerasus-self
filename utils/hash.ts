@@ -12,5 +12,5 @@ export async function generateHash(input: string): Promise<string> {
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
 
 	// 将哈希值转换为 64 个字符的十六进制字符串
-	return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+	return hashArray.map(b => padTo2Digit(b, 16)).join("");
 }

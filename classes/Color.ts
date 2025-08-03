@@ -104,7 +104,7 @@ export class Color {
 	 * 获取并设置不带井号开头的 16 进制颜色值。
 	 */
 	get hex() {
-		const padStart = (value: number) => Math.round(value).toString(16).padStart(2, "0");
+		const padStart = (value: number) => padTo2Digit(Math.round(value), 16);
 		const { r, g, b, a } = this.rgb;
 		let result = padStart(r) + padStart(g) + padStart(b);
 		if (a !== 1) result += padStart(a * 255);

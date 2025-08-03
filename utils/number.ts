@@ -111,3 +111,20 @@ export function getCompactDecimal(value: number | bigint) {
 	}
 	return value_str;
 }
+
+/**
+ * 将输入值转换为至少两位的字符串，不足时补零。
+ * @param num - 输入值（数字、大数或字符串），最好取值范围在 0~99 内。
+ * @param radix - 可选进制 (2~36)，默认十进制。
+ * @returns 至少两位的字符串。
+ *
+ * @example
+ * ```javascript
+ * padTo2Digit(5) // "05"
+ * padTo2Digit("9") // "09"
+ * padTo2Digit(15, 16) // "0f"
+ * ```
+ */
+export function padTo2Digit(num: number | bigint | string, radix: number = 10) {
+	return num.toString(radix).padStart(2, "0");
+}
