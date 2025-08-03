@@ -77,7 +77,7 @@ export default {
 		user: "User Settings",
 		app: "App Settings",
 		experimental_warning: "The following settings are experimental features and are not guaranteed to run stably or sync across multiple devices. Please use them with caution!",
-		no_experimental_features: "No experimental features available, you can check back later.",
+		no_experimental_features: "No experimental features available",
 		security: {
 			is_unsafe_2fa: "You haven't enabled two-factor authentication yet. We strongly recommend activating it immediately.\nAccounts without two-factor authentication are more vulnerable to being hacked.",
 		},
@@ -146,9 +146,9 @@ export default {
 		control_bar: {
 			_: "Control Bar",
 			stop: "Show Stop Button",
-			stop_description: "Teleport to the first frame and stop",
+			stop_description: "Go to first frame and stop",
 			replay: "Always Show Replay Button",
-			replay_description: "Teleport to the first frame and play",
+			replay_description: "Go to first frame and play",
 			first_last_frame: "Show First & Last Frame Buttons",
 			first_last_frame_description: "Teleport to the first or last frame and stop",
 			frame_by_frame: "Show Frame by Frame Control Buttons",
@@ -349,7 +349,6 @@ export default {
 		tile: "Tile",
 	},
 	duration: "Duration",
-	are_watching: "{0} User is Watching | {0} Users Are Watching",
 	step: {
 		next: "Next",
 		previous: "Previous",
@@ -633,4 +632,5 @@ export default {
 		administrator: "Administrator",
 		developer: "Developer",
 	},
+	info: "Info",
 } as const;

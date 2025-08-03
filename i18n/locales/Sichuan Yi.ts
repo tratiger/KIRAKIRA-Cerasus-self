@@ -81,6 +81,7 @@ export default {
 		user: "crwdns2308:0crwdne2308:0",
 		app: "crwdns2310:0crwdne2310:0",
 		experimental_warning: "crwdns3212:0crwdne3212:0",
+		no_experimental_features: "crwdns3652:0crwdne3652:0",
 		security: {
 			is_unsafe_2fa: "crwdns3384:0crwdne3384:0",
 		},
@@ -149,7 +150,9 @@ export default {
 		control_bar: {
 			_: "crwdns2888:0crwdne2888:0",
 			stop: "crwdns3602:0crwdne3602:0",
-			stop_description: "crwdns3604:0crwdne3604:0",
+			stop_description: "crwdns3654:0crwdne3654:0",
+			replay: "crwdns3636:0crwdne3636:0",
+			replay_description: "crwdns3656:0crwdne3656:0",
 			first_last_frame: "crwdns3606:0crwdne3606:0",
 			first_last_frame_description: "crwdns3608:0crwdne3608:0",
 			frame_by_frame: "crwdns3610:0crwdne3610:0",
@@ -328,13 +331,14 @@ export default {
 	push_to_feed: "crwdns3596:0crwdne3596:0",
 	cover: "crwdns2596:0crwdne2596:0",
 	select_cover: "crwdns2598:0crwdne2598:0",
-	follow: "crwdns2600:0crwdne2600:0",
 	follow_verb: "crwdns2602:0crwdne2602:0",
 	following: "crwdns2604:0crwdne2604:0",
+	follower: "crwdns3640:0crwdne3640:0",
 	fans: "crwdns2606:0crwdne2606:0",
 	watched: "crwdns2608:0crwdne2608:0",
 	latest: "crwdns2610:0crwdne2610:0",
 	upload_date: "crwdns2612:0crwdne2612:0",
+	send_date: "crwdns3642:0crwdne3642:0",
 	sort: {
 		by: "crwdns2614:0crwdne2614:0",
 		view: "crwdns2616:0crwdne2616:0",
@@ -349,7 +353,6 @@ export default {
 		tile: "crwdns2630:0crwdne2630:0",
 	},
 	duration: "crwdns2632:0crwdne2632:0",
-	are_watching: "crwdns2634:0crwdne2634:0",
 	step: {
 		next: "crwdns2636:0crwdne2636:0",
 		previous: "crwdns2638:0crwdne2638:0",
@@ -629,4 +632,9 @@ export default {
 	enable: "crwdns3504:0crwdne3504:0",
 	disable: "crwdns3506:0crwdne3506:0",
 	sync_across_devices: "crwdns3554:0crwdne3554:0",
+	role: {
+		administrator: "crwdns3646:0crwdne3646:0",
+		developer: "crwdns3648:0crwdne3648:0",
+	},
+	info: "crwdns3650:0crwdne3650:0",
 } as const satisfies LocaleIdentifiers;

@@ -125,7 +125,7 @@
 				</template>
 			</PlayerVideo>
 			<TabBar v-model="selectedTab" @movingForTransition="name => transitionName = name">
-				<TabItem id="info">Info</TabItem>
+				<TabItem id="info">{{ t.info }}</TabItem>
 				<TabItem id="comments">{{ t.comments }}</TabItem>
 				<TabItem id="danmakus">{{ t(0).danmaku }}</TabItem>
 			</TabBar>

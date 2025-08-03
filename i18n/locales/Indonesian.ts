@@ -202,7 +202,9 @@ export default {
 	modification_date: "Modifikasi",
 	addition_date: "Tanggal Penambahan",
 	history: "History",
-	collection: {},
+	collection: {
+		modify_info: "Ubah Info",
+	},
 	feed: {},
 	upload: {
 		_: "Unggah",
@@ -249,7 +251,6 @@ export default {
 	description: "Deskripsi",
 	cover: "Sampul",
 	select_cover: "Pilih Cover",
-	follow: "Ikuti",
 	follow_verb: "Ikuti",
 	following: "Mengikuti",
 	fans: "Penggemar",
@@ -269,7 +270,6 @@ export default {
 		tile: "Ubin",
 	},
 	duration: "Durasi",
-	are_watching: "sedang menonton",
 	step: {
 		next: "Selanjutnya",
 		previous: "Sebelumnya",
@@ -397,7 +397,10 @@ export default {
 		no_language_selected: "Tolong pilih bahasa dahulu!",
 	},
 	validation: {
-		required: {},
+		required: {
+			description: "Deskripsi diperlukan!",
+			password: "Kata sandi diperlukan!",
+		},
 		failed: {},
 		invalid_format: {},
 		too_long: {},
@@ -428,4 +431,5 @@ export default {
 		enable_email: {},
 		disable_email: {},
 	},
+	role: {},
 } as const satisfies LocaleIdentifiers;

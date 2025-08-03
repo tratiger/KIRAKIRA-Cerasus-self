@@ -81,6 +81,7 @@ export default {
 		user: "Paramètres de l'utilisateur",
 		app: "Paramètres de l'application",
 		experimental_warning: "Les paramètres suivants sont des fonctionnalités expérimentales et ne sont pas garantis de fonctionner stablement ou de synchroniser sur plusieurs appareils. Veuillez les utiliser avec précaution !",
+		no_experimental_features: "Aucune fonctionnalité expérimentale disponible",
 		security: {
 			is_unsafe_2fa: "Vous n'avez pas encore activé l'authentification à deux facteurs. Nous vous recommandons vivement de l'activer immédiatement.\nLes comptes sans authentification à deux facteurs sont plus vulnérables au piratage.",
 		},
@@ -149,7 +150,9 @@ export default {
 		control_bar: {
 			_: "Barre de Contrôle",
 			stop: "Afficher le bouton d'arrêt",
-			stop_description: "Téléporter à la première image et arrêter",
+			stop_description: "Aller à la première image et arrêter",
+			replay: "Toujours afficher le bouton de relecture",
+			replay_description: "Aller à la première image et jouer",
 			first_last_frame: "Afficher les boutons First & Last Frame",
 			first_last_frame_description: "Téléporter à la première ou à la dernière image et arrêter",
 			frame_by_frame: "Afficher les boutons de contrôle d'images",
@@ -328,13 +331,14 @@ export default {
 	push_to_feed: "Pousser vers le flux suivant",
 	cover: "Couverture",
 	select_cover: "Sélectionnez la couverture",
-	follow: "Suivre",
 	follow_verb: "Suivre",
 	following: "Suit",
+	follower: "Abonné·e | Abonné·e·s",
 	fans: "Fan | Fans",
 	watched: "Vue | Vues",
 	latest: "Dernières",
 	upload_date: "Date d'envoi",
+	send_date: "Date d'envoi",
 	sort: {
 		by: "Trier par",
 		view: "Nombre de consultations",
@@ -349,7 +353,6 @@ export default {
 		tile: "Tuile",
 	},
 	duration: "Durée",
-	are_watching: "est en train de regarder | sont en train de regarder",
 	step: {
 		next: "Suivant",
 		previous: "Retour",
@@ -629,4 +632,9 @@ export default {
 	enable: "Activer",
 	disable: "Désactiver",
 	sync_across_devices: "Synchroniser entre les appareils",
+	role: {
+		administrator: "Administrateur",
+		developer: "Développeur",
+	},
+	info: "Infos",
 } as const satisfies LocaleIdentifiers;

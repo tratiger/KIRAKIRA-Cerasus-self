@@ -284,7 +284,6 @@ export default {
 	description: "簡介",
 	cover: "封面",
 	select_cover: "選擇封面",
-	follow: "跟隨",
 	follow_verb: "跟隨",
 	following: "已跟隨",
 	fans: "粉絲",
@@ -304,7 +303,6 @@ export default {
 		tile: "並排",
 	},
 	duration: "時長",
-	are_watching: "人正在看",
 	step: {
 		next: "下一步",
 		previous: "上一步",
@@ -465,4 +463,5 @@ export default {
 		enable_email: {},
 		disable_email: {},
 	},
+	role: {},
 } as const satisfies LocaleIdentifiers;

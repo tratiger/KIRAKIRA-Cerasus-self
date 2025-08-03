@@ -82,4 +82,5 @@ export default {
 		enable_email: {},
 		disable_email: {},
 	},
+	role: {},
 } as const satisfies LocaleIdentifiers;
