@@ -68,7 +68,7 @@
 	 */
 	function saveToCollection() {
 		if (selfUserInfoStore.isLogined)
-			useToast("抱歉，功能正在制作中，请稍等~", "warning", 5000); // TODO: 使用多语言 // DELETE 请在收藏功能完成后删除该提示
+			useToast(t.under_construction.feature, "warning", 5000); // DELETE 请在收藏功能完成后删除该提示
 		else
 			useEvent("app:requestLogin");
 	}
@@ -78,7 +78,7 @@
 	 */
 	function watchLater() {
 		if (selfUserInfoStore.isLogined)
-			useToast("抱歉，功能正在制作中，请稍等~", "warning", 5000); // TODO: 使用多语言 // DELETE 请在收藏功能完成后删除该提示
+			useToast(t.under_construction.feature, "warning", 5000); // DELETE 请在收藏功能完成后删除该提示
 		else
 			useEvent("app:requestLogin");
 	}
@@ -111,7 +111,7 @@
 	 */
 	function report() {
 		if (selfUserInfoStore.isLogined)
-			useToast("抱歉，功能正在制作中，请稍等~", "warning", 5000); // TODO: 使用多语言 // DELETE 请在举报功能完成后删除该提示
+			useToast(t.under_construction.feature, "warning", 5000); // DELETE 请在举报功能完成后删除该提示
 		else
 			useEvent("app:requestLogin");
 	}

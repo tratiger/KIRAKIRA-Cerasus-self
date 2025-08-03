@@ -633,4 +633,5 @@ export default {
 		administrator: "Administrator",
 		developer: "Developer",
 	},
+	info: "Info",
 } as const;

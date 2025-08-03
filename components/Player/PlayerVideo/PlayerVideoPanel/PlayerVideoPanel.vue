@@ -61,7 +61,7 @@
 						<TabBar v-if="showTabBar && !showSettings" v-model="selectedTab" @movingForTransition="name => transitionName = name">
 							<TabItem id="danmaku-list">{{ t(0).danmaku }}</TabItem>
 							<TabItem id="chapters">分段章节</TabItem>
-							<TabItem id="playlist">播放列表「」</TabItem>
+							<TabItem id="playlist">播放列表</TabItem>
 						</TabBar>
 						<TabBar v-else-if="showSettings" v-model="selectedSettingsTab" @movingForTransition="name => transitionName = name">
 							<TabItem id="player">{{ t.player }}</TabItem>
