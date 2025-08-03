@@ -55,6 +55,7 @@
 	const settingsGridItemSelect = ref("");
 	const color = ref(Color.fromHex("#f00"));
 	const timecode = ref(new Duration(0));
+	const time = ref(Temporal.Now.plainTimeISO());
 
 	/**
 	 * 单击按钮事件。
@@ -185,7 +186,8 @@
 				<ComboBoxItem id="eyelid scrub">轮刮眼眶</ComboBoxItem>
 			</ComboBox>
 			<hr />
-			<TimecodePicker v-model="timecode" />
+			<p>时间码</p><TimecodePicker v-model="timecode" />
+			<p>时间</p><TimePicker v-model="time" />
 			<hr />
 			<HeadingComments :count="233" />
 			<hr />

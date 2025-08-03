@@ -2,6 +2,7 @@ import { useDrag } from "@vueuse/gesture";
 import type Danmaku from "danmaku";
 import * as themeTypes from "modules/theme/types";
 import { AcceptedPlugin } from "postcss";
+import { Temporal as temporal } from "temporal-polyfill";
 
 export namespace FlyoutModelNS {
 	export type Target = MaybeRef<MouseEvent | PointerEvent | TwoD | HTMLElement | EventTarget | DOMRect | undefined | null>;
@@ -101,7 +102,7 @@ declare global {
 		name: string;
 		/** 该字段所用可用的值。建议使用与语言无关或方便计算的数据。 */
 		values: TValue[];
-		/** 该字段与下一个字段之间的分隔符，如果没有则显示为空白，如果已经是最后一个字段则无效。 */
+		/** 该字段与下一个字段之间的分隔符，如果没有则显示为空白。 */
 		sep?: string;
 		/** 该字段内数据是否允许循环滚动？默认为否。 */
 		loopable?: boolean;
@@ -116,6 +117,8 @@ declare global {
 
 	/** PostCSS 插件。 */
 	type PostCSSPlugin = { postcss: true } & ((opts?: AnyObject) => AcceptedPlugin);
+
+	type Temporal = typeof temporal;
 
 	/**
 	 * 使用 `role` 可以增强组件的可读性和语义化。值得注意的是这个属性是枚举而并非任意填写的。

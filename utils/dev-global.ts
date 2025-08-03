@@ -19,5 +19,7 @@ export function loadDevGlobal() {
 			return document.head.querySelector(`style[data-vite-dev-id*="${component}.vue" i]`) ??
 				document.head.querySelector(`style[data-vite-dev-id*="${component}" i]`);
 		};
+
+		global.Temporal = Temporal;
 	}
 }

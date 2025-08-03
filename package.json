@@ -137,6 +137,7 @@
 		"qrcode.vue": "^3.4.1",
 		"safe-regex": "^2.1.1",
 		"shaka-player": "^4.10.11",
+		"temporal-polyfill": "^0.3.0",
 		"tus-js-client": "^4.1.0",
 		"variable-name-conversion": "^1.6.0",
 		"vue-audio-visual": "^3.0.8",

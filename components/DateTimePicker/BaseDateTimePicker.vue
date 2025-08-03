@@ -3,10 +3,14 @@
 </docs>
 
 <script setup lang="ts">
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		/** 基础日期时间选择器字段。 */
 		fields: BaseDateTimePickerField[];
-	}>();
+		/** 缺省分隔符。默认为间隔号。 */
+		defaultSep?: string;
+	}>(), {
+		defaultSep: "·",
+	});
 
 	const { menuItemCount } = useScssVariables().numbers;
 	const model = defineModel<Record<string, Readable>>({ required: true });
@@ -22,7 +26,7 @@
 		if (!menu.value || !showMenu.value) return;
 		const clickOutside = !isInPath(e, menu);
 		if (clickOutside) {
-			restoreValue();
+			restoreValue(); // 去掉该行，则点击屏幕外缘将会保存设置而不是恢复设置。
 			hide();
 		}
 	});
@@ -51,13 +55,15 @@
 		const nextValue = visibleValues.value[fieldName][menuItemCount - 1 + (isNext ? 1 : -1)];
 		if (nextValue !== undefined) setField(fieldName, nextValue);
 	}
+
+	// TODO: 滚动项目时没有动画。
 </script>
 
 <template>
 	<Comp role="application" v-ripple :aria-expanded="showMenu" tabindex="0" @click="e => { backupValue(); showMenu = e.currentTarget.getBoundingClientRect(); }">
-		<template v-for="({ name, sep, getDisplayValue }, index) in props.fields" :key="name">
+		<template v-for="({ name, sep, getDisplayValue }, index) in fields" :key="name">
 			<p class="value">{{ getDisplayValue?.(model[name]) ?? model[name] }}</p>
-			<p v-if="sep && index < props.fields.length - 1" class="sep">{{ sep }}</p>
+			<p v-if="(sep || defaultSep) && index < fields.length - 1" class="sep">{{ sep || defaultSep }}</p>
 		</template>
 		<ClientOnlyTeleport to="#popovers">
 			<Transition :duration="{ enter: 250, leave: 125 }">
@@ -75,14 +81,15 @@
 					<div class="content">
 						<div class="highlight"></div>
 						<div class="items">
-							<template v-for="({ name, sep, getDisplayValue }, index) in props.fields" :key="name">
+							<template v-for="({ name, sep, getDisplayValue }, index) in fields" :key="name">
 								<div class="values" @wheel="e => onWheel(e, name)">
-									<template v-for="value in visibleValues[name]" :key="value?.toString()">
+									<template v-for="(value, i) in visibleValues[name]" :key="i">
+										<!-- 虽说不推荐将数组索引值作为 key，但是假如元素太少（例如12小时制），则会出现一轮包含多个相同的 key，从而导致出现异常。 -->
 										<p v-if="value !== undefined" class="item" @click="setField(name, value)">{{ getDisplayValue?.(value) ?? value }}</p>
 										<p v-else class="item nothing"></p>
 									</template>
 								</div>
-								<p v-if="sep && index < props.fields.length - 1" class="sep">{{ sep }}</p>
+								<p v-if="(sep || defaultSep) && index < fields.length - 1" class="sep">{{ sep || defaultSep }}</p>
 							</template>
 						</div>
 						<div class="buttons">
@@ -138,16 +145,22 @@
 		}
 	}
 
+	* {
+		font-weight: 500;
+		font-feature-settings: "case" on; // 使冒号和负号等与数字和大写字母等高（不需要比号）。
+		font-variant-numeric: tabular-nums;
+	}
+
 	.sep {
 		align-content: center;
+		align-self: center;
 		opacity: 0.5;
 	}
 
 	%item-value {
 		align-content: center;
 		color: c(icon-color);
-		font-weight: 500;
-		font-variant-numeric: tabular-nums;
+		text-align: center;
 	}
 
 	.menu {
@@ -161,6 +174,7 @@
 		width: $width;
 		height: $height;
 
+		// 使用绝对定位而不是和 ComboBox 一样的相对定位是因为，我想到一个用例是视频跳时间。要是用相对定位的话，如果视频全屏显示，那么必然会有半边菜单显示在屏幕之外。
 		> * {
 			position: fixed;
 			top: var(--top-value);
@@ -189,11 +203,18 @@
 			height: $item-height * $menu-item-count;
 			padding-inline: $item-padding-inline + $menu-padding-inline;
 			overflow-y: clip;
+			mask: linear-gradient(to bottom,
+			transparent 0%,
+			black calc(100% / $menu-item-count),
+			black calc(100% - 100% / $menu-item-count),
+			transparent 100%,
+		);
 
 			.item {
 				@extend %item-value;
 				position: relative;
 				height: $item-height;
+				white-space: nowrap;
 				cursor: pointer;
 
 				&::after {
@@ -284,6 +305,7 @@
 			}
 
 			.content {
+				translate: 0 calc((var(--top) - #{$half-items-height}) - var(--top-value));
 				clip-path: inset($half-items-height 0 ($half-items-height + $menu-bottom-buttons-height));
 			}
 		}
