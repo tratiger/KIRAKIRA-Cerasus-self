@@ -89,7 +89,7 @@ export default {
 	account: "帳戶",
 	profile: {
 		_: "資料",
-		edit: "編輯資料",
+		edit: "編輯個人資料",
 		edit_banner: "換張封面",
 		edit_avatar: "換個樣",
 	},
@@ -148,6 +148,9 @@ export default {
 		},
 		control_bar: {
 			_: "控制列",
+			stop: "顯示暫停掣",
+			stop_description: "傳送到第一格並停止",
+			first_last_frame: "顯示第一同最尾影格掣",
 		},
 		screenshot: "擷取畫面",
 		stats: "統計",
@@ -257,10 +260,10 @@ export default {
 		add: "加入影片",
 		copy_to: "複製到",
 		move_to: "移動到",
-		multi_select: "批量揀選",
+		multi_select: "一次過揀晒",
 	},
 	feed: {
-		following: "追蹤緊",
+		following: "跟緊",
 	},
 	upload: {
 		_: "上載",
@@ -315,7 +318,6 @@ export default {
 	description: "簡介",
 	cover: "封面",
 	select_cover: "揀選封面",
-	follow: "追蹤",
 	follow_verb: "追蹤",
 	following: "追蹤緊",
 	fans: "擁躉",
@@ -335,7 +337,6 @@ export default {
 		tile: "並排",
 	},
 	duration: "時長",
-	are_watching: "個人睇緊",
 	step: {
 		next: "下一步",
 		previous: "上一步",
@@ -477,7 +478,7 @@ export default {
 		uploaded: "上載咗喇~",
 		upload_failed: "上載失敗！",
 		comment_sent: "留言送出咗喇~",
-		profile_updated: "檔案更新咗喇~",
+		profile_updated: "個人資料更新咗喇~",
 		email_changed: "電郵改咗喇~",
 		exists_2fa: "你啓用過雙重驗證喇！唔該重新整理個頁面。",
 		email_2fa_enabled: "電郵雙重驗證啓用咗喇~",
@@ -488,11 +489,17 @@ export default {
 		required: {},
 		failed: {},
 		invalid_format: {},
-		too_long: {},
-		duplicate: {},
+		too_long: {
+			nickname: "暱稱太遲喇！",
+		},
+		duplicate: {
+			username: "用戶名俾人揀咗！",
+			name: "名稱已存在！",
+		},
 	},
 	confirm: {
-		cancel_upload: "你係咪要取消呢次嘅upload呀？",
+		cancel_upload: "你確定要取消咗呢次upload？",
+		reset_profile: "你確定要重設你嘅個人資料？",
 	},
 	current_time: "現在時間",
 	improve_translation: "完善翻譯",
@@ -539,4 +546,5 @@ export default {
 	enable: "啓用",
 	disable: "停用",
 	sync_across_devices: "跨裝置同步",
+	role: {},
 } as const satisfies LocaleIdentifiers;

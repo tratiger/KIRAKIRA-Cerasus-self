@@ -81,6 +81,7 @@ export default {
 		user: "用户设置",
 		app: "应用设置",
 		experimental_warning: "下列设置项都是实验性功能，不保证稳定运行和多端同步。在尝试使用的同时，请务必注意喔！",
+		no_experimental_features: "没有可用的实验功能",
 		security: {
 			is_unsafe_2fa: "你还没有启用双重验证，我们强烈建议你立刻开启！\n没有双重验证的账号更容易被盗号。",
 		},
@@ -150,6 +151,8 @@ export default {
 			_: "控制栏",
 			stop: "显示停止按钮",
 			stop_description: "传送到首帧并停止",
+			replay: "始终显示重播按钮",
+			replay_description: "转到首帧并播放",
 			first_last_frame: "显示首帧和末帧按钮",
 			first_last_frame_description: "传送到首帧或末帧并停止",
 			frame_by_frame: "显示逐帧控制按钮",
@@ -328,13 +331,14 @@ export default {
 	push_to_feed: "推送到关注动态",
 	cover: "封面",
 	select_cover: "选择封面",
-	follow: "关注",
 	follow_verb: "关注",
 	following: "已关注",
+	follower: "粉丝",
 	fans: "粉丝",
 	watched: "观看",
 	latest: "最新",
 	upload_date: "上传日期",
+	send_date: "发送日期",
 	sort: {
 		by: "排序",
 		view: "播放量",
@@ -349,7 +353,6 @@ export default {
 		tile: "平铺",
 	},
 	duration: "时长",
-	are_watching: "人正在看",
 	step: {
 		next: "下一步",
 		previous: "上一步",
@@ -629,4 +632,9 @@ export default {
 	enable: "启用",
 	disable: "禁用",
 	sync_across_devices: "在设备之间同步",
+	role: {
+		administrator: "管理员",
+		developer: "开发者",
+	},
+	info: "信息",
 } as const satisfies LocaleIdentifiers;

@@ -148,6 +148,13 @@ export default {
 		},
 		control_bar: {
 			_: "Thanh điều khiển",
+			stop: "Hiện nút Tạm dừng",
+			stop_description: "Chuyển đến khung hình đầu tiên và dừng lại",
+			first_last_frame: "Hiện nút Khung hình đầu tiên & cuối cùng",
+			first_last_frame_description: "Chuyển đến khung hình đầu tiên hoặc cuối cùng và dừng lại",
+			frame_by_frame: "Hiển thị nút điều khiển từng khung hình",
+			frame_by_frame_description: "Điều chỉnh thời gian chính xác theo từng khung hình",
+			auto_resume_play_after_seeking: "Tự động tiếp tục phát sau khi tua",
 		},
 		screenshot: "Chụp ảnh màn hình",
 		stats: "Thống kê",
@@ -321,7 +328,6 @@ export default {
 	push_to_feed: "Đăng lên bảng tin theo dõi",
 	cover: "Bìa",
 	select_cover: "Chọn bìa",
-	follow: "Theo dõi",
 	follow_verb: "Theo dõi",
 	following: "Đang theo dõi",
 	fans: "Người hâm mộ",
@@ -342,7 +348,6 @@ export default {
 		tile: "Ô",
 	},
 	duration: "Thời lượng",
-	are_watching: "người đang xem",
 	step: {
 		next: "Kế tiếp",
 		previous: "Trước",
@@ -622,4 +627,5 @@ export default {
 	enable: "Kích hoạt",
 	disable: "Vô hiệu",
 	sync_across_devices: "Đồng bộ với mọi thiết bị",
+	role: {},
 } as const satisfies LocaleIdentifiers;
