@@ -18,8 +18,7 @@
 		<div class="card">
 			<div class="stack">
 				<h2>{{ message }}</h2>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<div v-html="stack"></div>
+				<div v-text="stack"></div>
 			</div>
 			<div class="card-bottom">
 				<div class="bottom-left">

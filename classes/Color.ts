@@ -86,7 +86,7 @@ export class Color {
 
 	/** 色相分量。 */
 	get h() { return this.hsva[0]; }
-	set h(v) { this.hsva[0] = PNMod(v, 360); }
+	set h(v) { this.hsva[0] = floorMod(v, 360); }
 
 	/** 饱和度分量。 */
 	get s() { return this.hsva[1]; }

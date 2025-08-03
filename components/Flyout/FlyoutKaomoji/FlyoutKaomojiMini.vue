@@ -33,7 +33,7 @@
 		if (current !== -1) {
 			newIndex = current;
 			newIndex += displacement;
-			newIndex = PNMod(newIndex, length);
+			newIndex = floorMod(newIndex, length);
 		}
 		(grid.value?.children[newIndex] as HTMLElement)?.focus();
 	}
@@ -91,7 +91,7 @@
 
 <style scoped lang="scss">
 	$button-width: 120px;
-	
+
 	.grid {
 		display: flex;
 		gap: 6px;
@@ -101,7 +101,7 @@
 		width: $button-width;
 		animation: float-left 500ms calc(var(--i) * 100ms) $ease-out-max backwards;
 	}
-	
+
 	@keyframes float-left {
 		from {
 			translate: 40px;
