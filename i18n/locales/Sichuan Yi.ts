@@ -150,9 +150,9 @@ export default {
 		control_bar: {
 			_: "crwdns2888:0crwdne2888:0",
 			stop: "crwdns3602:0crwdne3602:0",
-			stop_description: "crwdns3604:0crwdne3604:0",
+			stop_description: "crwdns3654:0crwdne3654:0",
 			replay: "crwdns3636:0crwdne3636:0",
-			replay_description: "crwdns3638:0crwdne3638:0",
+			replay_description: "crwdns3656:0crwdne3656:0",
 			first_last_frame: "crwdns3606:0crwdne3606:0",
 			first_last_frame_description: "crwdns3608:0crwdne3608:0",
 			frame_by_frame: "crwdns3610:0crwdne3610:0",

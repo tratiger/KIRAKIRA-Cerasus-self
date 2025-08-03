@@ -149,7 +149,6 @@ export default {
 		control_bar: {
 			_: "控制列",
 			stop: "顯示暫停掣",
-			stop_description: "傳送到第一格並停止",
 			first_last_frame: "顯示第一同最尾影格掣",
 		},
 		screenshot: "擷取畫面",

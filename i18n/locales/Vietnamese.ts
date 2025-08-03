@@ -149,7 +149,6 @@ export default {
 		control_bar: {
 			_: "Thanh điều khiển",
 			stop: "Hiện nút Tạm dừng",
-			stop_description: "Chuyển đến khung hình đầu tiên và dừng lại",
 			first_last_frame: "Hiện nút Khung hình đầu tiên & cuối cùng",
 			first_last_frame_description: "Chuyển đến khung hình đầu tiên hoặc cuối cùng và dừng lại",
 			frame_by_frame: "Hiển thị nút điều khiển từng khung hình",

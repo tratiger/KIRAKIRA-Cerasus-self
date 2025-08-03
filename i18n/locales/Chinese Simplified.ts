@@ -150,9 +150,9 @@ export default {
 		control_bar: {
 			_: "控制栏",
 			stop: "显示停止按钮",
-			stop_description: "传送到首帧并停止",
+			stop_description: "转到首帧后停止",
 			replay: "始终显示重播按钮",
-			replay_description: "转到首帧并播放",
+			replay_description: "转到首帧后播放",
 			first_last_frame: "显示首帧和末帧按钮",
 			first_last_frame_description: "传送到首帧或末帧并停止",
 			frame_by_frame: "显示逐帧控制按钮",

@@ -150,9 +150,9 @@ export default {
 		control_bar: {
 			_: "コントロールバー",
 			stop: "停止ボタンを表示",
-			stop_description: "最初のフレームにテレポートして停止",
+			stop_description: "最初のフレームに移動して停止",
 			replay: "リプレイボタンを常に表示",
-			replay_description: "最初のフレームにテレポートして再生する",
+			replay_description: "最初のフレームに移動して再生",
 			first_last_frame: "最初と最後のフレームボタンを表示",
 			first_last_frame_description: "最初または最後のフレームにテレポートして停止",
 			frame_by_frame: "フレームごとのフレームコントロールボタンを表示",
