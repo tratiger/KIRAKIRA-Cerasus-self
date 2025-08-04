@@ -154,7 +154,7 @@ export default {
 			replay: "リプレイボタンを常に表示",
 			replay_description: "最初のフレームに移動して再生",
 			first_last_frame: "最初と最後のフレームボタンを表示",
-			first_last_frame_description: "最初または最後のフレームにテレポートして停止",
+			first_last_frame_description: "最初または最後のフレームに移動して停止",
 			frame_by_frame: "フレームごとのフレームコントロールボタンを表示",
 			frame_by_frame_description: "時間をフレーム単位で正確に調整",
 			auto_resume_play_after_seeking: "シーク後に自動再生再開",

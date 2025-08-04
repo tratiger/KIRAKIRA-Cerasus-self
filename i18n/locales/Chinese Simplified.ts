@@ -154,7 +154,7 @@ export default {
 			replay: "始终显示重播按钮",
 			replay_description: "转到首帧后播放",
 			first_last_frame: "显示首帧和末帧按钮",
-			first_last_frame_description: "传送到首帧或末帧并停止",
+			first_last_frame_description: "转到首帧或末帧并停止",
 			frame_by_frame: "显示逐帧控制按钮",
 			frame_by_frame_description: "按帧精确调整时间",
 			auto_resume_play_after_seeking: "循迹后自动恢复播放",

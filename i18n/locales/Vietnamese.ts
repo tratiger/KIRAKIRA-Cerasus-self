@@ -81,6 +81,7 @@ export default {
 		user: "Cài đặt người dùng",
 		app: "Cài đặt ứng dụng",
 		experimental_warning: "Các thiết lập sau là các tính năng thử nghiệm, chưa đảm bảo tính ổn định và thích hợp với nhiều thiết bị. Vui lòng chú ý khi sử dụng!",
+		no_experimental_features: "Không có tính năng thử nghiệm nào khả dụng",
 		security: {
 			is_unsafe_2fa: "Bạn chưa kích hoạt tính năng xác minh hai bước. Chúng tôi khuyến nghị nên kích hoạt ngay. Tài khoản không xác minh hai bước dễ dàng bị xâm nhập hơn.",
 		},
@@ -149,8 +150,10 @@ export default {
 		control_bar: {
 			_: "Thanh điều khiển",
 			stop: "Hiện nút Tạm dừng",
+			stop_description: "Tới khung hình đầu tiên và dừng",
+			replay: "Luôn hiện nút phát lại",
+			replay_description: "Tới khung hình đầu tiên và phát",
 			first_last_frame: "Hiện nút Khung hình đầu tiên & cuối cùng",
-			first_last_frame_description: "Chuyển đến khung hình đầu tiên hoặc cuối cùng và dừng lại",
 			frame_by_frame: "Hiển thị nút điều khiển từng khung hình",
 			frame_by_frame_description: "Điều chỉnh thời gian chính xác theo từng khung hình",
 			auto_resume_play_after_seeking: "Tự động tiếp tục phát sau khi tua",
@@ -329,10 +332,12 @@ export default {
 	select_cover: "Chọn bìa",
 	follow_verb: "Theo dõi",
 	following: "Đang theo dõi",
+	follower: "Người theo dõi",
 	fans: "Người hâm mộ",
 	watched: "Lượt xem",
 	latest: "Mới nhất",
 	upload_date: "Ngày đăng",
+	send_date: "Ngày gửi",
 	sort: {
 		by: "Sắp xếp",
 		view: "Số lượt xem",
@@ -626,5 +631,9 @@ export default {
 	enable: "Kích hoạt",
 	disable: "Vô hiệu",
 	sync_across_devices: "Đồng bộ với mọi thiết bị",
-	role: {},
+	role: {
+		administrator: "Quản trị viên",
+		developer: "Lập trình viên",
+	},
+	info: "Thông tin",
 } as const satisfies LocaleIdentifiers;

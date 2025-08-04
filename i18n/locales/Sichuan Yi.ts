@@ -154,7 +154,7 @@ export default {
 			replay: "crwdns3636:0crwdne3636:0",
 			replay_description: "crwdns3656:0crwdne3656:0",
 			first_last_frame: "crwdns3606:0crwdne3606:0",
-			first_last_frame_description: "crwdns3608:0crwdne3608:0",
+			first_last_frame_description: "crwdns3658:0crwdne3658:0",
 			frame_by_frame: "crwdns3610:0crwdne3610:0",
 			frame_by_frame_description: "crwdns3612:0crwdne3612:0",
 			auto_resume_play_after_seeking: "crwdns3614:0crwdne3614:0",

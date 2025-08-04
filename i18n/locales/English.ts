@@ -150,7 +150,7 @@ export default {
 			replay: "Always Show Replay Button",
 			replay_description: "Go to first frame and play",
 			first_last_frame: "Show First & Last Frame Buttons",
-			first_last_frame_description: "Teleport to the first or last frame and stop",
+			first_last_frame_description: "Go to first or last frame and stop",
 			frame_by_frame: "Show Frame by Frame Control Buttons",
 			frame_by_frame_description: "Accurately adjust time by frame",
 			auto_resume_play_after_seeking: "Auto Resume Play After Seeking",

@@ -154,7 +154,7 @@ export default {
 			replay: "Toujours afficher le bouton de relecture",
 			replay_description: "Aller à la première image et jouer",
 			first_last_frame: "Afficher les boutons First & Last Frame",
-			first_last_frame_description: "Téléporter à la première ou à la dernière image et arrêter",
+			first_last_frame_description: "Aller à la première ou la dernière image et arrêter",
 			frame_by_frame: "Afficher les boutons de contrôle d'images",
 			frame_by_frame_description: "Ajuster précisément le temps par image",
 			auto_resume_play_after_seeking: "Reprendre automatiquement la lecture après la recherche",
