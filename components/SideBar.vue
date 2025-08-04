@@ -124,7 +124,9 @@
 			</div>
 			<Transition mode="out-in">
 				<p v-if="props.overrideLogoText" class="logo-text">{{ props.overrideLogoText }}</p>
-				<LogoText v-else />
+				<LocaleLink v-else to="/" class="logo-text-wrapper lite">
+					<LogoText />
+				</LocaleLink>
 			</Transition>
 		</div>
 
@@ -150,13 +152,15 @@
 		<LoginWindow v-model="showLogin" />
 	</aside>
 
-	<nav v-show="!hideBottomNav" :[scopeId]="''">
-		<div class="icons">
-			<BottomNavItem icon="home" href="/">{{ t.home }}</BottomNavItem>
-			<BottomNavItem icon="category" href="/category">{{ t.category }}</BottomNavItem>
-			<BottomNavItem icon="feed" href="/feed/following">{{ t.feed.following }}</BottomNavItem>
-		</div>
-	</nav>
+	<Transition>
+		<nav v-show="!hideBottomNav" :[scopeId]="''">
+			<div class="icons">
+				<BottomNavItem icon="home" href="/">{{ t.home }}</BottomNavItem>
+				<BottomNavItem icon="category" href="/category">{{ t.category }}</BottomNavItem>
+				<BottomNavItem icon="feed" href="/feed/following">{{ t.feed.following }}</BottomNavItem>
+			</div>
+		</nav>
+	</Transition>
 </template>
 
 <style scoped lang="scss">
@@ -338,6 +342,12 @@
 					display: none;
 				}
 
+				.logo-text-wrapper {
+					display: flex;
+					align-items: center;
+					height: 48px;
+				}
+
 				.logo-text {
 					--form: half !important;
 				}
@@ -467,6 +477,19 @@
 		.icons {
 			@include square(100%);
 			justify-content: space-evenly;
+		}
+
+		&.v-enter-active {
+			transition: translate $ease-out-smooth 700ms;
+		}
+
+		&.v-leave-active {
+			transition: translate $ease-in-smooth 150ms;
+		}
+
+		&.v-enter-from,
+		&.v-leave-to {
+			translate: 0 100%;
 		}
 	}
 
