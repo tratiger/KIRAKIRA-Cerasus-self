@@ -57,9 +57,9 @@
 		)
 			return nanValue;
 
-		return typeof n === "number" && Number.isFinite(n)
-			? clamp(map(n, props.min, props.max, 0, 1), 0, 1)
-			: nanValue;
+		return typeof n === "number" && Number.isFinite(n) ?
+			clamp(map(n, props.min, props.max, 0, 1), 0, 1) :
+			nanValue;
 	};
 
 	const value = computed(() => restrict(model.value, 0));
@@ -108,7 +108,7 @@
 		const lastValue = lastValueIfTriggerByTrack ?? model.value;
 		pendingValue.value = value.value;
 		showPendingState.value = "dragging";
-		const pointerMove = useDebounce((e: PointerEvent) => {
+		const pointerMove = (e: PointerEvent) => { // useDebounce会造成「卡碟」，因此已去除
 			const position = clamp(e.pageX - left - x, 0, max - thumbSize);
 			const value = map(position, 0, max - thumbSize, props.min, props.max);
 			const steppedValue = roundToStep(value, props.step);
@@ -116,7 +116,7 @@
 			model.value = steppedValue;
 			pendingValue.value = map(steppedValue, props.min, props.max, 0, 1);
 			emits("changing", value, lastValue);
-		});
+		};
 		const pointerUp = (e: PointerEvent) => {
 			document.removeEventListener("pointermove", pointerMove);
 			document.removeEventListener("pointerup", pointerUp);
@@ -195,8 +195,8 @@
 	}
 
 	const displayValue = computed(() =>
-		(typeof props.displayValue === "function" ? props.displayValue(pendingValue.value) : props.displayValue)
-		?? map(pendingValue.value, 0, 1, props.min, props.max));
+		(typeof props.displayValue === "function" ? props.displayValue(pendingValue.value) : props.displayValue) ??
+		map(pendingValue.value, 0, 1, props.min, props.max));
 </script>
 
 <template>

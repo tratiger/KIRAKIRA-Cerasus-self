@@ -75,18 +75,9 @@
 	const rateMenu = ref<MenuModel>();
 	const qualityMenu = ref<MenuModel>();
 	const tracksSorted = computed(() => props.tracks.sort((a, b) => (b.height || 0) - (a.height || 0)));
-	const isPlayingBeforeSeeking = ref<boolean>();
+	const isDraggingSlider = ref(false);
+	const pendingTime = ref<number>(NaN);
 	const seekingIcon = ref<DeclaredIcons>();
-	const currentPercent = computed({
-		get() {
-			const result = model.value / props.duration;
-			return Number.isFinite(result) ? result : 0;
-		},
-		set(percent) {
-			const newTime = percent * props.duration;
-			model.value = newTime;
-		},
-	});
 	const currentTime = computed(() => new Duration(model.value).toString());
 	const countdownTime = computed(() => new Duration(model.value - props.duration).toString());
 	const duration = computed(() => new Duration(props.duration).toString());
@@ -165,13 +156,12 @@
 	 * @param isSeeking - 用户正在拖拽滑动条？
 	 */
 	function onSeeking(isSeeking: boolean) {
-		if (isSeeking) {
-			isPlayingBeforeSeeking.value ??= playing.value;
-			playing.value = false;
-		} else {
+		if (isSeeking)
+			isDraggingSlider.value = true;
+		else {
+			model.value = pendingTime.value;
 			seekingIcon.value = undefined;
-			playing.value = props.settings?.controller.autoResumePlayAfterSeeking ? true : isPlayingBeforeSeeking.value ?? true;
-			isPlayingBeforeSeeking.value = undefined;
+			isDraggingSlider.value = false;
 		}
 	}
 
@@ -184,6 +174,10 @@
 			if (!seekingIcon.value) seekingIcon.value = "fast_forward";
 		} else seekingIcon.value = relativeChangingTime > 0 ? "fast_forward" : "fast_rewind";
 	}
+
+	watch(model, model => {
+		if (!Number.isNaN(model) && !isDraggingSlider.value) pendingTime.value = model;
+	}, { immediate: true });
 
 	const playbackRateText = (rate: number) => (2 ** rate).toFixed(2).replace(/\.?0+$/, "") + "×";
 	const volumeText = (volume: number) => Math.round(volume * 100) + "%";
@@ -293,14 +287,14 @@
 		</div>
 		<div class="slider-wrapper">
 			<Slider
-				v-model="currentPercent"
+				v-model="pendingTime"
 				:min="0"
-				:max="1"
+				:max="props.duration"
 				:buffered="buffered?.map(timeRanges => timeRanges.map(seconds => seconds / props.duration)) as Buffered"
 				:waiting
 				pending="cursor"
 				:displayValue="pending => new Duration(pending * props.duration).toString()"
-				@changing="(value, prevValue) => { onSeeking(true); setSeekingIcon(value - prevValue); }"
+				@changing="(value) => { onSeeking(true); setSeekingIcon(value - model); }"
 				@changed="onSeeking(false)"
 			/>
 		</div>
