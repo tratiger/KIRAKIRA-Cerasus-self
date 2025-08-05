@@ -463,6 +463,7 @@
 
 		> * {
 			@include flex-center;
+			font-feature-settings: "case" on;
 			font-variant-numeric: tabular-nums;
 			text-align: center;
 		}

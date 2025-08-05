@@ -111,7 +111,14 @@
 						</tr>
 					</thead>
 					<tbody>
-						<RecycleScroller v-slot="{ item }" class="scroller" :itemSize="28" keyField="key" :items="danmakuList" pageMode>
+						<RecycleScroller
+							v-slot="{ item }"
+							class="scroller"
+							:itemSize="28"
+							keyField="key"
+							:items="danmakuList"
+							pageMode
+						>
 							<tr :key="item.key" v-ripple @contextmenu.prevent="e => { currentDanmaku = item.item; danmakuItemMenu = e; }">
 								<td v-for="(value, key, j) in item.item" :key="key" :width="colWidths[j]">{{ handleTableDataCellText(value) }}</td>
 							</tr>
@@ -239,6 +246,7 @@
 			tbody tr {
 				td:nth-of-type(1),
 				td:nth-of-type(3) {
+					font-feature-settings: "case" on;
 					font-variant-numeric: tabular-nums;
 				}
 			}

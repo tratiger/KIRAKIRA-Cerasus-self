@@ -72,7 +72,7 @@
 							</div>
 							<div class="item">
 								<Icon name="duration" />
-								<p>{{ duration }}</p>
+								<p class="duration">{{ duration }}</p>
 							</div>
 							<div v-if="date" class="item">
 								<Icon name="calendar" />
@@ -245,6 +245,11 @@
 				white-space: nowrap;
 				text-overflow: ellipsis;
 			}
+		}
+
+		.duration {
+			font-feature-settings: "case" on;
+			font-variant-numeric: tabular-nums;
 		}
 	}
 </style>

@@ -9,11 +9,11 @@ export class Duration {
 	/** 秒值。 */
 	private seconds: number;
 	/** 时间中间的分隔符。 */
-	private static colon = "∶" as const;
+	private static colon = ":" as const;
 	/** 负号。 */
 	private static minus = "−" as const;
 	/** 当没有时间数据时显示的占位符字符串。 */
-	static placeholder = "‒‒∶‒‒" as const;
+	static placeholder = "‒‒:‒‒" as const;
 
 	/**
 	 * 通过秒构造时长对象。
