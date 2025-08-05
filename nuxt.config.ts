@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 	// HACK: 以下为还原 Nuxt 3 目录结构的配置，请尽量在之后改为 Nuxt 4 的目录结构。
 	// This reverts the new srcDir default from `app` back to your root directory
 	srcDir: ".",
-  // This specifies the directory prefix for `router.options.ts` and `spa-loading-template.html`
+	// This specifies the directory prefix for `router.options.ts` and `spa-loading-template.html`
 	dir: {
 		app: "app",
 	},
