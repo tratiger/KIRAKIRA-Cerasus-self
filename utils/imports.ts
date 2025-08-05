@@ -6,5 +6,4 @@ export { createReusableTemplate } from "@vueuse/core";
 export { Editor } from "@tiptap/vue-3";
 export { default as path } from "path-browserify-es";
 export { default as VariableName } from "variable-name-conversion";
-export { default as NumberFlow } from "@number-flow/vue";
 export { Temporal } from "temporal-polyfill";

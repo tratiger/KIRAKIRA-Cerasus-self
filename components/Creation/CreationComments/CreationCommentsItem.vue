@@ -1,4 +1,6 @@
 <script setup lang="ts">
+	import NumberFlow from "@number-flow/vue";
+
 	const props = withDefaults(defineProps<{
 		/** 评论唯一 ID */
 		commentId: string;
@@ -50,7 +52,7 @@
 	/**
 	 * 点击加分、减分按钮事件。
 	 * @param button - 点击的按钮是加分还是减分。
-	 * @param [noNestingDolls=false] - 禁止套娃，防止递归调用。
+	 * @param [noNestingDolls] - 禁止套娃，防止递归调用。
 	 */
 	function onClickVotes(button: "upvote" | "downvote", noNestingDolls: boolean = false) {
 		// const states = { upvote, isUpvoted, downvote, isDownvoted };
@@ -96,8 +98,8 @@
 
 	/**
 	 * 视频评论加分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function emitVideoCommentUpvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
@@ -120,8 +122,8 @@
 
 	/**
 	 * 取消视频评论加分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function cancelVideoCommentUpvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
@@ -140,8 +142,8 @@
 
 	/**
 	 * 视频评论减分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function emitVideoCommentDownvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
@@ -164,8 +166,8 @@
 
 	/**
 	 * 取消视频评论减分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function cancelVideoCommentDownvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
