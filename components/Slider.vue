@@ -133,7 +133,8 @@
 	 * @returns 指针在轨道上的值。
 	 */
 	function getPointerOnTrackValue(e: PointerEvent) {
-		const thumb = thumbEl.value!, track = trackEl.value!;
+		const thumb = thumbEl.value, track = trackEl.value;
+		if (!thumb || !track) return props.min;
 		const thumbSizeHalf = thumb.offsetWidth / 2;
 		const { width } = track.getBoundingClientRect();
 		return clamp(props.min, map(e.offsetX, thumbSizeHalf, width - thumbSizeHalf, props.min, props.max), props.max);
