@@ -71,11 +71,11 @@
 			</TabItem>
 		</TabBar>
 		<InfoBar :title="t.announcement" lite>
-			<TransInterpolation :i18nKey="t.announcement.homepage">
+			<I18nT keypath="announcement.homepage">
 				<template #discord-server>
 					<a href="https://discord.gg/uVd9ZJzEy7" target="_blank">{{ t.platform.discord.server }}</a>
 				</template>
-			</TransInterpolation>
+			</I18nT>
 		</InfoBar>
 		<Subheader icon="upload" :badge="categoryItemCount">{{ t.latest }}</Subheader>
 		<Transition :name="transitionName" mode="out-in">

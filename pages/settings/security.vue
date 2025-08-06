@@ -438,9 +438,24 @@
 		<Modal v-model="showChangeEmail" :title="t.change_email" icon="email">
 			<div class="change-email-modal">
 				<form>
-					<TextBox v-model="newEmail" :required="true" :invalid="isInvalidNewEmail" type="email" icon="email" :placeholder="t.new_email" autoComplete="new-email" />
+					<TextBox
+						v-model="newEmail"
+						:required="true"
+						:invalid="isInvalidNewEmail"
+						type="email"
+						icon="email"
+						:placeholder="t.new_email"
+						autoComplete="new-email"
+					/>
 					<SendVerificationCode v-model="changeEmailVerificationCode" :email="newEmail" verificationCodeFor="change-email" :disabled="!newEmail || isInvalidNewEmail" />
-					<TextBox v-model="changeEmailPassword" :required="true" type="password" icon="lock" :placeholder="t.password._" autoComplete="current-password" />
+					<TextBox
+						v-model="changeEmailPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password._"
+						autoComplete="current-password"
+					/>
 				</form>
 			</div>
 			<template #footer-right>
@@ -453,9 +468,30 @@
 			<div class="change-password-modal">
 				<form>
 					<SendVerificationCode v-model="changePasswordVerificationCode" verificationCodeFor="change-password" />
-					<TextBox v-model="oldPassword" :required="true" type="password" icon="lock" :placeholder="t.password.current" autoComplete="current-password" />
-					<TextBox v-model="newPassword" :required="true" type="password" icon="lock" :placeholder="t.password.new" autoComplete="new-password" />
-					<TextBox v-model="confirmNewPassword" :required="true" type="password" icon="lock" :placeholder="t.password.new_retype" autoComplete="new-password" />
+					<TextBox
+						v-model="oldPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password.current"
+						autoComplete="current-password"
+					/>
+					<TextBox
+						v-model="newPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password.new"
+						autoComplete="new-password"
+					/>
+					<TextBox
+						v-model="confirmNewPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password.new_retype"
+						autoComplete="new-password"
+					/>
 				</form>
 			</div>
 			<template #footer-right>
@@ -474,7 +510,7 @@
 						<ShadingIcon icon="download" />
 						<h3><Icon name="counter_1" />{{ t.two_factor_authentication.add_totp.step_install }}</h3>
 						<p>
-							<TransInterpolation :i18nKey="t.two_factor_authentication.add_totp.step_install_description">
+							<I18nT keypath="t.two_factor_authentication.add_totp.step_install_description">
 								<template #ente-auth>
 									<a href="https://ente.io/auth/" target="_blank">Ente Auth</a>
 								</template>
@@ -484,7 +520,7 @@
 								<template #google-authenticator>
 									<a href="https://support.google.com/accounts/answer/1066447" target="_blank">Google Authenticator</a>
 								</template>
-							</TransInterpolation>
+							</I18nT>
 						</p>
 					</div>
 					<div class="step">
@@ -544,8 +580,22 @@
 		<Modal v-model="showDeleteTotpModel" :title="t.two_factor_authentication.remove_totp" icon="delete">
 			<div class="delete-totp-modal">
 				<form>
-					<TextBox v-model="deleteTotpPassword" :required="true" type="password" icon="lock" :placeholder="t.password" autoComplete="current-password" />
-					<TextBox v-model="deleteTotpVerificationCode" :required="true" type="text" icon="lock" :placeholder="t.totp_verification_code" autocomplete="off" />
+					<TextBox
+						v-model="deleteTotpPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password"
+						autoComplete="current-password"
+					/>
+					<TextBox
+						v-model="deleteTotpVerificationCode"
+						:required="true"
+						type="text"
+						icon="lock"
+						:placeholder="t.totp_verification_code"
+						autocomplete="off"
+					/>
 				</form>
 			</div>
 			<template #footer-right>
@@ -568,7 +618,14 @@
 		<Modal v-model="showDeleteEmail2FAModel" :title="t.two_factor_authentication.disable_email" icon="delete">
 			<div class="delete-email-2fa-modal">
 				<form>
-					<TextBox v-model="deleteEmail2FAPassword" :required="true" type="password" icon="lock" :placeholder="t.password" autoComplete="current-password" />
+					<TextBox
+						v-model="deleteEmail2FAPassword"
+						:required="true"
+						type="password"
+						icon="lock"
+						:placeholder="t.password"
+						autoComplete="current-password"
+					/>
 					<SendVerificationCode v-model="deleteEmail2FAVerificationCode" verificationCodeFor="delete-email-2fa" />
 				</form>
 			</div>
