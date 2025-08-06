@@ -13,11 +13,15 @@
 	}>(), {
 		filled: false,
 	});
+
+	const iconName = computed(() => {
+		return props.name.replace(/^(.*)\/|^/, (_, prefix) => (prefix ?? "kirakira") + ":");
+	});
 </script>
 
 <template>
 	<i class="icon" :class="{ filled }" role="img" :aria-label="new VariableName(name).words">
-		<NuxtIcon :name="props.name.replace(/^(.*)\/|^/, (_, prefix) => (prefix ?? 'kirakira') + ':')" />
+		<NuxtIcon :name="iconName" />
 	</i>
 </template>
 
