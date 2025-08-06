@@ -213,6 +213,7 @@ export default defineNuxtConfig({
 		vueI18n: "./i18n.config.ts",
 		detectBrowserLanguage: {
 			cookieKey: "language",
+			alwaysRedirect: true,
 		},
 		bundle: {
 			// 非预期错误，临时解决办法。参考：https://github.com/intlify/bundle-tools/issues/423#issuecomment-2525540710
