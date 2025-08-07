@@ -56,6 +56,7 @@
 	const color = ref(Color.fromHex("#f00"));
 	const timecode = ref(new Duration(0));
 	const time = ref(Temporal.Now.plainTimeISO());
+	const date = ref(Temporal.Now.plainDateISO().withCalendar("gregory"));
 
 	/**
 	 * 单击按钮事件。
@@ -188,6 +189,7 @@
 			<hr />
 			<p>时间码</p><TimecodePicker v-model="timecode" />
 			<p>时间</p><TimePicker v-model="time" />
+			<p>日期</p><DatePicker v-model="date" />
 			<hr />
 			<HeadingComments :count="233" />
 			<hr />

@@ -37,7 +37,7 @@ export function formatDateWithLocale(
 		time?: boolean;
 	} = {},
 ) {
-	const locale = getCurrentLocaleLangCode();
+	const locale = getCurrentLocaleLangCode(undefined, true);
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
 		month: "2-digit",

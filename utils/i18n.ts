@@ -82,13 +82,17 @@ export function getCurrentLocale() {
 }
 
 /**
- * 获取当前语言的语言代码。（主要是为了单独处理简体中文和繁体中文。）
+ * 获取当前语言的语言代码。（主要是为了单独处理简体中文、繁体中文和粤语。）
  * @param locale - 手动指定语言代码，留空时会自动获取。
+ * @param redirectDialect - 是否重定向方言到基础语言？（例如粤语会重定向到香港地区繁体中文。）这是因为这些方言的内置本地化处理函数支持率太低太烂。
  * @returns 语言代码。
  */
-export function getCurrentLocaleLangCode(locale?: string) {
+export function getCurrentLocaleLangCode(locale?: string, redirectDialect: boolean = false) {
 	locale ||= getCurrentLocale();
-	return locale === "zhs" ? "zh-Hans-CN" : locale === "zht" ? "zh-Hant-TW" : locale;
+	return locale === "zhs" ? "zh-Hans-CN" :
+		locale === "zht" ? "zh-Hant-TW" :
+		redirectDialect && locale === "yue" ? "zh-Hant-HK" :
+		locale;
 }
 
 /**

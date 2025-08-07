@@ -101,13 +101,26 @@ declare global {
 		/** 字段组名。如：year、month、date。 */
 		name: string;
 		/** 该字段所用可用的值。建议使用与语言无关或方便计算的数据。 */
-		values: TValue[];
+		values: readonly TValue[] | (() => readonly TValue[]);
 		/** 该字段与下一个字段之间的分隔符，如果没有则显示为空白。 */
 		sep?: string;
 		/** 该字段内数据是否允许循环滚动？默认为否。 */
 		loopable?: boolean;
+		/** 设置字段的最小宽度（CSS 值）。 */
+		minWidth?: string | (() => string | undefined);
 		/** 从 `values` 内数据值转换到本地化显示文本值的函数，如果未提供则直接显示 `values` 内的数据值。 */
 		getDisplayValue?(value: TValue): TDisplay;
+	}
+	/** 基础日期时间选择器只读纯文本字段。 */
+	interface BaseDateTimePickerFieldPlain {
+		/** 字段组名。如：year、month、date。 */
+		name: string;
+		/** 要显示的只读文本。 */
+		text: Readable | (() => Readable);
+		/** 该字段与下一个字段之间的分隔符，如果没有则显示为空白。 */
+		sep?: string;
+		/** 设置字段的最小宽度（CSS 值）。 */
+		minWidth?: string | (() => string);
 	}
 
 	type FlyoutModel = FlyoutModelNS.Tuple | FlyoutModelNS.Object;

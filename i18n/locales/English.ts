@@ -633,4 +633,8 @@ export default {
 		developer: "Developer",
 	},
 	info: "Info",
+	calendar: {
+		gregory: "Gregorian",
+		chinese: "Chinese",
+	},
 } as const;

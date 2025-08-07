@@ -5,7 +5,7 @@
 <script setup lang="ts">
 	const props = withDefaults(defineProps<{
 		/** 基础日期时间选择器字段。 */
-		fields: BaseDateTimePickerField[];
+		fields: (BaseDateTimePickerField | BaseDateTimePickerFieldPlain)[];
 		/** 缺省分隔符。默认为间隔号。 */
 		defaultSep?: string;
 	}>(), {
@@ -20,6 +20,8 @@
 	const previousValue = ref<Record<string, Readable>>();
 	const menuValuesKeys = ["noumenon", "shadow"] as const;
 	const menuValues = reactive<Record<ValueOf<typeof menuValuesKeys>, Record<string, HTMLDivElement | undefined | null>>>(arrayMapObjectConst(menuValuesKeys, () => ({})));
+	const buttonEl = ref<InstanceType<typeof Comp>>();
+	const buttonElSizeObserver = ref<ResizeObserver>();
 
 	const backupValue = () => previousValue.value = model.value;
 	const restoreValue = () => previousValue.value && (model.value = previousValue.value);
@@ -34,7 +36,8 @@
 	});
 
 	const visibleValues = computed(() => {
-		return arrayMapObject(props.fields, ({ name, values, loopable }) => {
+		return arrayMapObject(props.fields.filter(field => !("text" in field)) as BaseDateTimePickerField[], ({ name, values, loopable }) => {
+			if (typeof values === "function") values = values();
 			const currentValue = model.value[name];
 			let currentIndex = values.indexOf(currentValue);
 			if (currentIndex === -1) currentIndex = 0;
@@ -75,12 +78,31 @@
 			easing: eases.easeOutMax,
 		}).finished.catch(useNoop)));
 	}
+
+	onMounted(() => {
+		buttonElSizeObserver.value = new ResizeObserver(([{ target }]) => {
+			showMenu.value &&= target.getBoundingClientRect();
+		});
+		if (buttonEl.value) buttonElSizeObserver.value.observe(buttonEl.value.$el);
+	});
+
+	onUnmounted(() => {
+		buttonElSizeObserver.value?.disconnect();
+	});
 </script>
 
 <template>
-	<Comp role="application" v-ripple :aria-expanded="showMenu" tabindex="0" @click="e => { backupValue(); showMenu = e.currentTarget.getBoundingClientRect(); }">
-		<template v-for="({ name, sep, getDisplayValue }, index) in fields" :key="name">
-			<p class="value">{{ getDisplayValue?.(model[name]) ?? model[name] }}</p>
+	<Comp
+		ref="buttonEl"
+		role="application"
+		v-ripple
+		:aria-expanded="showMenu"
+		tabindex="0"
+		@click="e => { backupValue(); showMenu = e.currentTarget.getBoundingClientRect(); }"
+	>
+		<template v-for="({ name, sep, minWidth, ...field }, index) in fields" :key="name">
+			<p v-if="'values' in field" class="value" :style="{ minWidth: toValue(minWidth) }">{{ field.getDisplayValue?.(model[name]) ?? model[name] }}</p>
+			<p v-else-if="String(toValue(field.text))" class="value" :style="{ minWidth: toValue(minWidth) }">{{ toValue(field.text) }}</p>
 			<p v-if="(sep || defaultSep) && index < fields.length - 1" class="sep">{{ sep || defaultSep }}</p>
 		</template>
 		<ClientOnlyTeleport to="#popovers">
@@ -99,14 +121,15 @@
 					<div class="content">
 						<div class="highlight"></div>
 						<div v-for="key in menuValuesKeys" :key="key" class="items" :class="key">
-							<template v-for="({ name, sep, getDisplayValue }, index) in fields" :key="name">
-								<div :ref="el => menuValues[key][name] = el as HTMLDivElement" class="values" @wheel="e => onWheel(e, name)">
+							<template v-for="({ name, sep, minWidth, ...field }, index) in fields" :key="name">
+								<div v-if="'values' in field" :ref="el => menuValues[key][name] = el as HTMLDivElement" class="values" :style="{ minWidth: toValue(minWidth) }" @wheel="e => onWheel(e, name)">
 									<!-- 虽说不推荐将数组索引值作为 key，但是假如元素太少（例如12小时制），则会出现一轮包含多个相同的 key，从而导致出现异常。 -->
 									<template v-for="(value, i) in visibleValues[name]" :key="getOffsetFromIndex(i)">
-										<p v-if="value !== undefined" class="item" @click="setField(name, value); spining(name, getOffsetFromIndex(i))">{{ getDisplayValue?.(value) ?? value }}</p>
+										<p v-if="value !== undefined" class="item" @click="setField(name, value); spining(name, getOffsetFromIndex(i))">{{ field.getDisplayValue?.(value) ?? value }}</p>
 										<p v-else class="item nothing"></p>
 									</template>
 								</div>
+								<p v-else-if="String(toValue(field.text))" class="plain" :style="{ minWidth: toValue(minWidth) }">{{ toValue(field.text) }}</p>
 								<p v-if="(sep || defaultSep) && index < fields.length - 1" class="sep">{{ sep || defaultSep }}</p>
 							</template>
 						</div>
@@ -218,6 +241,7 @@
 			gap: 9px;
 			justify-content: space-evenly;
 			align-items: stretch;
+			width: 100%;
 			height: $item-height * $menu-item-count;
 			padding-inline: $item-padding-inline + $menu-padding-inline;
 			overflow-y: clip;
@@ -228,15 +252,6 @@
 				black calc(100% - 100% / $menu-item-count),
 				transparent 100%,
 			);
-
-			&.shadow {
-				position: absolute;
-				top: 0;
-				z-index: 2;
-				pointer-events: none;
-				interactivity: inert;
-				clip-path: inset($half-items-height 0);
-			}
 
 			.item {
 				@extend %item-value;
@@ -272,13 +287,32 @@
 				margin-top: -$half-items-height;
 			}
 
-			.sep,
-			&.shadow .item {
-				color: c(main-bg);
+			&.shadow {
+				position: absolute;
+				top: 0;
+				z-index: 2;
+				pointer-events: none;
+				interactivity: inert;
+				clip-path: inset($half-items-height 0);
+
+				.sep,
+				.plain,
+				.item {
+					color: c(main-bg);
+				}
 			}
 
-			&:not(.shadow) .sep {
-				visibility: hidden;
+			&:not(.shadow) {
+				.sep,
+				.plain {
+					visibility: hidden;
+				}
+			}
+
+			.plain {
+				@extend %item-value;
+				align-self: center;
+				white-space: nowrap;
 			}
 		}
 
@@ -338,6 +372,10 @@
 			.content {
 				translate: 0 calc((var(--top) - #{$half-items-height}) - var(--top-value));
 				clip-path: inset($half-items-height 0 ($half-items-height + $menu-bottom-buttons-height));
+			}
+
+			.items.shadow .plain {
+				color: c(icon-color);
 			}
 		}
 	}

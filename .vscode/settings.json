@@ -70,6 +70,7 @@
 		"IDEA",
 		"REVIEW",
 		"NOTE",
+		"CAUTION",
 		"XXX",
 		"WARN",
 		"FIXME",
@@ -121,6 +122,13 @@
 			"foreground": "#fff",
 			"iconColour": "#fc0",
 			"icon": "light-bulb",
+			"hideFromTree": true,
+		},
+		"CAUTION": {
+			"background": "#d3e600",
+			"foreground": "#000",
+			"iconColour": "#d3e600",
+			"icon": "stop",
 			"hideFromTree": true,
 		},
 		"FIXME": {

@@ -637,4 +637,8 @@ export default {
 		developer: "开发者",
 	},
 	info: "信息",
+	calendar: {
+		gregory: "公历",
+		chinese: "农历",
+	},
 } as const satisfies LocaleIdentifiers;

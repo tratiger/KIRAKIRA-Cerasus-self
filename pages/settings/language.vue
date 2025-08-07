@@ -11,7 +11,7 @@
 	});
 	const localeList = computed(() => locales.value.map(locale => ({
 		code: locale.code,
-		lang: getCurrentLocaleLangCode(locale.code),
+		lang: getCurrentLocaleLangCode(locale.code, true),
 		name: locale.name || locale.code,
 		title: (() => {
 			if (isInContextLocalization(locale.code).value)
