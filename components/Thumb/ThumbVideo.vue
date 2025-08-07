@@ -36,6 +36,7 @@
 	const duration = computed(() => props.duration ?? Duration.placeholder);
 	const link = computed(() => props.videoId !== undefined && props.videoId !== null ?
 		`/video/kv${props.videoId}` : props.link);
+	const useRelativeDate = useAppSettingsStore().relativeDate;
 </script>
 
 <template>
@@ -76,7 +77,7 @@
 							</div>
 							<div v-if="date" class="item">
 								<Icon name="calendar" />
-								<div><DateTime :dateTime="date" /></div>
+								<div><DateTime :dateTime="date" :relativeTime="useRelativeDate && 'short'" /></div>
 							</div>
 						</div>
 					</div>

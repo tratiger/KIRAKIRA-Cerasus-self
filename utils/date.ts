@@ -91,3 +91,39 @@ export function formatLocalizationSemanticDateTime(timestamp: number, semanticDa
 export function getCloudflareRFC3339ExpiryDateTime(expiresIn: number): string {
 	return new Date(new Date().getTime() + expiresIn * 1000).toISOString().replace(/\.\d{3}/, "");
 }
+
+/**
+ * 将绝对日期转换为相对于现在的相对日期字符串。
+ * @param date - 要格式化的日期。
+ * @param style - 格式化相对时间的样式。默认为 `"long"`。
+ * @returns 格式化后的相对日期字符串（如：2 小时前、3 天前）。
+ */
+export function timeAgo(date: Date, style: Intl.RelativeTimeFormatStyle = "long") {
+	const locale = getCurrentLocaleLangCode(undefined, true);
+	const formatter = new Intl.RelativeTimeFormat(locale, { style });
+
+	const now = Date.now();
+	const past = date.getTime();
+	const diff = past - now;
+
+	const seconds = diff / 1000 | 0;
+	if (Math.abs(seconds) < 60) return formatter.format(seconds, "seconds");
+
+	const minutes = seconds / 60 | 0;
+	if (Math.abs(minutes) < 60) return formatter.format(minutes, "minutes");
+
+	const hours = minutes / 60 | 0;
+	if (Math.abs(hours) < 60) return formatter.format(hours, "hours");
+
+	const days = hours / 24 | 0;
+	if (Math.abs(days) < 7) return formatter.format(days, "days");
+
+	const weeks = days / 7 | 0; // TODO: 不可靠，当大于三周并小于一个月时会显示“零个月后”。
+	if (Math.abs(weeks) < 4) return formatter.format(weeks, "weeks");
+
+	const months = days / 30 | 0; // TODO: 不可靠，一个月不恒等于三十天。
+	if (Math.abs(months) < 12) return formatter.format(months, "months");
+
+	const years = days / 365 | 0; // TODO: 不可靠，一年不恒等于三百六十五天。
+	return formatter.format(years, "years");
+}

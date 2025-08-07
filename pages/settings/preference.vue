@@ -17,11 +17,11 @@
 		<InfoBar type="warning" :title="t.severity.warning">
 			{{ t.under_construction.page }}
 			<ol>
-				<li>可用功能：在新窗口打开视频、同步外观样式、使用阿卡林游客头像。</li>
+				<li>可用功能：在新窗口打开视频、同步外观样式、使用阿卡林游客头像、使用相对时间。</li>
 				<li>除上述功能外其它功能都用不了。</li>
 				<li>本页面缺乏国际化。</li>
 			</ol>
-		<!-- TODO: 使用多语言 -->
+			<!-- TODO: 使用多语言 -->
 		</InfoBar>
 		<Subheader icon="placeholder">流量节省程序模式</Subheader>
 		<!-- 该功能似乎并容易实现，如不能实现可删除该功能。 -->
@@ -46,6 +46,11 @@
 		<Subheader icon="placeholder">新窗口</Subheader>
 		<section list>
 			<ToggleSwitch v-model="appSettings.isOpenVideoInNewTab" icon="placeholder">在新标签页打开视频</ToggleSwitch>
+		</section>
+
+		<Subheader icon="placeholder">？？？</Subheader>
+		<section list>
+			<ToggleSwitch v-model="appSettings.relativeDate" icon="time">使用相对时间</ToggleSwitch>
 		</section>
 	</div>
 </template>
