@@ -12,12 +12,14 @@
 		defaultSep: "·",
 	});
 
-	const { menuItemCount } = useScssVariables().numbers;
+	const { menuItemCount, itemHeight } = useScssVariables().numbers;
 	const model = defineModel<Record<string, Readable>>({ required: true });
 	const showMenu = ref<DOMRect>();
 	const menu = ref<HTMLElement>();
 	const hide = () => showMenu.value = undefined;
 	const previousValue = ref<Record<string, Readable>>();
+	const menuValuesKeys = ["noumenon", "shadow"] as const;
+	const menuValues = reactive<Record<ValueOf<typeof menuValuesKeys>, Record<string, HTMLDivElement | undefined | null>>>(arrayMapObjectConst(menuValuesKeys, () => ({})));
 
 	const backupValue = () => previousValue.value = model.value;
 	const restoreValue = () => previousValue.value && (model.value = previousValue.value);
@@ -51,12 +53,28 @@
 	}
 
 	function onWheel(e: WheelEvent, fieldName: string) {
-		const isNext = e.deltaY > 0;
-		const nextValue = visibleValues.value[fieldName][menuItemCount - 1 + (isNext ? 1 : -1)];
-		if (nextValue !== undefined) setField(fieldName, nextValue);
+		const offset = e.deltaY > 0 ? 1 : -1;
+		const nextValue = visibleValues.value[fieldName][menuItemCount - 1 + offset];
+		if (nextValue !== undefined) {
+			setField(fieldName, nextValue);
+			spining(fieldName, offset);
+		}
 	}
 
-	// TODO: 滚动项目时没有动画。
+	const getOffsetFromIndex = (index: number) => index - menuItemCount + 1;
+
+	async function spining(fieldName: string, offset: number) {
+		await nextTick();
+		const fields = menuValuesKeys.map(key => menuValues[key][fieldName]).filter(Boolean) as HTMLDivElement[];
+		if (fields.length === 0 || !offset || isPrefersReducedMotion()) return;
+		removeExistAnimations(...fields);
+		await Promise.all(fields.map(field => field.animate({
+			translate: [`0 ${offset * itemHeight}px`, ""],
+		}, {
+			duration: 250,
+			easing: eases.easeOutMax,
+		}).finished.catch(useNoop)));
+	}
 </script>
 
 <template>
@@ -80,12 +98,12 @@
 					<div class="base"></div>
 					<div class="content">
 						<div class="highlight"></div>
-						<div class="items">
+						<div v-for="key in menuValuesKeys" :key="key" class="items" :class="key">
 							<template v-for="({ name, sep, getDisplayValue }, index) in fields" :key="name">
-								<div class="values" @wheel="e => onWheel(e, name)">
-									<template v-for="(value, i) in visibleValues[name]" :key="i">
-										<!-- 虽说不推荐将数组索引值作为 key，但是假如元素太少（例如12小时制），则会出现一轮包含多个相同的 key，从而导致出现异常。 -->
-										<p v-if="value !== undefined" class="item" @click="setField(name, value)">{{ getDisplayValue?.(value) ?? value }}</p>
+								<div :ref="el => menuValues[key][name] = el as HTMLDivElement" class="values" @wheel="e => onWheel(e, name)">
+									<!-- 虽说不推荐将数组索引值作为 key，但是假如元素太少（例如12小时制），则会出现一轮包含多个相同的 key，从而导致出现异常。 -->
+									<template v-for="(value, i) in visibleValues[name]" :key="getOffsetFromIndex(i)">
+										<p v-if="value !== undefined" class="item" @click="setField(name, value); spining(name, getOffsetFromIndex(i))">{{ getDisplayValue?.(value) ?? value }}</p>
 										<p v-else class="item nothing"></p>
 									</template>
 								</div>
@@ -203,12 +221,22 @@
 			height: $item-height * $menu-item-count;
 			padding-inline: $item-padding-inline + $menu-padding-inline;
 			overflow-y: clip;
-			mask: linear-gradient(to bottom,
-			transparent 0%,
-			black calc(100% / $menu-item-count),
-			black calc(100% - 100% / $menu-item-count),
-			transparent 100%,
-		);
+			mask: linear-gradient(
+				to bottom,
+				transparent 0%,
+				black calc(100% / $menu-item-count),
+				black calc(100% - 100% / $menu-item-count),
+				transparent 100%,
+			);
+
+			&.shadow {
+				position: absolute;
+				top: 0;
+				z-index: 2;
+				pointer-events: none;
+				interactivity: inert;
+				clip-path: inset($half-items-height 0);
+			}
 
 			.item {
 				@extend %item-value;
@@ -237,10 +265,6 @@
 				&.nothing {
 					pointer-events: none;
 				}
-
-				&:nth-child(#{$menu-item-count}) {
-					color: c(main-bg);
-				}
 			}
 
 			.values {
@@ -248,8 +272,13 @@
 				margin-top: -$half-items-height;
 			}
 
-			.sep {
+			.sep,
+			&.shadow .item {
 				color: c(main-bg);
+			}
+
+			&:not(.shadow) .sep {
+				visibility: hidden;
 			}
 		}
 
@@ -279,9 +308,11 @@
 			position: absolute;
 			top: $half-items-height;
 			left: $menu-padding-inline;
+			z-index: 1;
 			width: var(--width);
 			height: $item-height;
 			background-color: c(accent);
+			pointer-events: none;
 		}
 
 		&.v-enter-from,

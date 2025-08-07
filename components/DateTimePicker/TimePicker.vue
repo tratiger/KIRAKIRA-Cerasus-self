@@ -17,6 +17,11 @@
 		const am = formattedAm.match(meridiemRegExp)?.[0].trim() ?? "";
 		return { hour12, meridiemAfter, sep, am, pm };
 	}
+	const hour23ToHour12 = (hour23: number) => ({
+		meridiem: hour23 >= 12 ? "pm" : "am",
+		hour: hour23 % 12 || 12,
+	});
+	const hour12ToHour23 = ({ meridiem, hour }: ReturnType<typeof hour23ToHour12>) => hour % 12 + (meridiem === "pm" ? 12 : 0);
 </script>
 
 <script setup lang="ts">
@@ -37,11 +42,6 @@
 		staticFields.second,
 		...format.value.hour12 && format.value.meridiemAfter ? [staticFields.meridiem] : [],
 	]);
-	const hour23ToHour12 = (hour23: number) => ({
-		meridiem: hour23 >= 12 ? "pm" : "am",
-		hour: hour23 % 12 || 12,
-	});
-	const hour12ToHour23 = ({ meridiem, hour }: ReturnType<typeof hour23ToHour12>) => hour % 12 + (meridiem === "pm" ? 12 : 0);
 	const model = computed({
 		get: () => ({
 			...format.value.hour12 ? hour23ToHour12(value.value.hour) : { hour: value.value.hour, meridiem: undefined },

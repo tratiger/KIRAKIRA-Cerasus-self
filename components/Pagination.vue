@@ -97,10 +97,9 @@
 					if (!child) continue;
 					const hasExistAnimations = removeExistAnimations(child);
 					isScrolling.value = true;
-					child.animate([
-						{ right: 0 },
-						{ right: `${merged.finallyPosition * 36}px` },
-					], animationOptions(hasExistAnimations)).finished.then(() => {
+					child.animate({
+						right: ["0", `${merged.finallyPosition * 36}px`],
+					}, animationOptions(hasExistAnimations)).finished.then(() => {
 						scrolledPages.value = nextItems;
 						isScrolling.value = false;
 					}).catch(IGNORE);
@@ -121,14 +120,12 @@
 				}
 				newPageNumber.value.hidden = false;
 				if (!merged) isForceSmallRipple.value = true;
-				pageEdit.value.animate([
-					{ left: 0 },
-					{ left: `${pageLeft ? 36 : -36}px` },
-				], animationOptions(hasExistAnimations));
-				newPageNumber.value.animate([
-					{ left: `${pageLeft ? -36 : 36}px` },
-					{ left: 0 },
-				], animationOptions(hasExistAnimations)).finished.then(() => {
+				pageEdit.value.animate({
+					left: ["0", `${pageLeft ? 36 : -36}px`],
+				}, animationOptions(hasExistAnimations));
+				newPageNumber.value.animate({
+					left: [`${pageLeft ? -36 : 36}px`, "0"],
+				}, animationOptions(hasExistAnimations)).finished.then(() => {
 					setCurrentPage();
 					if (newPageNumber.value) newPageNumber.value.hidden = true;
 					thumb.style.removeProperty("transition-timing-function");
