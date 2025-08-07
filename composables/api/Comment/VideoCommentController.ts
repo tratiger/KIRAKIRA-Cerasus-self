@@ -1,12 +1,12 @@
 import { DELETE, GET, POST } from "../Common";
-import type { CancelVideoCommentDownvoteRequestDto, CancelVideoCommentUpvoteRequestDto, DeleteSelfVideoCommentRequestDto, DeleteSelfVideoCommentResponseDto, AdminDeleteVideoCommentRequestDto, AdminDeleteVideoCommentResponseDto, EmitVideoCommentDownvoteRequestDto, EmitVideoCommentDownvoteResponseDto, EmitVideoCommentRequestDto, EmitVideoCommentResponseDto, EmitVideoCommentUpvoteRequestDto, EmitVideoCommentUpvoteResponseDto, GetVideoCommentByKvidRequestDto, GetVideoCommentByKvidResponseDto } from "./VideoCommentControllerDto";
+import type { AdminDeleteVideoCommentRequestDto, AdminDeleteVideoCommentResponseDto, CancelVideoCommentDownvoteRequestDto, CancelVideoCommentUpvoteRequestDto, DeleteSelfVideoCommentRequestDto, DeleteSelfVideoCommentResponseDto, EmitVideoCommentDownvoteRequestDto, EmitVideoCommentDownvoteResponseDto, EmitVideoCommentRequestDto, EmitVideoCommentResponseDto, EmitVideoCommentUpvoteRequestDto, EmitVideoCommentUpvoteResponseDto, GetVideoCommentByKvidRequestDto, GetVideoCommentByKvidResponseDto } from "./VideoCommentControllerDto";
 
 const BACK_END_URI = environment.backendUri;
 const VIDEO_COMMENT_API_URI = `${BACK_END_URI}video/comment`;
 
 /**
  * 用户发送视频评论
- * @param emitVideoCommentRequest 用户发送的视频评论的请求载荷
+ * @param emitVideoCommentRequest - 用户发送的视频评论的请求载荷
  * @returns 用户发送视频评论的结果
  */
 export const emitVideoComment = async (emitVideoCommentRequest: EmitVideoCommentRequestDto): Promise<EmitVideoCommentResponseDto> => {
@@ -16,7 +16,7 @@ export const emitVideoComment = async (emitVideoCommentRequest: EmitVideoComment
 
 /**
  * 根据 kvid 获取视频评论列表
- * @param getVideoCommentByKvidRequest 请求视频评论列表的查询参数
+ * @param getVideoCommentByKvidRequest - 请求视频评论列表的查询参数
  * @returns 视频的视频评论列表
  */
 export const getVideoCommentByKvid = async (getVideoCommentByKvidRequest: GetVideoCommentByKvidRequestDto): Promise<GetVideoCommentByKvidResponseDto> => {
@@ -26,7 +26,7 @@ export const getVideoCommentByKvid = async (getVideoCommentByKvidRequest: GetVid
 
 /**
  * 用户为视频评论点赞
- * @param emitVideoCommentUpvoteRequest 用户为视频评论点赞的请求载荷
+ * @param emitVideoCommentUpvoteRequest - 用户为视频评论点赞的请求载荷
  * @returns 用户为视频评论点赞的结果
  */
 export const emitVideoCommentUpvote = async (emitVideoCommentUpvoteRequest: EmitVideoCommentUpvoteRequestDto): Promise<EmitVideoCommentUpvoteResponseDto> => {
@@ -36,7 +36,7 @@ export const emitVideoCommentUpvote = async (emitVideoCommentUpvoteRequest: Emit
 
 /**
  * 用户为视频评论点踩
- * @param emitVideoCommentDownvoteRequest 用户为视频评论点踩的请求载荷
+ * @param emitVideoCommentDownvoteRequest - 用户为视频评论点踩的请求载荷
  * @returns 用户为视频评论点踩的结果
  */
 export const emitVideoCommentDownvote = async (emitVideoCommentDownvoteRequest: EmitVideoCommentDownvoteRequestDto): Promise<EmitVideoCommentDownvoteResponseDto> => {
@@ -46,7 +46,7 @@ export const emitVideoCommentDownvote = async (emitVideoCommentDownvoteRequest: 
 
 /**
  * 用户取消一个视频评论的点赞
- * @param cancelVideoCommentUpvoteRequest 用户取消一个视频评论的点赞的请求载荷
+ * @param cancelVideoCommentUpvoteRequest - 用户取消一个视频评论的点赞的请求载荷
  * @returns 用户取消一个视频评论的点赞的结果
  */
 export const cancelVideoCommentUpvote = async (cancelVideoCommentUpvoteRequest: CancelVideoCommentUpvoteRequestDto): Promise<EmitVideoCommentUpvoteResponseDto> => {
@@ -56,7 +56,7 @@ export const cancelVideoCommentUpvote = async (cancelVideoCommentUpvoteRequest: 
 
 /**
  * 用户取消一个视频评论的点踩
- * @param cancelVideoCommentDownvoteRequest 用户取消一个视频评论的点踩的请求载荷
+ * @param cancelVideoCommentDownvoteRequest - 用户取消一个视频评论的点踩的请求载荷
  * @returns 用户取消一个视频评论的点踩的结果
  */
 export const cancelVideoCommentDownvote = async (cancelVideoCommentDownvoteRequest: CancelVideoCommentDownvoteRequestDto): Promise<EmitVideoCommentDownvoteResponseDto> => {
@@ -66,7 +66,7 @@ export const cancelVideoCommentDownvote = async (cancelVideoCommentDownvoteReque
 
 /**
  * 删除一条自己发布的视频评论
- * @param deleteSelfVideoCommentRequest 删除一条自己发布的视频评论的请求载荷
+ * @param deleteSelfVideoCommentRequest - 删除一条自己发布的视频评论的请求载荷
  * @returns 删除一条自己发布的视频评论的请求响应
  */
 export const deleteSelfVideoComment = async (deleteSelfVideoCommentRequest: DeleteSelfVideoCommentRequestDto): Promise<DeleteSelfVideoCommentResponseDto> => {
@@ -76,7 +76,7 @@ export const deleteSelfVideoComment = async (deleteSelfVideoCommentRequest: Dele
 
 /**
  * 管理员删除一条视频评论
- * @param dadminDeleteVideoCommentRequest 管理员删除一条视频评论的请求载荷
+ * @param dadminDeleteVideoCommentRequest - 管理员删除一条视频评论的请求载荷
  * @returns 管理员删除一条视频评论的请求响应
  */
 export const adminDeleteVideoComment = async (dadminDeleteVideoCommentRequest: AdminDeleteVideoCommentRequestDto): Promise<AdminDeleteVideoCommentResponseDto> => {

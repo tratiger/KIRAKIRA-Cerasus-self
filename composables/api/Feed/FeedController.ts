@@ -5,7 +5,7 @@ const FEED_API_URI = `${BACK_END_URI}feed`;
 
 /**
  * 用户关注一个创作者
- * @param followingUploaderRequest 用户关注一个创作者的请求载荷
+ * @param followingUploaderRequest - 用户关注一个创作者的请求载荷
  * @returns 用户关注一个创作者的请求响应
  */
 export const followingUploader = (followingUploaderRequest: FollowingUploaderRequestDto) => {
@@ -22,7 +22,7 @@ export const followingUploader = (followingUploaderRequest: FollowingUploaderReq
 
 /**
  * 用户取消关注一个创作者
- * @param followingUploaderRequest 用户取消关注一个创作者的请求载荷
+ * @param unfollowingUploaderRequest - 用户取消关注一个创作者的请求载荷
  * @returns 用户取消关注一个创作者的请求响应
  */
 export const unfollowingUploader = (unfollowingUploaderRequest: UnfollowingUploaderRequestDto) => {

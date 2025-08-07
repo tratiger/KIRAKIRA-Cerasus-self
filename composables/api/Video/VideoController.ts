@@ -21,7 +21,7 @@ export const getHomePageThumbVideo = async (headerCookie: { cookie?: string | un
 
 /**
  * 根据视频 ID (KVID) 检验视频是否存在
- * @param CheckVideoExistRequestDto 视频 ID (KVID)
+ * @param CheckVideoExistRequest - 视频 ID (KVID)
  * @returns 视频是否存在的响应
  */
 export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoExistRequestDto): Promise<CheckVideoExistResponseDto> => {
@@ -37,8 +37,8 @@ export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoEx
 
 /**
  * 根据视频 ID (KVID) 获取视频的数据
- * @param getVideoByKvidRequest 从视频 ID 获取视频的请求参数
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param getVideoByKvidRequest - 从视频 ID 获取视频的请求参数
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 视频页面需要的响应
  */
 export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetVideoByKvidResponseDto> => {
@@ -56,7 +56,7 @@ export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidReques
 
 /**
  * 根据 UID 获取该用户上传的视频
- * @param getVideoByUidRequest 根据 UID 获取该用户上传的视频的请求参数
+ * @param getVideoByUidRequest - 根据 UID 获取该用户上传的视频的请求参数
  * @returns 根据 UID 获取该用户上传的视频的请求响应结果
  */
 export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDto): Promise<GetVideoByUidResponseDto> => {
@@ -72,7 +72,7 @@ export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDt
 
 /**
  * 根据关键字搜索视频
- * @param searchVideoByKeywordRequest 根据关键字搜索视频的请求参数
+ * @param searchVideoByKeywordRequest - 根据关键字搜索视频的请求参数
  * @returns 根据关键字搜索视频的请求响应结果
  */
 export const searchVideoByKeyword = async (searchVideoByKeywordRequest: SearchVideoByKeywordRequestDto): Promise<SearchVideoByKeywordResponseDto> => {
@@ -88,7 +88,7 @@ export const searchVideoByKeyword = async (searchVideoByKeywordRequest: SearchVi
 
 /**
  * 根据 TAG ID 列表搜索视频
- * @param searchVideoByVideoTagIdRequest 根据 TAG ID 列表搜索视频的请求参数
+ * @param searchVideoByVideoTagIdRequest - 根据 TAG ID 列表搜索视频的请求参数
  * @returns 根据 TAG ID 列表搜索视频的请求响应结果
  */
 export const searchVideoByTagIds = async (searchVideoByVideoTagIdRequest: SearchVideoByVideoTagIdRequestDto): Promise<SearchVideoByVideoTagIdResponseDto> => {
@@ -227,9 +227,9 @@ export async function getVideoCoverUploadSignedUrl(): Promise<GetVideoCoverUploa
 
 /**
  * 通过预签名 URL 上传视频封面图
- * @param fileName 头像文件名
- * @param videoCoverBlobData 用 Blob 编码的用户头像文件
- * @param signedUrl 预签名 URL
+ * @param fileName - 头像文件名
+ * @param videoCoverBlobData - 用 Blob 编码的用户头像文件
+ * @param signedUrl - 预签名 URL
  * @returns boolean 上传结果
  */
 export async function uploadVideoCover(fileName: string, videoCoverBlobData: Blob, signedUrl: string): Promise<boolean> {
@@ -244,7 +244,7 @@ export async function uploadVideoCover(fileName: string, videoCoverBlobData: Blo
 
 /**
  * 提交已上传完成的视频
- * @param uploadVideoRequest 视频数据
+ * @param uploadVideoRequest - 视频数据
  * @returns 上传视频的请求响应
  */
 export async function commitVideo(uploadVideoRequest: UploadVideoRequestDto): Promise<UploadVideoResponseDto> {
@@ -253,7 +253,7 @@ export async function commitVideo(uploadVideoRequest: UploadVideoRequestDto): Pr
 
 /**
  * 删除一个视频
- * @param deleteVideoRequest 删除一个视频的请求载荷
+ * @param deleteVideoRequest - 删除一个视频的请求载荷
  * @returns 删除一个视频的请求响应
  */
 export async function deleteVideo(deleteVideoRequest: DeleteVideoRequestDto): Promise<DeleteVideoResponseDto> {
@@ -262,7 +262,7 @@ export async function deleteVideo(deleteVideoRequest: DeleteVideoRequestDto): Pr
 
 /**
  * 获取待审核视频列表
- * @param headerCookie  从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie  - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 获取待审核视频列表的请求响应
  */
 export const getPendingReviewVideo = async (headerCookie: { cookie?: string | undefined }): Promise<PendingReviewVideoResponseDto> => {
@@ -274,7 +274,7 @@ export const getPendingReviewVideo = async (headerCookie: { cookie?: string | un
 
 /**
  * 通过一个待审核视频
- * @param approvePendingReviewVideoRequest 通过一个待审核视频的请求载荷
+ * @param approvePendingReviewVideoRequest - 通过一个待审核视频的请求载荷
  * @returns 通过一个待审核视频的请求响应
  */
 export async function approvePendingReviewVideo(approvePendingReviewVideoRequest: ApprovePendingReviewVideoRequestDto): Promise<ApprovePendingReviewVideoResponseDto> {

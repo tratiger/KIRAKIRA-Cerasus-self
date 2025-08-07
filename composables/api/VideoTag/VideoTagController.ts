@@ -6,7 +6,7 @@ const VIDEO_TAG_API_URI = `${BACK_END_URI}video/tag`;
 
 /**
  * 创建视频 TAG
- * @param createVideoTagRequest 视频 TAG 数据
+ * @param createVideoTagRequest - 视频 TAG 数据
  * @returns 创建视频 TAG 的请求响应
  */
 export async function createVideoTag(createVideoTagRequest: CreateVideoTagRequestDto): Promise<CreateVideoTagResponseDto> {
@@ -15,7 +15,7 @@ export async function createVideoTag(createVideoTagRequest: CreateVideoTagReques
 
 /**
  * 搜索视频 TAG
- * @param searchVideoTagRequest 搜索视频的请求载荷
+ * @param searchVideoTagRequest - 搜索视频的请求载荷
  * @returns 搜索视频的请求响应
  */
 export async function searchVideoTag(searchVideoTagRequest: SearchVideoTagRequestDto): Promise<SearchVideoTagResponseDto> {
@@ -24,7 +24,7 @@ export async function searchVideoTag(searchVideoTagRequest: SearchVideoTagReques
 
 /**
  * 根据 TAG ID 列表搜索 TAG
- * @param getVideoTagByTagIdRequest 根据 TAG ID 列表搜索 TAG 的请求参数
+ * @param getVideoTagByTagIdRequest - 根据 TAG ID 列表搜索 TAG 的请求参数
  * @returns 根据 TAG ID 列表搜索 TAG 的请求响应结果
  */
 export const getTagsByTagIds = async (getVideoTagByTagIdRequest: GetVideoTagByTagIdRequestDto): Promise<GetVideoTagByTagIdResponseDto> => {
