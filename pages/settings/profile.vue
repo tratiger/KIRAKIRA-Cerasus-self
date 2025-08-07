@@ -14,12 +14,12 @@
 	const isUpdateUserInfo = ref<boolean>(false); // 是否正在上传用户信息
 	const isResetUserInfo = ref<boolean>(false); // 是否正在重置用户信息
 	const profile = reactive({
-		name: selfUserInfoStore.userInfo.username ?? "",
-		nickname: selfUserInfoStore.userInfo.userNickname ?? "",
-		bio: selfUserInfoStore.userInfo.signature ?? "",
-		gender: selfUserInfoStore.userInfo.gender ?? "",
+		name: selfUserInfoStore.userInfo.username?.normalize() ?? "",
+		nickname: selfUserInfoStore.userInfo.userNickname?.normalize() ?? "",
+		bio: selfUserInfoStore.userInfo.signature?.normalize() ?? "",
+		gender: selfUserInfoStore.userInfo.gender?.normalize() ?? "",
 		birthday: new Date(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-		tags: selfUserInfoStore.userInfo.label?.map(label => label.labelName) ?? [],
+		tags: selfUserInfoStore.userInfo.label?.map(label => label.labelName?.normalize()) ?? [],
 	});
 	const cropper = ref<InstanceType<typeof ImageCropper>>(); // 图片裁剪器实例
 	const isUploadingUserAvatar = ref(false); // 是否正在上传头像
@@ -143,12 +143,12 @@
 
 		const updateOrCreateUserInfoRequest: UpdateOrCreateUserInfoRequestDto = {
 			avatar: correctAvatar.value,
-			username: profile.name,
-			userNickname: profile.nickname,
-			signature: profile.bio,
-			gender: profile.gender,
+			username: profile.name.normalize(),
+			userNickname: profile.nickname.normalize(),
+			signature: profile.bio.normalize(),
+			gender: profile.gender.normalize(),
 			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag })),
+			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
@@ -210,19 +210,19 @@
 	/**
 	 * 将 Pinia 中的用户数据拷贝到当前组件的响应式变量 "profile" 中
 	 */
-	function copyPiniaUserInfo2Profile() {
-		profile.name = selfUserInfoStore.userInfo.username ?? "";
-		profile.nickname = selfUserInfoStore.userInfo.userNickname ?? "";
-		profile.bio = selfUserInfoStore.userInfo.signature ?? "";
-		profile.gender = selfUserInfoStore.userInfo.gender ?? "";
-		profile.tags = selfUserInfoStore.userInfo.label?.map(label => label.labelName) ?? [];
+	function copyPiniaUserInfoToProfile() {
+		profile.name = selfUserInfoStore.userInfo.username?.normalize() ?? "";
+		profile.nickname = selfUserInfoStore.userInfo.userNickname?.normalize() ?? "";
+		profile.bio = selfUserInfoStore.userInfo.signature?.normalize() ?? "";
+		profile.gender = selfUserInfoStore.userInfo.gender?.normalize() ?? "";
+		profile.tags = selfUserInfoStore.userInfo.label?.map(label => label.labelName?.normalize()) ?? [];
 	}
 
 	useEventListener(userAvatarFileInput, "change", handleOpenAvatarCropper); // 监听头像文件变化事件
 
 	onMounted(async () => await getSelfUserInfoController());
 	onBeforeUnmount(clearBlobUrl); // 释放内存
-	watch(selfUserInfoStore, copyPiniaUserInfo2Profile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
+	watch(selfUserInfoStore, copyPiniaUserInfoToProfile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
 	useListen("user:login", async loginStatus => { // 发生用户登录事件，请求最新用户信息，并修改 Pinia 中的用户数据，然后触发上方的监听
 		if (loginStatus)
 			await getSelfUserInfoController();

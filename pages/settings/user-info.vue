@@ -57,7 +57,7 @@
 
 	/**
 	 * 管理员通过用户信息审核
-	 * @param UUID 用户 UUID
+	 * @param UUID - 用户 UUID
 	 */
 	async function approveUserInfo(UUID: string) {
 		const approveUserInfoRequest: ApproveUserInfoRequestDto = {
