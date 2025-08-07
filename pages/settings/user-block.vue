@@ -47,11 +47,13 @@
 			return;
 		}
 		isBlockingUser.value = true;
-		const blockUserByUIDRequest: BlockUserByUIDRequestDto = {
-			criminalUid: uid,
+		const adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto = {
+			uid,
+			uuid: undefined as never,
+			newRoles: ["blocked"],
 		};
-		const blockUserByUIDResult = await api.user.blockUserByUID(blockUserByUIDRequest);
-		if (blockUserByUIDResult.success) {
+		const setUserRoleToBlockedResult = await api.rbac.adminUpdateUserRoleController(adminUpdateUserRoleRequest);
+		if (setUserRoleToBlockedResult.success) {
 			showBlockUserAlert.value = false;
 			criminalUid.value = undefined;
 			await getBlockedUser();
@@ -63,14 +65,16 @@
 
 	/**
 	 * 根据 UID 重新激活一个用户
-	 * @param uid 要重新激活的用户的 UID
+	 * @param uid - 要重新激活的用户的 UID
 	 */
 	async function reactivateUserByUID(uid: number) {
-		const reactivateUserByUIDRequest: ReactivateUserByUIDRequestDto = {
+		const adminUpdateUserRoleRequest: AdminUpdateUserRoleRequestDto = {
 			uid,
+			uuid: undefined as never,
+			newRoles: ["user"],
 		};
-		const reactivateUserByUIDResult = await api.user.reactivateUserByUID(reactivateUserByUIDRequest);
-		if (reactivateUserByUIDResult.success) {
+		const setUserRoleToBlockedResult = await api.rbac.adminUpdateUserRoleController(adminUpdateUserRoleRequest);
+		if (setUserRoleToBlockedResult.success) {
 			useToast("重新激活成功", "success");
 			await getBlockedUser();
 		}

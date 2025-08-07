@@ -6,7 +6,7 @@ const BLOCK_API_URI = `${BACK_END_URI}block`;
 
 /**
  * 获取用户的黑名单
- * @param getVideoCommentByKvidRequest 获取用户的黑名单的请求载荷
+ * @param getBlockListRequest - 获取用户的黑名单的请求载荷
  * @returns 获取用户的黑名单的请求响应
  */
 export const getBlockListController = async (getBlockListRequest: GetBlockListRequestDto): Promise<GetBlockListResponseDto> => {
@@ -16,7 +16,7 @@ export const getBlockListController = async (getBlockListRequest: GetBlockListRe
 
 /**
  * 屏蔽用户
- * @param blockUserByUidRequest 屏蔽用户的请求载荷
+ * @param blockUserByUidRequest - 屏蔽用户的请求载荷
  * @returns 屏蔽用户的请求响应
  */
 export const blockUserController = async (blockUserByUidRequest: BlockUserByUidRequestDto): Promise<BlockUserByUidResponseDto> => {
@@ -26,7 +26,7 @@ export const blockUserController = async (blockUserByUidRequest: BlockUserByUidR
 
 /**
  * 取消屏蔽用户
- * @param blockUserByUidRequest 取消屏蔽用户的请求载荷
+ * @param unblockUserByUidRequest - 取消屏蔽用户的请求载荷
  * @returns 取消屏蔽用户的请求响应
  */
 export const unblockUserController = async (unblockUserByUidRequest: UnblockUserByUidRequestDto): Promise<UnblockUserByUidResponseDto> => {
@@ -36,7 +36,7 @@ export const unblockUserController = async (unblockUserByUidRequest: UnblockUser
 
 /**
  * 隐藏用户
- * @param hideUserByUidRequest 隐藏用户的请求载荷
+ * @param hideUserByUidRequest - 隐藏用户的请求载荷
  * @returns 隐藏用户的请求响应
  */
 export const hideUserController = async (hideUserByUidRequest: HideUserByUidRequestDto): Promise<HideUserByUidResponseDto> => {
@@ -46,7 +46,7 @@ export const hideUserController = async (hideUserByUidRequest: HideUserByUidRequ
 
 /**
  * 取消隐藏用户
- * @param showUserByUidRequest 显示用户的请求载荷
+ * @param showUserByUidRequest - 显示用户的请求载荷
  * @returns 显示用户的请求响应
  */
 export const showUserController = async (showUserByUidRequest: ShowUserByUidRequestDto): Promise<ShowUserByUidResponseDto> => {
@@ -56,7 +56,7 @@ export const showUserController = async (showUserByUidRequest: ShowUserByUidRequ
 
 /**
  * 屏蔽 TAG
- * @param blockTagRequest 屏蔽 TAG 的请求载荷
+ * @param blockTagRequest - 屏蔽 TAG 的请求载荷
  * @returns 屏蔽 TAG 的请求响应
  */
 export const blockTagController = async (blockTagRequest: BlockTagRequestDto): Promise<BlockTagResponseDto> => {
@@ -66,7 +66,7 @@ export const blockTagController = async (blockTagRequest: BlockTagRequestDto): P
 
 /**
  * 取消屏蔽 TAG
- * @param unblockTagRequest 取消屏蔽 TAG 的请求载荷
+ * @param unblockTagRequest - 取消屏蔽 TAG 的请求载荷
  * @returns 取消屏蔽 TAG 的请求响应
  */
 export const unblockTagController = async (unblockTagRequest: UnblockTagRequestDto): Promise<UnblockTagResponseDto> => {
@@ -76,7 +76,7 @@ export const unblockTagController = async (unblockTagRequest: UnblockTagRequestD
 
 /**
  * 屏蔽关键词
- * @param blockKeywordRequest 屏蔽关键词的请求载荷
+ * @param blockKeywordRequest - 屏蔽关键词的请求载荷
  * @returns 屏蔽关键词的请求响应
  */
 export const blockKeywordController = async (blockKeywordRequest: BlockKeywordRequestDto): Promise<BlockKeywordResponseDto> => {
@@ -86,7 +86,7 @@ export const blockKeywordController = async (blockKeywordRequest: BlockKeywordRe
 
 /**
  * 取消屏蔽关键词
- * @param unblockKeywordRequest 取消屏蔽关键词的请求载荷
+ * @param unblockKeywordRequest - 取消屏蔽关键词的请求载荷
  * @returns 取消屏蔽关键词的请求响应
  */
 export const unblockKeywordController = async (unblockKeywordRequest: UnblockKeywordRequestDto): Promise<UnblockKeywordResponseDto> => {
@@ -96,7 +96,7 @@ export const unblockKeywordController = async (unblockKeywordRequest: UnblockKey
 
 /**
  * 添加用于屏蔽内容的正则表达式
- * @param addRegexRequest 添加用于屏蔽内容的正则表达式的请求载荷
+ * @param addRegexRequest - 添加用于屏蔽内容的正则表达式的请求载荷
  * @returns 添加用于屏蔽内容的正则表达式的请求响应
  */
 export const addRegexController = async (addRegexRequest: AddRegexRequestDto): Promise<AddRegexResponseDto> => {
@@ -106,7 +106,7 @@ export const addRegexController = async (addRegexRequest: AddRegexRequestDto): P
 
 /**
  * 移除用于屏蔽内容的正则表达式
- * @param removeRegexRequest 移除用于屏蔽内容的正则表达式的请求载荷
+ * @param removeRegexRequest - 移除用于屏蔽内容的正则表达式的请求载荷
  * @returns 移除用于屏蔽内容的正则表达式的请求响应
  */
 export const removeRegexController = async (removeRegexRequest: RemoveRegexRequestDto): Promise<RemoveRegexResponseDto> => {

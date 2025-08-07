@@ -3,7 +3,7 @@ import type {
 	AdminClearUserInfoRequestDto,
 	AdminClearUserInfoResponseDto, AdminGetUserInfoResponseDto,
 	ApproveUserInfoRequestDto, ApproveUserInfoResponseDto,
-	BlockUserByUIDRequestDto, BlockUserByUIDResponseDto, CheckInvitationCodeRequestDto, CheckInvitationCodeResponseDto,
+	CheckInvitationCodeRequestDto, CheckInvitationCodeResponseDto,
 	CheckUserHave2FARequestDto,
 	CheckUserHave2FAResponseDto,
 	CheckUserTokenResponseDto,
@@ -18,8 +18,7 @@ import type {
 	DeleteUserEmailAuthenticatorResponseDto, GetBlockedUserResponseDto, GetMyInvitationCodeResponseDto,
 	GetSelfUserInfoRequestDto, GetSelfUserInfoResponseDto, GetUserAvatarUploadSignedUrlResponseDto,
 	GetUserInfoByUidRequestDto, GetUserInfoByUidResponseDto, GetUserSettingsRequestDto,
-	GetUserSettingsResponseDto, ReactivateUserByUIDRequestDto,
-	ReactivateUserByUIDResponseDto, RequestSendChangeEmailVerificationCodeRequestDto,
+	GetUserSettingsResponseDto, RequestSendChangeEmailVerificationCodeRequestDto,
 	RequestSendChangeEmailVerificationCodeResponseDto, RequestSendChangePasswordVerificationCodeRequestDto,
 	RequestSendChangePasswordVerificationCodeResponseDto, RequestSendVerificationCodeRequestDto,
 	RequestSendVerificationCodeResponseDto,
@@ -40,7 +39,7 @@ const USER_API_URI = `${BACK_END_URI}user`;
 
 /**
  * 用户注册
- * @param userRegistrationData 用户注册提交的参数
+ * @param userRegistrationData - 用户注册提交的参数
  * @returns 用户注册的返回参数
  */
 export const registration = async (userRegistrationData: UserRegistrationRequestDto): Promise<UserRegistrationResponseDto> => {
@@ -50,7 +49,7 @@ export const registration = async (userRegistrationData: UserRegistrationRequest
 
 /**
  * 用户登录
- * @param userLoginRequest 用户登录提交的参数
+ * @param userLoginRequest - 用户登录提交的参数
  * @returns 用户登录的返回参数
  */
 export const login = async (userLoginRequest: UserLoginRequestDto): Promise<UserLoginResponseDto> => {
@@ -60,7 +59,7 @@ export const login = async (userLoginRequest: UserLoginRequestDto): Promise<User
 
 /**
  * 检查用户邮箱是否已经注册过
- * @param userExistsCheckRequest 验证用户邮箱是否存在提交的参数
+ * @param userExistsCheckRequest - 验证用户邮箱是否存在提交的参数
  * @returns 验证用户邮箱是否已经存在的返回参数
  */
 export const userExistsCheck = async (userExistsCheckRequest: UserEmailExistsCheckRequestDto): Promise<UserEmailExistsCheckResponseDto> => {
@@ -69,7 +68,7 @@ export const userExistsCheck = async (userExistsCheckRequest: UserEmailExistsChe
 
 /**
  * 用户更改邮箱
- * @param updateUserEmailRequest 用户更改邮箱的请求的请求载荷
+ * @param updateUserEmailRequest - 用户更改邮箱的请求的请求载荷
  * @returns 用户更改邮箱返回的参数
  */
 export const updateUserEmail = async (updateUserEmailRequest: UpdateUserEmailRequestDto): Promise<UpdateUserEmailResponseDto> => {
@@ -78,7 +77,7 @@ export const updateUserEmail = async (updateUserEmailRequest: UpdateUserEmailReq
 
 /**
  * 创建或更新用户信息
- * @param updateOrCreateUserInfoRequest 创建或更新用户信息的请求载荷
+ * @param updateOrCreateUserInfoRequest - 创建或更新用户信息的请求载荷
  * @returns 创建或更新用户信息的响应结果
  */
 export const updateOrCreateUserInfo = async (updateOrCreateUserInfoRequest: UpdateOrCreateUserInfoRequestDto): Promise<UpdateOrCreateUserInfoResponseDto> => {
@@ -89,8 +88,8 @@ type AppSettingsStoreType = ReturnType<typeof useAppSettingsStore>;
 type SelfUserInfoStoreType = ReturnType<typeof useSelfUserInfoStore>;
 /**
  * 获取当前登录的用户信息，前提是 token 中包含正确的 uid 和 token，同时丰富全局变量中的用户信息
- * @param getSelfUserInfoRequest 获取当前登录的用户信息的请求参数
- * @param pinia pinia
+ * @param getSelfUserInfoRequest - 获取当前登录的用户信息的请求参数
+ * @param pinia - pinia
  * @returns 用户信息
  */
 export const getSelfUserInfo = async (props: { getSelfUserInfoRequest: GetSelfUserInfoRequestDto | undefined; appSettingsStore: AppSettingsStoreType | undefined; selfUserInfoStore: SelfUserInfoStoreType | undefined; headerCookie: { cookie?: string | undefined } | undefined }): Promise<GetSelfUserInfoResponseDto> => {
@@ -121,23 +120,13 @@ export const getSelfUserInfo = async (props: { getSelfUserInfoRequest: GetSelfUs
 
 /**
  * 通过传入的 UID 获取一个用户的信息（已启用服务端渲染）
- * @param getUserInfoByUidRequest 传入的 UID
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param getUserInfoByUidRequest - 传入的 UID
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @returns 用户信息
  */
 export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetUserInfoByUidResponseDto> => {
 	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	// const result = await GET(
-	// 	`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`,
-	// 	{
-	// 		credentials: "include",
-	// 	},
-	// 	{
-	// 		Cookie: headerCookie?.cookie ?? "",
-	// 	},
-	// ) as GetUserInfoByUidResponseDto;
-	// return result;
-
 	const result = await $fetch<GetUserInfoByUidResponseDto>(
 		`${USER_API_URI}/info?uid=${getUserInfoByUidRequest.uid}`,
 		{
@@ -151,11 +140,12 @@ export const getUserInfo = async (getUserInfoByUidRequest: GetUserInfoByUidReque
 
 /**
  * 通过传入的 UID 检验一个用户是否存在
- * @param UserExistsCheckByUIDRequest 传入的 UID
+ * @param userExistsCheckByUIDRequest - 用户是否存在的请求载荷
+ * @returns 用户是否存在的响应结果
  */
-export const userExistsCheckByUID = async (UserExistsCheckByUIDRequest: UserExistsCheckByUIDRequestDto): Promise<UserExistsCheckByUIDResponseDto> => {
-	if (UserExistsCheckByUIDRequest && UserExistsCheckByUIDRequest.uid) {
-		const { data: result } = await useFetch(`${USER_API_URI}/exists?uid=${UserExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
+export const userExistsCheckByUID = async (userExistsCheckByUIDRequest: UserExistsCheckByUIDRequestDto): Promise<UserExistsCheckByUIDResponseDto> => {
+	if (userExistsCheckByUIDRequest && userExistsCheckByUIDRequest.uid) {
+		const { data: result } = await useFetch(`${USER_API_URI}/exists?uid=${userExistsCheckByUIDRequest.uid}`, { credentials: "include" }); // 使用 useFetch 以启用服务端渲染
 		return result.value as UserExistsCheckByUIDResponseDto;
 	}
 	return { success: false, message: "未传入 UID", exists: false };
@@ -197,7 +187,8 @@ export async function userLogout(props: { appSettingsStore: AppSettingsStoreType
 }
 
 /**
- * 更新用户头像，并获取用于用户上传头像的预签名 URL, 上传限时 60 秒
+ * 更新用户头像：获取用于用户上传头像的预签名 URL, 上传限时 60 秒
+ * @returns 获取用户头像上传的预签名 URL 的请求响应
  */
 export const getUserAvatarUploadSignedUrl = async (): Promise<GetUserAvatarUploadSignedUrlResponseDto> => {
 	return await GET(`${USER_API_URI}/avatar/preUpload`, { credentials: "include" }) as GetUserAvatarUploadSignedUrlResponseDto;
@@ -205,9 +196,9 @@ export const getUserAvatarUploadSignedUrl = async (): Promise<GetUserAvatarUploa
 
 /**
  * 根据预签名 URL 上传用户头像
- * @param fileName 头像文件名
- * @param avatarBlobData 用 Blob 编码的用户头像文件
- * @param signedUrl 预签名 URL
+ * @param fileName - 头像文件名
+ * @param avatarBlobData - 用 Blob 编码的用户头像文件
+ * @param signedUrl - 预签名 URL
  * @returns 是否上传成功，成功返回 true，失败返回 false
  */
 export const uploadUserAvatar = async (fileName: string, avatarBlobData: Blob, signedUrl: string): Promise<boolean> => {
@@ -222,7 +213,7 @@ export const uploadUserAvatar = async (fileName: string, avatarBlobData: Blob, s
 
 /**
  * 获取用户设置，如果传入了 getUserSettingsRequest 且为提供 cookie（uid, token），则使用 getUserSettingsRequest 中的参数
- * @param getUserSettingsRequest 用户令牌
+ * @param getUserSettingsRequest - 用户令牌
  * @returns 用户设置
  */
 export const getUserSettings = async (request?: { getUserSettingsRequest?: GetUserSettingsRequestDto; headerCookie?: { cookie?: string | undefined } }): Promise<GetUserSettingsResponseDto> => {
@@ -243,7 +234,7 @@ export const getUserSettings = async (request?: { getUserSettingsRequest?: GetUs
 
 /**
  * 更新用户设置
- * @param updateOrCreateUserSettingsRequest 更新的设置项
+ * @param updateOrCreateUserSettingsRequest - 更新的设置项
  * @returns 用户设置，同时更新的设置项会产生一个 set-cookie 的响应头
  */
 export const updateUserSettings = async (updateOrCreateUserSettingsRequest: UpdateOrCreateUserSettingsRequestDto): Promise<UpdateOrCreateUserSettingsResponseDto> => {
@@ -253,7 +244,7 @@ export const updateUserSettings = async (updateOrCreateUserSettingsRequest: Upda
 
 /**
  * 请求发送验证码
- * @param requestSendVerificationCodeRequest 请求发送验证码的请求载荷
+ * @param requestSendVerificationCodeRequest - 请求发送验证码的请求载荷
  * @returns 请求发送验证码的请求响应
  */
 export const requestSendVerificationCode = async (requestSendVerificationCodeRequest: RequestSendVerificationCodeRequestDto): Promise<RequestSendVerificationCodeResponseDto> => {
@@ -263,7 +254,7 @@ export const requestSendVerificationCode = async (requestSendVerificationCodeReq
 
 /**
  * 检查一个邀请码是否可用
- * @param checkInvitationCodeRequestDto 检查一个邀请码是否可用的请求载荷
+ * @param checkInvitationCodeRequestDto - 检查一个邀请码是否可用的请求载荷
  * @returns 检查一个邀请码是否可用的请求响应
  */
 export const checkInvitationCode = async (checkInvitationCodeRequestDto: CheckInvitationCodeRequestDto): Promise<CheckInvitationCodeResponseDto> => {
@@ -282,7 +273,7 @@ export const createInvitationCode = async (): Promise<CreateInvitationCodeRespon
 
 /**
  * 获取用户所有的邀请码
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户所有的邀请码
  */
 export const getMyInvitationCode = async (headerCookie: { cookie?: string | undefined }): Promise<GetMyInvitationCodeResponseDto> => {
@@ -299,7 +290,7 @@ export const getMyInvitationCode = async (headerCookie: { cookie?: string | unde
 
 /**
  * 请求发送修改邮箱的邮箱验证码
- * @param requestSendChangeEmailVerificationCodeRequest 请求发送修改邮箱的邮箱验证码的请求载荷
+ * @param requestSendChangeEmailVerificationCodeRequest - 请求发送修改邮箱的邮箱验证码的请求载荷
  * @returns 请求发送修改邮箱的邮箱验证码的请求响应
  */
 export const requestSendChangeEmailVerificationCode = async (requestSendChangeEmailVerificationCodeRequest: RequestSendChangeEmailVerificationCodeRequestDto): Promise<RequestSendChangeEmailVerificationCodeResponseDto> => {
@@ -309,7 +300,7 @@ export const requestSendChangeEmailVerificationCode = async (requestSendChangeEm
 
 /**
  * 请求发送修改密码的邮箱验证码
- * @param requestSendChangePasswordVerificationCodeRequest 请求发送修改密码的邮箱验证码的请求载荷
+ * @param requestSendChangePasswordVerificationCodeRequest - 请求发送修改密码的邮箱验证码的请求载荷
  * @returns 请求发送修改密码的邮箱验证码的请求响应
  */
 export const requestSendChangePasswordVerificationCode = async (requestSendChangePasswordVerificationCodeRequest: RequestSendChangePasswordVerificationCodeRequestDto): Promise<RequestSendChangePasswordVerificationCodeResponseDto> => {
@@ -319,7 +310,7 @@ export const requestSendChangePasswordVerificationCode = async (requestSendChang
 
 /**
  * 用户更改密码
- * @param updateUserPasswordRequest 用户更改密码的请求的请求载荷
+ * @param updateUserPasswordRequest - 用户更改密码的请求的请求载荷
  * @returns 用户更改密码返回的参数
  */
 export const updateUserPassword = async (updateUserPasswordRequest: UpdateUserPasswordRequestDto): Promise<UpdateUserPasswordResponseDto> => {
@@ -329,7 +320,7 @@ export const updateUserPassword = async (updateUserPasswordRequest: UpdateUserPa
 
 /**
  * 检查用户名是否可用
- * @param checkUsernameRequest 用户更改密码的请求的请求载荷
+ * @param checkUsernameRequest - 用户更改密码的请求的请求载荷
  * @returns 用户更改密码返回的参数
  */
 export const checkUsername = async (checkUsernameRequest: CheckUsernameRequestDto): Promise<CheckUsernameResponseDto> => {
@@ -337,29 +328,29 @@ export const checkUsername = async (checkUsernameRequest: CheckUsernameRequestDt
 	return await GET(`${USER_API_URI}/checkUsername?username=${checkUsernameRequest.username}`, { credentials: "include" }) as CheckUsernameResponseDto;
 };
 
-/**
- * 根据 UID 封禁一个用户
- * @param blockUserByUIDRequest 封禁用户的请求载荷
- * @returns 封禁用户的请求响应
- */
-export const blockUserByUID = async (blockUserByUIDRequest: BlockUserByUIDRequestDto): Promise<BlockUserByUIDResponseDto> => {
-	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${USER_API_URI}/blockUser`, blockUserByUIDRequest, { credentials: "include" }) as BlockUserByUIDResponseDto;
-};
+// /**
+//  * 根据 UID 封禁一个用户
+//  * @param blockUserByUIDRequest 封禁用户的请求载荷
+//  * @returns 封禁用户的请求响应
+//  */
+// export const blockUserByUID = async (blockUserByUIDRequest: BlockUserByUIDRequestDto): Promise<BlockUserByUIDResponseDto> => {
+// 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+// 	return await POST(`${USER_API_URI}/blockUser`, blockUserByUIDRequest, { credentials: "include" }) as BlockUserByUIDResponseDto;
+// };
 
-/**
- * 根据 UID 重新激活一个用户
- * @param reactivateUserByUIDRequest 重新激活一个用户的请求载荷
- * @returns 重新激活一个用户的请求响应
- */
-export const reactivateUserByUID = async (reactivateUserByUIDRequest: ReactivateUserByUIDRequestDto): Promise<ReactivateUserByUIDResponseDto> => {
-	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
-	return await POST(`${USER_API_URI}/reactivateUser`, reactivateUserByUIDRequest, { credentials: "include" }) as ReactivateUserByUIDResponseDto;
-};
+// /**
+//  * 根据 UID 重新激活一个用户
+//  * @param reactivateUserByUIDRequest 重新激活一个用户的请求载荷
+//  * @returns 重新激活一个用户的请求响应
+//  */
+// export const reactivateUserByUID = async (reactivateUserByUIDRequest: ReactivateUserByUIDRequestDto): Promise<ReactivateUserByUIDResponseDto> => {
+// 	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+// 	return await POST(`${USER_API_URI}/reactivateUser`, reactivateUserByUIDRequest, { credentials: "include" }) as ReactivateUserByUIDResponseDto;
+// };
 
 /**
  * 获取所有被封禁用户的信息
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 获取所有被封禁用户的信息的请求响应
  */
 export const getBlockedUser = async (headerCookie: { cookie?: string | undefined }): Promise<GetBlockedUserResponseDto> => {
@@ -379,10 +370,10 @@ export const getBlockedUser = async (headerCookie: { cookie?: string | undefined
 
 /**
  * 管理员获取用户信息
- * @param isOnlyShowUserInfoUpdatedAfterReview 是否只展示在上一次审核通过后修改了用户信息的用户
- * @param page 当前在第几页
- * @param pageSize 每页显示多少项目
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param isOnlyShowUserInfoUpdatedAfterReview - 是否只展示在上一次审核通过后修改了用户信息的用户
+ * @param page - 当前在第几页
+ * @param pageSize - 每页显示多少项目
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 管理员获取用户信息的请求响应
  */
 export const adminGetUserInfo = async (isOnlyShowUserInfoUpdatedAfterReview: boolean, page: number, pageSize: number, headerCookie: { cookie?: string | undefined }): Promise<AdminGetUserInfoResponseDto> => {
@@ -394,7 +385,7 @@ export const adminGetUserInfo = async (isOnlyShowUserInfoUpdatedAfterReview: boo
 
 /**
  * 管理员通过用户信息审核
- * @param approveUserInfoRequest 管理员通过用户信息审核的请求载荷
+ * @param approveUserInfoRequest - 管理员通过用户信息审核的请求载荷
  * @returns 管理员通过用户信息审核的请求响应
  */
 export const approveUserInfo = async (approveUserInfoRequest: ApproveUserInfoRequestDto): Promise<ApproveUserInfoResponseDto> => {
@@ -404,7 +395,7 @@ export const approveUserInfo = async (approveUserInfoRequest: ApproveUserInfoReq
 
 /**
  * 管理员清空某个用户的信息
- * @param adminClearUserInfoRequest 管理员清空某个用户的信息的请求载荷
+ * @param adminClearUserInfoRequest - 管理员清空某个用户的信息的请求载荷
  * @returns 管理员清空某个用户的信息的请求响应
  */
 export const adminClearUserInfo = async (adminClearUserInfoRequest: AdminClearUserInfoRequestDto): Promise<AdminClearUserInfoResponseDto> => {
@@ -414,7 +405,7 @@ export const adminClearUserInfo = async (adminClearUserInfoRequest: AdminClearUs
 
 /**
  * 通过 UUID 检查用户是否已开启 2FA 身份验证器
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 通过 UUID 检查用户是否已开启 2FA 身份验证器的请求响应
  */
 export const checkUserHave2FAByUUID = async (headerCookie: { cookie?: string | undefined }): Promise<CheckUserHave2FAResponseDto> => {
@@ -431,7 +422,7 @@ export const checkUserHave2FAByUUID = async (headerCookie: { cookie?: string | u
 
 /**
  * 通过 Email 检查用户是否已开启 2FA 身份验证器
- * @param checkUserHave2FARequestDto 通过 Email 检查用户是否已开启 2FA 身份验证器的请求载荷
+ * @param checkUserHave2FARequest - 通过 Email 检查用户是否已开启 2FA 身份验证器的请求载荷
  * @returns 通过 Email 检查用户是否已开启 2FA 身份验证器的请求响应
  */
 export const checkUserHave2FAByEmail = async (checkUserHave2FARequest: CheckUserHave2FARequestDto): Promise<CheckUserHave2FAResponseDto> => {
@@ -441,7 +432,7 @@ export const checkUserHave2FAByEmail = async (checkUserHave2FARequest: CheckUser
 
 /**
  * 用户创建 TOTP 身份验证器
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户创建 TOTP 身份验证器的请求响应
  */
 export const createTotpAuthenticator = async (headerCookie: { cookie?: string | undefined }): Promise<CreateUserTotpAuthenticatorResponseDto> => {
@@ -453,8 +444,8 @@ export const createTotpAuthenticator = async (headerCookie: { cookie?: string | 
 
 /**
  * 用户确认绑定 TOTP 设备
- * @param confirmUserTotpAuthenticatorRequest 用户确认绑定 TOTP 设备的请求载荷
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param confirmUserTotpAuthenticatorRequest - 用户确认绑定 TOTP 设备的请求载荷
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户确认绑定 TOTP 设备的请求响应
  */
 export const confirmUserTotpAuthenticator = async (confirmUserTotpAuthenticatorRequest: ConfirmUserTotpAuthenticatorRequestDto, headerCookie: { cookie?: string | undefined }): Promise<ConfirmUserTotpAuthenticatorResponseDto> => {
@@ -474,8 +465,8 @@ export const confirmUserTotpAuthenticator = async (confirmUserTotpAuthenticatorR
 
 /**
  * 已登录用户通过密码和 TOTP 验证码删除身份验证器
- * @param deleteTotpAuthenticatorByTotpVerificationCodeRequest
- * @param headerCookie
+ * @param deleteTotpAuthenticatorByTotpVerificationCodeRequest - 已登录用户通过密码和 TOTP 验证码删除身份验证器的请求载荷
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 已登录用户通过密码和 TOTP 验证码删除身份验证器的请求响应
  */
 export const deleteTotpByVerificationCode = async (deleteTotpAuthenticatorByTotpVerificationCodeRequest: DeleteTotpAuthenticatorByTotpVerificationCodeRequestDto, headerCookie: { cookie?: string | undefined }): Promise<DeleteTotpAuthenticatorByTotpVerificationCodeResponseDto> => {
@@ -495,7 +486,7 @@ export const deleteTotpByVerificationCode = async (deleteTotpAuthenticatorByTotp
 
 /**
  * 用户创建 Email 身份验证器
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户创建 Email 身份验证器的请求响应
  */
 export const createEmail2FA = async (headerCookie: { cookie?: string | undefined }): Promise<CreateUserEmailAuthenticatorResponseDto> => {
@@ -515,7 +506,7 @@ export const createEmail2FA = async (headerCookie: { cookie?: string | undefined
 
 /**
  * 发送 Email 身份验证器验证码
- * @param sendUserEmailAuthenticatorVerificationCodeRequest 发送 Email 身份验证器验证码的请求载荷
+ * @param sendUserEmailAuthenticatorVerificationCodeRequest - 发送 Email 身份验证器验证码的请求载荷
  * @returns 发送 Email 身份验证器验证码的请求响应
  */
 export const sendUserEmailAuthenticatorVerificationCode = async (sendUserEmailAuthenticatorVerificationCodeRequest: SendUserEmailAuthenticatorVerificationCodeRequestDto): Promise<SendUserEmailAuthenticatorVerificationCodeResponseDto> => {
@@ -525,7 +516,7 @@ export const sendUserEmailAuthenticatorVerificationCode = async (sendUserEmailAu
 
 /**
  * 发送删除 Email 身份验证器验证码
- * @param sendDeleteUserEmailAuthenticatorVerificationCodeRequest 发送删除 Email 身份验证器验证码的请求载荷
+ * @param sendDeleteUserEmailAuthenticatorVerificationCodeRequest - 发送删除 Email 身份验证器验证码的请求载荷
  * @returns 发送删除 Email 身份验证器验证码的请求响应
  */
 export const sendDeleteUserEmailAuthenticatorVerificationCode = async (sendDeleteUserEmailAuthenticatorVerificationCodeRequest: SendDeleteUserEmailAuthenticatorVerificationCodeRequestDto): Promise<SendDeleteUserEmailAuthenticatorVerificationCodeResponseDto> => {
@@ -535,8 +526,8 @@ export const sendDeleteUserEmailAuthenticatorVerificationCode = async (sendDelet
 
 /**
  * 用户删除 Email 2FA
- * @param deleteUserEmailAuthenticatorRequest 用户删除 Email 2FA 的请求载荷
- * @param headerCookie 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param deleteUserEmailAuthenticatorRequest - 用户删除 Email 2FA 的请求载荷
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 用户删除 Email 2FA 的请求响应
  */
 export const deleteEmail2FA = async (deleteUserEmailAuthenticatorRequest: DeleteUserEmailAuthenticatorRequestDto, headerCookie: { cookie?: string | undefined }): Promise<DeleteUserEmailAuthenticatorResponseDto> => {
