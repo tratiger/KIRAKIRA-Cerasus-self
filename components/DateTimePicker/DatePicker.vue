@@ -38,7 +38,7 @@
 </script>
 
 <script setup lang="ts">
-	const value = defineModel<InstanceType<Temporal["PlainDate"]>>({ required: true });
+	const value = defineModel<Temporal.PlainDate>({ required: true });
 	const locale = getCurrentLocaleLangCode(undefined, true);
 	const useHanzi = computed(() => locale.startsWith("zh") || locale === "ja"); // 中文（包括简中、繁中、粤语）和日语可以使用汉字。
 	const isChineseCalendar = computed(() => value.value.calendarId === "chinese");

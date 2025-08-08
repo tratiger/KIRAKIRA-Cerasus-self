@@ -25,7 +25,7 @@
 </script>
 
 <script setup lang="ts">
-	const value = defineModel<InstanceType<Temporal["PlainTime"]>>({ required: true });
+	const value = defineModel<Temporal.PlainTime>({ required: true });
 	const locale = getCurrentLocaleLangCode(undefined, true);
 	const format = computed(() => getLocaleTimeFormat(locale));
 	const staticFields = {

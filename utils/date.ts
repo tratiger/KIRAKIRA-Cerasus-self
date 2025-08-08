@@ -1,3 +1,5 @@
+import { toTemporalInstant } from "temporal-polyfill";
+
 /**
  * 根据指定的格式来格式化日期时间。
  * @param date - 日期时间对象。
@@ -98,32 +100,17 @@ export function getCloudflareRFC3339ExpiryDateTime(expiresIn: number): string {
  * @param style - 格式化相对时间的样式。默认为 `"long"`。
  * @returns 格式化后的相对日期字符串（如：2 小时前、3 天前）。
  */
-export function timeAgo(date: Date, style: Intl.RelativeTimeFormatStyle = "long") {
+export function timeAgo(date: Date | Temporal.ZonedDateTime, style: Intl.RelativeTimeFormatStyle = "long") {
+	const now = Temporal.Now.zonedDateTimeISO();
+	const past = date instanceof Date ? toTemporalInstant.call(date).toZonedDateTimeISO(Temporal.Now.timeZoneId()) : date;
+	const diff = now.until(past, { largestUnit: "years", smallestUnit: "seconds", roundingMode: "trunc" });
+
+	const units = ["years", "months", "weeks", "days", "hours", "minutes", "seconds"] as const satisfies Intl.RelativeTimeFormatUnit[]; // 从大到小，不含季度 (quarter)。
+	const maxUnit = units.find(unit => diff[unit]) ?? units.at(-1)!;
+	const value = diff[maxUnit];
+
 	const locale = getCurrentLocaleLangCode(undefined, true);
-	const formatter = new Intl.RelativeTimeFormat(locale, { style });
+	const formatter = new Intl.RelativeTimeFormat(locale, { style, numeric: "auto" });
 
-	const now = Date.now();
-	const past = date.getTime();
-	const diff = past - now;
-
-	const seconds = diff / 1000 | 0;
-	if (Math.abs(seconds) < 60) return formatter.format(seconds, "seconds");
-
-	const minutes = seconds / 60 | 0;
-	if (Math.abs(minutes) < 60) return formatter.format(minutes, "minutes");
-
-	const hours = minutes / 60 | 0;
-	if (Math.abs(hours) < 60) return formatter.format(hours, "hours");
-
-	const days = hours / 24 | 0;
-	if (Math.abs(days) < 7) return formatter.format(days, "days");
-
-	const weeks = days / 7 | 0; // TODO: 不可靠，当大于三周并小于一个月时会显示“零个月后”。
-	if (Math.abs(weeks) < 4) return formatter.format(weeks, "weeks");
-
-	const months = days / 30 | 0; // TODO: 不可靠，一个月不恒等于三十天。
-	if (Math.abs(months) < 12) return formatter.format(months, "months");
-
-	const years = days / 365 | 0; // TODO: 不可靠，一年不恒等于三百六十五天。
-	return formatter.format(years, "years");
+	return formatter.format(value, maxUnit);
 }

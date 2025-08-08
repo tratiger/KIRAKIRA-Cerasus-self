@@ -2,7 +2,7 @@ import { useDrag } from "@vueuse/gesture";
 import type Danmaku from "danmaku";
 import * as themeTypes from "modules/theme/types";
 import { AcceptedPlugin } from "postcss";
-import { Temporal as temporal } from "temporal-polyfill";
+import "temporal-polyfill/global";
 
 export namespace FlyoutModelNS {
 	export type Target = MaybeRef<MouseEvent | PointerEvent | TwoD | HTMLElement | EventTarget | DOMRect | undefined | null>;
@@ -130,8 +130,6 @@ declare global {
 
 	/** PostCSS 插件。 */
 	type PostCSSPlugin = { postcss: true } & ((opts?: AnyObject) => AcceptedPlugin);
-
-	type Temporal = typeof temporal;
 
 	/**
 	 * 使用 `role` 可以增强组件的可读性和语义化。值得注意的是这个属性是枚举而并非任意填写的。
