@@ -188,4 +188,5 @@
 	"workbench.colorCustomizations": {
 		"statusBar.background": "#00c16a1f",
 	},
+	"material-icon-theme.activeIconPack": "vue_vuex",
 }

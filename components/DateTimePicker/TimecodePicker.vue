@@ -4,9 +4,10 @@
 
 <script setup lang="ts">
 	const value = defineModel<Duration>({ required: true });
+	const sep = Duration.localedColon;
 	const fields: BaseDateTimePickerField<number>[] = reactive([
-		{ name: "hour", sep: ":", values: forMap(100, Number, 0), getDisplayValue: padTo2Digit },
-		{ name: "minute", sep: ":", values: forMap(60, Number, 0), getDisplayValue: padTo2Digit, loopable: true },
+		{ name: "hour", sep, values: forMap(100, Number, 0), getDisplayValue: padTo2Digit },
+		{ name: "minute", sep, values: forMap(60, Number, 0), getDisplayValue: padTo2Digit, loopable: true },
 		{ name: "second", values: forMap(60, Number, 0), getDisplayValue: padTo2Digit, loopable: true },
 	]);
 	const model = computed({

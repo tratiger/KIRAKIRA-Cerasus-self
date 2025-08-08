@@ -12,6 +12,8 @@ export class Duration {
 	private static colon = ":" as const;
 	/** 负号。 */
 	private static minus = "−" as const;
+	/** 当没有时间数据时显示的占位符划线。 */
+	private static dash = "‒" as const;
 	/** 当没有时间数据时显示的占位符字符串。 */
 	static placeholder = "‒‒:‒‒" as const;
 
@@ -60,15 +62,45 @@ export class Duration {
 
 	/**
 	 * 返回对象的字符串表示形式。
+	 * @deprecated 请使用官方内置的实现方式。
 	 * @returns 对象的字符串表示形式。
 	 */
-	toString() {
+	private toString_legacy() {
 		if (!this.valid)
 			return Duration.placeholder; // 当没有时间数据时显示占位符字符串。
 		let result = `${padTo2Digit(this.m)}${Duration.colon}${padTo2Digit(this.s)}`;
 		if (this.h) result = `${padTo2Digit(this.h)}${Duration.colon}${result}`;
 		if (this.negative) result = Duration.minus + result;
 		return result;
+	}
+
+	/**
+	 * 返回对象的字符串表示形式。
+	 * @note 至少要求 Chromium 129，否则自动使用旧的私有实现。
+	 * @returns 对象的字符串表示形式。
+	 */
+	toString() {
+		if (!("DurationFormat" in Intl)) return this.toString_legacy();
+		const locale = getCurrentLocaleLangCode(undefined, true);
+		const options: Intl.DurationFormatOptions = { style: "digital", hours: "2-digit", hoursDisplay: "auto" };
+		if (!this.valid)
+			return new Intl.DurationFormat(locale, { ...options, numberingSystem: "latn" }).format({ seconds: 0 }).replaceAll("0", Duration.dash);
+		return new Intl.DurationFormat(locale, options).format({
+			hours: this.h, minutes: this.m, seconds: this.s,
+		});
+	}
+
+	/**
+	 * 获取本地化的时长字符串中冒号所使用的字符。
+	 *
+	 * @remarks 不同语言使用不同的时长分隔符，如印尼语使用点号而不是冒号作为分隔符。
+	 *
+	 * @note 至少要求 Chromium 129，否则固定返回冒号字符本身。
+	 */
+	static get localedColon() {
+		if (!("DurationFormat" in Intl)) return Duration.colon;
+		const locale = getCurrentLocaleLangCode(undefined, true);
+		return new Intl.DurationFormat(locale, { style: "digital", hoursDisplay: "auto" }).format({ seconds: 0 }).replaceAll("0", "");
 	}
 
 	/**
