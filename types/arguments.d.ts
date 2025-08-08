@@ -110,6 +110,8 @@ declare global {
 		minWidth?: string | (() => string | undefined);
 		/** 从 `values` 内数据值转换到本地化显示文本值的函数，如果未提供则直接显示 `values` 内的数据值。 */
 		getDisplayValue?(value: TValue): TDisplay;
+		/** 当值为 undefined 时显示的占位符长度。默认为 2。 */
+		placeholderLength?: number;
 	}
 	/** 基础日期时间选择器只读纯文本字段。 */
 	interface BaseDateTimePickerFieldPlain {
@@ -121,6 +123,8 @@ declare global {
 		sep?: string;
 		/** 设置字段的最小宽度（CSS 值）。 */
 		minWidth?: string | (() => string);
+		/** 当值为 undefined 时显示的占位符长度。默认为 2。 */
+		placeholderLength?: number;
 	}
 
 	type FlyoutModel = FlyoutModelNS.Tuple | FlyoutModelNS.Object;

@@ -22,6 +22,8 @@
 	const menuValues = reactive<Record<ValueOf<typeof menuValuesKeys>, Record<string, HTMLDivElement | undefined | null>>>(arrayMapObjectConst(menuValuesKeys, () => ({})));
 	const buttonEl = ref<InstanceType<typeof Comp>>();
 	const buttonElSizeObserver = ref<ResizeObserver>();
+	const dash = "‒" as const;
+	const widthChangingTransitionTimeoutId = ref<Timeout>();
 
 	const backupValue = () => previousValue.value = model.value;
 	const restoreValue = () => previousValue.value && (model.value = previousValue.value);
@@ -35,21 +37,19 @@
 		}
 	});
 
-	const visibleValues = computed(() => {
-		return arrayMapObject(props.fields.filter(field => !("text" in field)) as BaseDateTimePickerField[], ({ name, values, loopable }) => {
-			if (typeof values === "function") values = values();
-			const currentValue = model.value[name];
-			let currentIndex = values.indexOf(currentValue);
-			if (currentIndex === -1) currentIndex = 0;
-			const result: Readable[] = [];
-			for (let i = currentIndex - (menuItemCount - 1); i <= currentIndex + (menuItemCount - 1); i++) {
-				const index = loopable ? floorMod(i, values.length) : i;
-				const value = values[index];
-				result.push(value);
-			}
-			return [name, result];
-		});
-	});
+	const visibleValues = computed(() => arrayMapObject(props.fields.filter(field => !("text" in field)) as BaseDateTimePickerField[], ({ name, values, loopable }) => {
+		if (typeof values === "function") values = values();
+		const currentValue = model.value[name];
+		let currentIndex = values.indexOf(currentValue);
+		if (currentIndex === -1) currentIndex = 0;
+		const result: Readable[] = [];
+		for (let i = currentIndex - (menuItemCount - 1); i <= currentIndex + (menuItemCount - 1); i++) {
+			const index = loopable ? floorMod(i, values.length) : i;
+			const value = values[index];
+			result.push(value);
+		}
+		return [name, result];
+	}));
 
 	function setField(name: string, value: Readable) {
 		model.value = { ...model.value, [name]: value };
@@ -80,8 +80,12 @@
 	}
 
 	onMounted(() => {
+		const WIDTH_CHANGING = "width-changing";
 		buttonElSizeObserver.value = new ResizeObserver(([{ target }]) => {
+			menu.value?.classList.add(WIDTH_CHANGING);
 			showMenu.value &&= target.getBoundingClientRect();
+			clearTimeout(widthChangingTransitionTimeoutId.value);
+			widthChangingTransitionTimeoutId.value = setTimeout(() => menu.value?.classList.remove(WIDTH_CHANGING), 250);
 		});
 		if (buttonEl.value) buttonElSizeObserver.value.observe(buttonEl.value.$el);
 	});
@@ -100,8 +104,10 @@
 		tabindex="0"
 		@click="e => { backupValue(); showMenu = e.currentTarget.getBoundingClientRect(); }"
 	>
-		<template v-for="({ name, sep, minWidth, ...field }, index) in fields" :key="name">
-			<p v-if="'values' in field" class="value" :style="{ minWidth: toValue(minWidth) }">{{ field.getDisplayValue?.(model[name]) ?? model[name] }}</p>
+		<template v-for="({ name, sep, minWidth, placeholderLength, ...field }, index) in fields" :key="name">
+			<p v-if="'values' in field" class="value" :style="{ minWidth: toValue(minWidth) }">
+				{{ model[name] == null ? dash.repeat(placeholderLength ?? 2) : field.getDisplayValue?.(model[name]) ?? model[name] }}
+			</p>
 			<p v-else-if="String(toValue(field.text))" class="value" :style="{ minWidth: toValue(minWidth) }">{{ toValue(field.text) }}</p>
 			<p v-if="(sep || defaultSep) && index < fields.length - 1" class="sep">{{ sep || defaultSep }}</p>
 		</template>
@@ -377,6 +383,10 @@
 			.items.shadow .plain {
 				color: c(icon-color);
 			}
+		}
+
+		&.width-changing .values {
+			overflow-x: hidden;
 		}
 	}
 </style>

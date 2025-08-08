@@ -16,7 +16,7 @@
 		nickname: "",
 		bio: "",
 		gender: "",
-		birthday: new Date(),
+		birthday: Temporal.Now.plainDateISO().withCalendar("gregory"),
 		tags: [] as string[],
 	});
 	const isRead = ref(false);
@@ -41,7 +41,7 @@
 			userNickname: profile.nickname.normalize(),
 			signature: profile.bio.normalize(),
 			gender: profile.gender.normalize(),
-			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
+			userBirthday: Temporal.Now.plainDateISO().withCalendar("gregory").toString(),
 			label: profile.tags.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {

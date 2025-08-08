@@ -18,7 +18,13 @@
 		nickname: selfUserInfoStore.userInfo.userNickname?.normalize() ?? "",
 		bio: selfUserInfoStore.userInfo.signature?.normalize() ?? "",
 		gender: selfUserInfoStore.userInfo.gender?.normalize() ?? "",
-		birthday: new Date(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
+		birthday: (() => {
+			try {
+				return Temporal.PlainDate.from(selfUserInfoStore.userInfo.userBirthday!);
+			} catch {
+				return Temporal.Now.plainDateISO().withCalendar("gregory");
+			}
+		})(),
 		tags: selfUserInfoStore.userInfo.label?.map(label => label.labelName?.normalize()) ?? [],
 	});
 	const cropper = ref<InstanceType<typeof ImageCropper>>(); // 图片裁剪器实例
@@ -147,7 +153,7 @@
 			userNickname: profile.nickname.normalize(),
 			signature: profile.bio.normalize(),
 			gender: profile.gender.normalize(),
-			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
+			userBirthday: profile.birthday.toString(),
 			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {

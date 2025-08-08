@@ -50,6 +50,7 @@
 			name: "year",
 			sep: format.value.sep,
 			values: () => forMap(21, Number, value.value.year - 10),
+			placeholderLength: 4,
 			getDisplayValue: year => {
 				if (isChineseCalendar.value && useHanzi.value) return toHanziDecimal(year, locale);
 				return year.toString().padStart(4, "0");

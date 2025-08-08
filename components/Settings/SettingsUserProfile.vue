@@ -13,7 +13,7 @@
 		nameValid?: boolean;
 		bio: string;
 		gender: string;
-		birthday: Date;
+		birthday: Temporal.PlainDate;
 		tags: string[];
 	}>({ required: true });
 	const nameTextBox = ref<InstanceType<typeof TextBox>>();
@@ -63,10 +63,14 @@
 
 	<TextBox v-model="profile.bio" :placeholder="t.user.bio" icon="edit" />
 
-	<!-- <TextBox v-model="profile.birthday" type="date" :placeholder="t.user.birthday" icon="birthday" /> -->
-	<!-- TODO: [艾拉] 这里需要日期选择组件，谁来做一下？ -->
-	<!-- [琪露诺瓦露] 日期选择点击X按钮，再次选择日期后按钮不会出现。 -->
-	<!-- [兰音] 由于日期组件尚未制作，目前仅是一个占位符，暂时不必在意其功能或外观等的问题。 -->
+	<div class="gender">
+		<div class="gender-subtitle">
+			<Icon name="birthday" class="icon" />
+			<span class="text">{{ t.user.birthday }}</span>
+		</div>
+
+		<DatePicker v-model="profile.birthday" />
+	</div>
 
 	<div class="gender">
 		<div class="gender-subtitle">

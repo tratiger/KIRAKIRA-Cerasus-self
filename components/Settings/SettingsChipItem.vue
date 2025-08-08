@@ -61,6 +61,11 @@
 		}
 	}
 
+	:comp {
+		position: relative;
+		overflow: hidden;
+	}
+
 	:comp:any-hover {
 		background-color: c(hover-overlay);
 	}
