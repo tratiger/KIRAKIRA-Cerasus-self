@@ -510,7 +510,7 @@
 						<ShadingIcon icon="download" />
 						<h3><Icon name="counter_1" />{{ t.two_factor_authentication.add_totp.step_install }}</h3>
 						<p>
-							<I18nT keypath="t.two_factor_authentication.add_totp.step_install_description">
+							<TransInterpolation keypath="t.two_factor_authentication.add_totp.step_install_description">
 								<template #ente-auth>
 									<a href="https://ente.io/auth/" target="_blank">Ente Auth</a>
 								</template>
@@ -520,7 +520,7 @@
 								<template #google-authenticator>
 									<a href="https://support.google.com/accounts/answer/1066447" target="_blank">Google Authenticator</a>
 								</template>
-							</I18nT>
+							</TransInterpolation>
 						</p>
 					</div>
 					<div class="step">
