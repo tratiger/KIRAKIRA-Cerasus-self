@@ -6,6 +6,7 @@ import styleResources from "./helpers/style-resources";
 import docsLoader from "./plugins/vite/docs";
 import vitePluginScssVariables from "./plugins/vite/scss-variables";
 import scssVariablesLoader from "./plugins/vite/scss-variables-loader";
+import devtoolsJson from "vite-plugin-devtools-json";
 /* import vueNestedSFC from "vite-plugin-vue-nested-sfc"; */
 type OriginalNuxtConfig = Parameters<typeof defineNuxtConfig>[0];
 type BroadNuxtConfig = OriginalNuxtConfig & Record<Exclude<string, keyof OriginalNuxtConfig>, object | string>; // 还敢报错吗？
@@ -81,6 +82,7 @@ export default defineNuxtConfig({
 			docsLoader(),
 			vitePluginScssVariables(),
 			scssVariablesLoader(),
+			devtoolsJson(),
 			pomsky.vite({
 				fileExtensions: [".vue"],
 			}),
