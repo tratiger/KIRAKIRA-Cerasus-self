@@ -1,7 +1,7 @@
-import { createResolver, defineNuxtModule } from "@nuxt/kit";
 import { lstat, readFile, readdir, writeFile } from "fs/promises";
+import { basename, parse } from "path";
+import { createResolver, defineNuxtModule } from "@nuxt/kit";
 import { throttle } from "lodash-es";
-import { parse, basename } from "path";
 
 type WatchEvent = "update" | "remove";
 type Initial = (event?: WatchEvent, path?: string[]) => Promise<void>;
@@ -42,14 +42,14 @@ export default defineNuxtModule({
 			await writeFile(resolve("../types/", D_TS_NAME), (() => {
 				let result = "";
 				for (const [index, klass] of classes.entries())
-					result += `import * as _${index + 1} from "../classes/${klass}";\n`;
+					result += `import type _${index} from "../classes/${klass}";\n`;
 				result += "\ndeclare global {\n";
 				result += "\t// components\n";
 				for (const component of components)
-					result += `\texport const ${component.name}: typeof import("${component.path}")["${component.member}"];\n`;
+					result += `\tconst ${component.name}: typeof import("${component.path}")["${component.member}"];\n`;
 				result += "\n\t// classes\n";
-				for (const klass of classes)
-					result += `\texport { ${fileRoot(klass)} } from "../classes/${klass}";\n`;
+				for (const [index, klass] of classes.entries())
+					result += `\ttype ${fileRoot(klass)} = _${index};\n`;
 				result += "}\n\nexport { };\n";
 				return result;
 			})());

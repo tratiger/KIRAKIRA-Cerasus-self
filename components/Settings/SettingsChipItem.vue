@@ -25,7 +25,7 @@
 	<Comp v-ripple role="listitem">
 		<div :class="{ pictorial: image || icon }">
 			<div v-if="image" class="image">
-				<NuxtPicture
+				<NuxtImg
 					:src="image"
 					:provider="environment.cloudflareImageProvider"
 					alt="image"
@@ -84,8 +84,7 @@
 			@include circle;
 			overflow: clip;
 
-			> picture,
-			> picture :deep(img) {
+			> img {
 				@include square(100%);
 				z-index: 1;
 				object-fit: cover;

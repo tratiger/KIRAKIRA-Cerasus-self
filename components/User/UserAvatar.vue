@@ -25,7 +25,7 @@
 
 <template>
 	<Comp v-ripple="Boolean(userLink) || Boolean(hoverable)" :class="{ hoverable }">
-		<NuxtPicture
+		<NuxtImg
 			v-if="avatar"
 			:provider
 			:src="avatar"
@@ -90,8 +90,7 @@
 			cursor: pointer;
 		}
 
-		> picture,
-		> picture :deep(img) {
+		> img {
 			@include square(100%);
 			z-index: 1;
 			object-fit: cover;
