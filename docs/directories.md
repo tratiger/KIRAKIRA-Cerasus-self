@@ -35,9 +35,6 @@ SVG 雪碧图生成文件
 ### styles
 全局样式文件
 
-#### css-doodles
-CSS Doodle 图形文件
-
 #### elements
 与特定元素有关的样式文件
 

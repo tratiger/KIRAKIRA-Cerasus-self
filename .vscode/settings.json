@@ -48,8 +48,8 @@
 	],
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"editor.codeActionsOnSave": {
-		"source.fixAll": "explicit"
-		// "source.sortImports": "explicit" // BUG: 开启后保存时缩进会出现问题。
+		"source.fixAll": "explicit",
+		"source.sortImports": "never", // BUG: 开启后保存时缩进会出现问题。
 	},
 	"vue.complete.casing.props": "camel",
 	"vue.complete.casing.tags": "pascal",
@@ -70,6 +70,7 @@
 		"IDEA",
 		"REVIEW",
 		"NOTE",
+		"CAUTION",
 		"XXX",
 		"WARN",
 		"FIXME",
@@ -121,6 +122,13 @@
 			"foreground": "#fff",
 			"iconColour": "#fc0",
 			"icon": "light-bulb",
+			"hideFromTree": true,
+		},
+		"CAUTION": {
+			"background": "#d3e600",
+			"foreground": "#000",
+			"iconColour": "#d3e600",
+			"icon": "stop",
 			"hideFromTree": true,
 		},
 		"FIXME": {
@@ -180,5 +188,5 @@
 	"workbench.colorCustomizations": {
 		"statusBar.background": "#00c16a1f",
 	},
-	"editor.formatOnPaste": false,
+	"material-icon-theme.activeIconPack": "vue_vuex",
 }

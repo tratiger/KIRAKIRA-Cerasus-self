@@ -3,10 +3,10 @@
 import pomsky from "@pomsky-lang/unplugin";
 import defineAlias from "./helpers/alias";
 import styleResources from "./helpers/style-resources";
-import cssDoodleLoader from "./plugins/vite/css-doodle";
 import docsLoader from "./plugins/vite/docs";
 import vitePluginScssVariables from "./plugins/vite/scss-variables";
 import scssVariablesLoader from "./plugins/vite/scss-variables-loader";
+import devtoolsJson from "vite-plugin-devtools-json";
 /* import vueNestedSFC from "vite-plugin-vue-nested-sfc"; */
 type OriginalNuxtConfig = Parameters<typeof defineNuxtConfig>[0];
 type BroadNuxtConfig = OriginalNuxtConfig & Record<Exclude<string, keyof OriginalNuxtConfig>, object | string>; // 还敢报错吗？
@@ -15,7 +15,7 @@ const dev = process.env.NODE_ENV === "development";
 
 export default defineNuxtConfig({
 	devtools: {
-		enabled: false,
+		enabled: true,
 	},
 
 	plugins: [
@@ -28,7 +28,6 @@ export default defineNuxtConfig({
 	modules: [
 		// "@nuxt/devtools",
 		"@nuxtjs/i18n",
-		"@nuxt/content",
 		"@nuxt/image",
 		dev && "nuxt-icons",
 		!dev && "@nuxtjs/svg-sprite",
@@ -37,7 +36,7 @@ export default defineNuxtConfig({
 		["@pinia/nuxt", {
 			autoImports: ["defineStore", "storeToRefs"],
 		}],
-		"@pinia-plugin-persistedstate/nuxt",
+		"pinia-plugin-persistedstate/nuxt",
 		"modules/theme/module.ts",
 		"modules/noscript/module.ts",
 		"modules/unsupported-browsers/module.ts",
@@ -56,7 +55,6 @@ export default defineNuxtConfig({
 		"public/static",
 		"assets/lotties",
 		"modules",
-		"content",
 		"middleware",
 		"server",
 		"helpers",
@@ -82,14 +80,44 @@ export default defineNuxtConfig({
 	vite: {
 		plugins: [
 			docsLoader(),
-			cssDoodleLoader(),
 			vitePluginScssVariables(),
 			scssVariablesLoader(),
+			devtoolsJson(),
 			pomsky.vite({
 				fileExtensions: [".vue"],
 			}),
+			{
+				// 干掉 nuxt-icons 引起的警告。https://github.com/gitFoxCode/nuxt-icons/issues/56
+				name: "vite-plugin-glob-transform",
+				transform(code: string, id: string) {
+					if (id.includes("nuxt-icons")) {
+						const transformed = code.replaceAll(/as:\s*['"]raw['"]/g, 'query: "?raw", import: "default"');
+						return {
+							code: transformed,
+							map: null,
+						};
+					}
+					return null;
+				},
+			},
 		],
 		optimizeDeps: {
+			// 防止「optimized dependencies changed. reloading」
+			include: [
+				"lottie-web",
+				"vue-cropper",
+				"js-confetti",
+				"@number-flow/vue",
+				"vue-audio-visual",
+				"vue-virtual-scroller",
+				"danmaku/dist/esm/danmaku.dom.js",
+				"qrcode.vue",
+				"shaka-player",
+				"@tiptap/starter-kit",
+				"@tiptap/extension-underline",
+				"@tiptap/core",
+				"safe-regex",
+			],
 			needsInterop: [
 				"mediainfo.js",
 			],
@@ -181,35 +209,25 @@ export default defineNuxtConfig({
 			{ code: "id", name: "Bahasa Indonesia" },
 			{ code: "fr", name: "Français" },
 			{ code: "yue", name: "廣東話" },
+			{ code: "ii", name: "ꆈꌠꉙ" }, // In Context Language
 		],
 		defaultLocale: "zhs",
 		vueI18n: "./i18n.config.ts",
 		detectBrowserLanguage: {
-			useCookie: true,
 			cookieKey: "language",
 			alwaysRedirect: true,
 		},
-	},
-
-	content: {
-		markdown: {
-			remarkPlugins: {
-				"remark-emoji": {
-					emoticon: true,
-				},
-			},
+		bundle: {
+			// 非预期错误，临时解决办法。参考：https://github.com/intlify/bundle-tools/issues/423#issuecomment-2525540710
+			optimizeTranslationDirective: false,
 		},
-		highlight: {
-			theme: {
-				default: "github-light",
-				dark: "github-dark",
-				sepia: "monokai",
-			},
+		experimental: {
+			typedOptionsAndMessages: "default",
 		},
 	},
 
 	image: {
-		format: ["avif", "webp"], // 只适用于 <NuxtPicture>，对 <NuxtImg> 无效。
+		format: ["avif", "webp"], // 只适用于 <NuxtPicture>，对 <NuxtPicture> 无效。
 		providers: {
 			cloudflareProd: {
 				name: "cloudflare-prod", // optional value to overrider provider name
@@ -241,6 +259,7 @@ export default defineNuxtConfig({
 
 	svgSprite: {
 		input: "~/assets/icons",
+		iconsPath: false,
 	},
 
 	imports: {
@@ -279,7 +298,7 @@ export default defineNuxtConfig({
 
 	app: {
 		pageTransition: {
-			name: "page-jump",
+			name: "page-jump-in",
 			mode: "out-in",
 		},
 		rootId: "root",
@@ -295,7 +314,12 @@ export default defineNuxtConfig({
 
 	robots: {
 		credits: false,
-		disallow: ["/search/", "/dev/", "/settings/", "/welcome/"],
+		disallow: [
+			"/dev",
+			"/settings",
+			"/welcome",
+			"/search",
+		],
 	},
 
 	compatibilityDate: "2024-08-25",

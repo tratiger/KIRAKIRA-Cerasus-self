@@ -78,7 +78,10 @@ declare global {
 	 * 类似 `keyof` 关键字，只不过返回的是值的类型集合而不是键的类型集合。
 	 * @template T - 源对象。
 	 */
-	type ValueOf<T extends object> = T[keyof T];
+	type ValueOf<T extends object> =
+		T extends ArrayLike<infer Value> ? Value :
+		T extends Iterable<infer Value> ? Value :
+		T[keyof T];
 
 	/**
 	 * 深度只读对象。

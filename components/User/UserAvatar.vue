@@ -20,11 +20,12 @@
 	});
 
 	const provider = computed(() => props.avatar?.startsWith("blob:http") ? undefined : environment.cloudflareImageProvider);
+	const appSettings = useAppSettingsStore();
 </script>
 
 <template>
 	<Comp v-ripple="Boolean(userLink) || Boolean(hoverable)" :class="{ hoverable }">
-		<NuxtImg
+		<NuxtPicture
 			v-if="avatar"
 			:provider
 			:src="avatar"
@@ -36,7 +37,7 @@
 			:class="{ hoverable }"
 			:placeholder="[20, 20, 100, 2]"
 		/>
-		<Icon v-else name="person" />
+		<Icon v-else :name="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'" />
 		<div v-if="avatar" class="tint-overlay"></div>
 		<LocaleLink v-if="userLink" :to="userLink" class="lite" />
 	</Comp>
@@ -89,7 +90,8 @@
 			cursor: pointer;
 		}
 
-		> img {
+		> picture,
+		> picture :deep(img) {
 			@include square(100%);
 			z-index: 1;
 			object-fit: cover;
@@ -132,6 +134,10 @@
 			@include square(100%);
 			position: absolute;
 			z-index: 3;
+		}
+
+		.icon[aria-label="akkarin"] {
+			font-size: var(--size);
 		}
 	}
 </style>

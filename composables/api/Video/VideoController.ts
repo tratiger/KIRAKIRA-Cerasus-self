@@ -1,5 +1,5 @@
 import * as tus from "tus-js-client";
-import { GET, POST, DELETE, uploadFile2CloudflareImages } from "../Common";
+import { DELETE, GET, POST, uploadFile2CloudflareImages } from "../Common";
 import type { ApprovePendingReviewVideoRequestDto, ApprovePendingReviewVideoResponseDto, CheckVideoExistRequestDto, CheckVideoExistResponseDto, DeleteVideoRequestDto, DeleteVideoResponseDto, GetVideoByKvidRequestDto, GetVideoByKvidResponseDto, GetVideoByUidRequestDto, GetVideoByUidResponseDto, GetVideoCoverUploadSignedUrlResponseDto, PendingReviewVideoResponseDto, SearchVideoByVideoTagIdRequestDto, SearchVideoByVideoTagIdResponseDto, ThumbVideoResponseDto, UploadVideoRequestDto, UploadVideoResponseDto } from "./VideoControllerDto";
 
 const BACK_END_URI = environment.backendUri;
@@ -9,8 +9,10 @@ const VIDEO_API_URI = `${BACK_END_URI}video`;
  * 获取主页中显示的视频
  * @returns 展示视频卡片需要的返回参数
  */
-export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> => {
-	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`);
+export const getHomePageThumbVideo = async (headerCookie: { cookie?: string | undefined }): Promise<ThumbVideoResponseDto> => {
+	// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+	// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+	const { data: result } = await useFetch<ThumbVideoResponseDto>(`${VIDEO_API_URI}/home`, { headers: headerCookie, credentials: "include" });
 	if (result.value)
 		return result.value;
 	else
@@ -19,7 +21,7 @@ export const getHomePageThumbVideo = async (): Promise<ThumbVideoResponseDto> =>
 
 /**
  * 根据视频 ID (KVID) 检验视频是否存在
- * @param CheckVideoExistRequestDto 视频 ID (KVID)
+ * @param CheckVideoExistRequest - 视频 ID (KVID)
  * @returns 视频是否存在的响应
  */
 export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoExistRequestDto): Promise<CheckVideoExistResponseDto> => {
@@ -35,23 +37,26 @@ export const checkVideoExistByKvid = async (CheckVideoExistRequest: CheckVideoEx
 
 /**
  * 根据视频 ID (KVID) 获取视频的数据
- * @param getVideoByKvidRequest 从视频 ID 获取视频的请求参数
+ * @param getVideoByKvidRequest - 从视频 ID 获取视频的请求参数
+ * @param headerCookie - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 视频页面需要的响应
  */
-export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto): Promise<GetVideoByKvidResponseDto> => {
+export const getVideoByKvid = async (getVideoByKvidRequest: GetVideoByKvidRequestDto, headerCookie?: { cookie?: string | undefined }): Promise<GetVideoByKvidResponseDto> => {
 	if (getVideoByKvidRequest && getVideoByKvidRequest.videoId) {
-		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { credentials: "include" });
+		// NOTE: use { headers: headerCookie } to passing client-side cookies to backend API when SSR.
+		// TODO: use { credentials: "include" } to allow save/read cookies from cross-origin domains. Maybe we should remove it before deployment to production env.
+		const { data: result } = await useFetch<GetVideoByKvidResponseDto>(`${VIDEO_API_URI}?videoId=${getVideoByKvidRequest.videoId}`, { headers: headerCookie, credentials: "include" });
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取视频失败" };
+			return { success: false, message: "获取视频失败", isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 KVID" };
+		return { success: false, message: "未提供 KVID", isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
  * 根据 UID 获取该用户上传的视频
- * @param getVideoByUidRequest 根据 UID 获取该用户上传的视频的请求参数
+ * @param getVideoByUidRequest - 根据 UID 获取该用户上传的视频的请求参数
  * @returns 根据 UID 获取该用户上传的视频的请求响应结果
  */
 export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDto): Promise<GetVideoByUidResponseDto> => {
@@ -60,14 +65,14 @@ export const getVideoByUid = async (getVideoByUidRequest: GetVideoByUidRequestDt
 		if (result.value)
 			return result.value;
 		else
-			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [] };
+			return { success: false, message: "获取用户上传的视频失败", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 	} else
-		return { success: false, message: "未提供 UID", videosCount: 0, videos: [] };
+		return { success: false, message: "未提供 UID", videosCount: 0, videos: [], isBlockedByOther: false, isBlocked: false, isHidden: false };
 };
 
 /**
  * 根据关键字搜索视频
- * @param searchVideoByKeywordRequest 根据关键字搜索视频的请求参数
+ * @param searchVideoByKeywordRequest - 根据关键字搜索视频的请求参数
  * @returns 根据关键字搜索视频的请求响应结果
  */
 export const searchVideoByKeyword = async (searchVideoByKeywordRequest: SearchVideoByKeywordRequestDto): Promise<SearchVideoByKeywordResponseDto> => {
@@ -83,7 +88,7 @@ export const searchVideoByKeyword = async (searchVideoByKeywordRequest: SearchVi
 
 /**
  * 根据 TAG ID 列表搜索视频
- * @param searchVideoByVideoTagIdRequest 根据 TAG ID 列表搜索视频的请求参数
+ * @param searchVideoByVideoTagIdRequest - 根据 TAG ID 列表搜索视频的请求参数
  * @returns 根据 TAG ID 列表搜索视频的请求响应结果
  */
 export const searchVideoByTagIds = async (searchVideoByVideoTagIdRequest: SearchVideoByVideoTagIdRequestDto): Promise<SearchVideoByVideoTagIdResponseDto> => {
@@ -118,8 +123,8 @@ export class TusFileUploader {
 	constructor(file: File, progress: Ref<number>, isUploadingVideo: Ref<boolean>) {
 		if (!file) {
 			this.step = "error";
-			useToast("无法上传：未找到文件", "error"); // TODO: 使用多语言
-			throw new Error("无法上传：未找到文件"); // TODO: 使用多语言
+			useToast(t.toast.upload_file_not_found, "error");
+			throw new Error(t.toast.upload_file_not_found);
 		}
 		this.isUploadingVideo = isUploadingVideo;
 		this.process = new Promise<string>((resolve, reject) => {
@@ -144,17 +149,17 @@ export class TusFileUploader {
 					expiry: getCloudflareRFC3339ExpiryDateTime(3600), // 最大上传耗时，3600 秒（1 小时）
 				},
 				onError: error => {
-					console.error("ERROR", "Upload error: ", error);
+					console.error("ERROR", "Upload error:", error);
 					this.step = "error";
 					reject(error);
 				},
 				onProgress: (bytesUploaded, bytesTotal) => {
 					const percentage = bytesUploaded / bytesTotal * 100;
 					progress.value = percentage;
-					console.log(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // DELETE ME
+					console.info(bytesUploaded, bytesTotal, percentage.toFixed(2) + "%"); // useless
 				},
 				onSuccess: () => {
-					console.log("Download %s from %s", (uploader.file as File)?.name, uploader.url); // DELETE ME
+					console.info("Video upload success");
 					if (videoId) {
 						this.step = "success";
 						resolve(videoId);
@@ -174,7 +179,7 @@ export class TusFileUploader {
 			// Check if there are any previous uploads to continue.
 			uploader.findPreviousUploads().then(previousUploads => {
 				// Found previous uploads so we select the first one.
-				if (previousUploads.length)
+				if (previousUploads.length > 0)
 					uploader.resumeFromPreviousUpload(previousUploads[0]);
 
 				// Start the upload
@@ -195,7 +200,7 @@ export class TusFileUploader {
 				this.step = "pausing";
 				this.isUploadingVideo.value = false;
 			} else
-				console.error(`Upload pause failed, Pausing can only work when in 'uploading' step, but you are in '${this.step}' step.`); // TODO: 使用多语言
+				console.error(`Upload pause failed, Pausing can only work when in 'uploading' step, but you are in '${this.step}' step.`);
 	}
 
 	/**
@@ -208,7 +213,7 @@ export class TusFileUploader {
 				this.step = "uploading";
 				this.isUploadingVideo.value = true;
 			} else
-				console.error(`Upload resume failed, Uploading can only work when in 'pausing' step, but you are in '${this.step}' step.`); // TODO: 使用多语言
+				console.error(`Upload resume failed, Uploading can only work when in 'pausing' step, but you are in '${this.step}' step.`);
 	}
 }
 
@@ -222,9 +227,9 @@ export async function getVideoCoverUploadSignedUrl(): Promise<GetVideoCoverUploa
 
 /**
  * 通过预签名 URL 上传视频封面图
- * @param fileName 头像文件名
- * @param videoCoverBlobData 用 Blob 编码的用户头像文件
- * @param signedUrl 预签名 URL
+ * @param fileName - 头像文件名
+ * @param videoCoverBlobData - 用 Blob 编码的用户头像文件
+ * @param signedUrl - 预签名 URL
  * @returns boolean 上传结果
  */
 export async function uploadVideoCover(fileName: string, videoCoverBlobData: Blob, signedUrl: string): Promise<boolean> {
@@ -239,7 +244,7 @@ export async function uploadVideoCover(fileName: string, videoCoverBlobData: Blo
 
 /**
  * 提交已上传完成的视频
- * @param uploadVideoRequest 视频数据
+ * @param uploadVideoRequest - 视频数据
  * @returns 上传视频的请求响应
  */
 export async function commitVideo(uploadVideoRequest: UploadVideoRequestDto): Promise<UploadVideoResponseDto> {
@@ -248,7 +253,7 @@ export async function commitVideo(uploadVideoRequest: UploadVideoRequestDto): Pr
 
 /**
  * 删除一个视频
- * @param deleteVideoRequest 删除一个视频的请求载荷
+ * @param deleteVideoRequest - 删除一个视频的请求载荷
  * @returns 删除一个视频的请求响应
  */
 export async function deleteVideo(deleteVideoRequest: DeleteVideoRequestDto): Promise<DeleteVideoResponseDto> {
@@ -257,7 +262,7 @@ export async function deleteVideo(deleteVideoRequest: DeleteVideoRequestDto): Pr
 
 /**
  * 获取待审核视频列表
- * @param headerCookie  从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
+ * @param headerCookie  - 从客户端发起 SSR 请求时传递的 Header 中的 Cookie 部分，在 SSR 时将其转交给后端 API
  * @returns 获取待审核视频列表的请求响应
  */
 export const getPendingReviewVideo = async (headerCookie: { cookie?: string | undefined }): Promise<PendingReviewVideoResponseDto> => {
@@ -269,7 +274,7 @@ export const getPendingReviewVideo = async (headerCookie: { cookie?: string | un
 
 /**
  * 通过一个待审核视频
- * @param approvePendingReviewVideoRequest 通过一个待审核视频的请求载荷
+ * @param approvePendingReviewVideoRequest - 通过一个待审核视频的请求载荷
  * @returns 通过一个待审核视频的请求响应
  */
 export async function approvePendingReviewVideo(approvePendingReviewVideoRequest: ApprovePendingReviewVideoRequestDto): Promise<ApprovePendingReviewVideoResponseDto> {

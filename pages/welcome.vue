@@ -3,8 +3,11 @@
 </docs>
 
 <script setup lang="ts">
-	useHead({ title: "欢迎加入KIRAKIRA☆DOUGA大家庭" });
-	const next = useRoute().query.next || "/";
+	useHead({ title: "欢迎加入KIRAKIRA☆DOUGA大家庭" }); // TODO: 多语言
+	const next = Array.isArray(useRoute().query.next) ?
+		useRoute().query.next?.[0] ?? "/" :
+		useRoute().query.next as string ?? "/"; // FIXME: Array.isArray 为什么推断不出来问号表达式第三位一定不是 Array 类型
+
 	const container = ref<HTMLDivElement>();
 
 	const profile = reactive({
@@ -13,42 +16,42 @@
 		nickname: "",
 		bio: "",
 		gender: "",
-		birthday: new Date(),
+		birthday: Temporal.Now.plainDateISO().withCalendar("gregory"),
 		tags: [] as string[],
 	});
 	const isRead = ref(false);
 	const showWelcome = ref(false);
 	const avatarBlob = ref<string>(); // 头像文件
 	const cropper = ref<InstanceType<typeof ImageCropper>>(); // 图片裁剪器实例
-	const isAvatarCropperOpen = ref(false); // 用户头像图片裁剪器是否开启
+	const isAvatarCropperOpened = ref(false); // 用户头像图片裁剪器是否开启
 	const isUploadingUserAvatar = ref(false); // 是否正在上传头像
 	const userAvatarUploadFile = ref<string | undefined>(); // 用户上传的头像文件 Blob
 	const userAvatarFileInput = ref<HTMLInputElement>(); // 隐藏的图片上传 Input 元素
-	const isUpdateUserInfo = ref<boolean>(false); // 是否正在上传用户信息
+	const isUpdatingUserInfo = ref<boolean>(false); // 是否正在上传用户信息
 	const validData = computed(() => isRead.value && profile.nameValid && profile.gender);
 
 	/**
 	 * 完成注册。
 	 */
 	async function finish() {
-		isUpdateUserInfo.value = true;
+		isUpdatingUserInfo.value = true;
 		const updateOrCreateUserInfoRequest: UpdateOrCreateUserInfoRequestDto = {
 			avatar: avatarBlob.value,
-			username: profile.name,
-			userNickname: profile.nickname,
-			signature: profile.bio,
-			gender: profile.gender,
-			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-			label: profile.tags.map((tag, index) => ({ id: index, labelName: tag })),
+			username: profile.name.normalize(),
+			userNickname: profile.nickname.normalize(),
+			signature: profile.bio.normalize(),
+			gender: profile.gender.normalize(),
+			userBirthday: Temporal.Now.plainDateISO().withCalendar("gregory").toString(),
+			label: profile.tags.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
-				isUpdateUserInfo.value = false;
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined });
+				isUpdatingUserInfo.value = false;
 			}
 		} catch (error) {
-			isUpdateUserInfo.value = false;
+			isUpdatingUserInfo.value = false;
 			useToast("用户信息更新失败！", "error"); // TODO: 使用多语言
 			console.error("用户信息更新失败！", error);
 		}
@@ -78,7 +81,7 @@
 					const uploadResult = await api.user.uploadUserAvatar(userAvatarUploadFilename, blobImageData, userAvatarUploadSignedUrl);
 					if (uploadResult) {
 						avatarBlob.value = userAvatarUploadFilename;
-						isAvatarCropperOpen.value = false;
+						isAvatarCropperOpened.value = false;
 						clearBlobUrl(); // 释放内存
 					}
 					isUploadingUserAvatar.value = false;
@@ -120,7 +123,7 @@
 			}
 
 			userAvatarUploadFile.value = fileToBlob(image);
-			isAvatarCropperOpen.value = true;
+			isAvatarCropperOpened.value = true;
 			fileInput.value = ""; // 读取完用户上传的文件后，需要清空 input，以免用户在下次上传同一个文件时无法触发 change 事件。
 		}
 	}
@@ -140,7 +143,7 @@
 
 <template>
 	<!-- TODO: 使用多语言 -->
-	<Modal v-model="isAvatarCropperOpen" title="更新头像">
+	<Modal v-model="isAvatarCropperOpened" title="更新头像">
 		<div class="avatar-cropper">
 			<ImageCropper
 				ref="cropper"
@@ -155,7 +158,7 @@
 		</div>
 		<template #footer-right>
 			<!-- TODO: 使用多语言 -->
-			<Button class="secondary" @click="isAvatarCropperOpen = false">取消</Button>
+			<Button class="secondary" @click="isAvatarCropperOpened = false">取消</Button>
 			<!-- TODO: 使用多语言 -->
 			<Button :loading="isUploadingUserAvatar" @click="handleSubmitAvatarImage">更新头像</Button>
 		</template>
@@ -180,7 +183,7 @@
 
 				<Checkbox v-model:single="isRead">我已阅读并同意<PopupWindowLink href="https://otomad.github.io/cssc/license.htm">《KIRAKIRA☆DOUGA用户协议》</PopupWindowLink></Checkbox>
 
-				<Button icon="check" :disabled="!validData || isUpdateUserInfo" :loading="isUpdateUserInfo" @click="finish">开始畅游KIRAKIRA☆DOUGA</Button>
+				<Button icon="check" :disabled="!validData || isUpdatingUserInfo" :loading="isUpdatingUserInfo" @click="finish">开始畅游KIRAKIRA☆DOUGA</Button>
 			</div>
 		</div>
 	</div>

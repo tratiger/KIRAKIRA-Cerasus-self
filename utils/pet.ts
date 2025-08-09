@@ -1,7 +1,3 @@
-/* eslint-disable no-new-func */
-/* eslint-disable no-eval */
-/* eslint-disable require-jsdoc */
-
 type Sex = "male" | "female";
 
 export interface Pet {

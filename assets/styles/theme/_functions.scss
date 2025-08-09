@@ -58,7 +58,7 @@
 /// @return {Number} 转换后的新标度数值。
 @function map($x, $min, $max, $a, $b, $css-calc: false) {
 	@if not $css-calc {
-		@return (($b - $a) * ($x - $min) / ($max - $min)) + $a;
+		@return calc(($b - $a) * ($x - $min) / ($max - $min)) + $a;
 	} @else {
 		@return calc((($b - $a) * ($x - $min) / ($max - $min)) + $a);
 	}

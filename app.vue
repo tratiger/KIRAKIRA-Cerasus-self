@@ -1,25 +1,16 @@
 <script setup lang="ts">
-	import "css-doodle";
-	import manifest from "public/manifest.json";
+	import crowdinLogoSvg from "assets/svg/crowdin.svg";
 	import { useDynamicLayout } from "helpers/page-transition";
+	import manifest from "public/manifest.json";
 
 	const homepage = "https://kirakira.moe/";
 	const { locale } = useI18n();
-	const appSettings = useAppSettingsStore();
+	const inContextLocalization = isInContextLocalization();
 
-	const langTag = computed(() => {
-		const langs = {
-			zhs: "zh-Hans-CN",
-			zht: "zh-Hant-TW",
-			en: "en",
-			ja: "ja",
-			ko: "ko",
-			vi: "vi",
-			id: "id",
-		};
-
-		return langs[locale.value as keyof typeof langs] ?? locale.value;
-	});
+	const langTag = computed(() => ({
+		zhs: "zh-Hans-CN",
+		zht: "zh-Hant-TW",
+	} as RecordValue<string>)[locale.value] ?? (inContextLocalization.value && globalThis.jipt ? globalThis.jipt.target_language : locale.value));
 
 	useHead({
 		htmlAttrs: {
@@ -84,13 +75,31 @@
 			{ rel: "preconnect", href: "https://rsms.me/" },
 			{ rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
 		],
+		script: inContextLocalization.value ? [
+			{
+				innerHTML: `(${() => {
+					globalThis._jipt = Object.entries({
+						project: "kirakira",
+						escape() {
+							globalThis.location.pathname = "/settings/language";
+						},
+					});
+				}})()`,
+			},
+			{ src: "https://cdn.crowdin.com/jipt/jipt.js", tagPriority: "low" },
+		] : undefined,
 	});
 
-	watch(() => appSettings.sharpAppearanceMode, enabled => {
-		setClassEnabled(document.documentElement, "sharp", enabled);
-	});
-	watch(() => appSettings.flatAppearanceMode, enabled => {
-		setClassEnabled(document.documentElement, "flat", enabled);
+	watch(inContextLocalization, enableJipt => {
+		if (enableJipt && !globalThis.jipt) {
+			const jiptLoaderLogo = document.createElement("img");
+			jiptLoaderLogo.className = "jipt-loader-logo";
+			jiptLoaderLogo.src = crowdinLogoSvg;
+			document.body.append(jiptLoaderLogo);
+			document.getElementById("root")!.hidden = true;
+			setTimeout(() => location.reload(), 250);
+		} else if (globalThis.jipt)
+			globalThis.jipt[enableJipt ? "start" : "stop"]();
 	});
 
 	const layout = useDynamicLayout();

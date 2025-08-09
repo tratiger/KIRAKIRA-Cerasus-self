@@ -14,7 +14,7 @@
 		/** 视频播放量。 */
 		watchedCount?: number;
 		/** 创作者名称。 */
-		uploader: string;
+		uploader?: string;
 		/** 创作者编号 UID。 */
 		uploaderId?: number;
 		/** 视频时长。 */
@@ -36,6 +36,7 @@
 	const duration = computed(() => props.duration ?? Duration.placeholder);
 	const link = computed(() => props.videoId !== undefined && props.videoId !== null ?
 		`/video/kv${props.videoId}` : props.link);
+	const useRelativeDate = useAppSettingsStore().relativeDate;
 </script>
 
 <template>
@@ -43,7 +44,7 @@
 		<div class="card-wrapper">
 			<div v-ripple class="card">
 				<div class="cover-wrapper">
-					<NuxtImg
+					<NuxtPicture
 						v-if="image"
 						:provider="environment.cloudflareImageProvider"
 						:src="image"
@@ -59,10 +60,10 @@
 				<div class="text-wrapper">
 					<div class="title"><slot>视频标题</slot></div>
 					<div class="info">
-						<div class="line">
+						<div v-if="uploader || uploaderId" class="line">
 							<LocaleLink class="item uploader" :to="`/user/${uploaderId ?? ''}`" linkInLink :blank>
 								<Icon name="person" />
-								<div>{{ uploader }}</div>
+								<div>{{ uploader ?? uploaderId }}</div>
 							</LocaleLink>
 						</div>
 						<div class="line">
@@ -72,11 +73,11 @@
 							</div>
 							<div class="item">
 								<Icon name="duration" />
-								<p>{{ duration }}</p>
+								<p class="duration">{{ duration }}</p>
 							</div>
-							<div class="item">
+							<div v-if="date" class="item">
 								<Icon name="calendar" />
-								<div><DateTime :dateTime="date ?? null" /></div>
+								<div><DateTime :dateTime="date" :relativeTime="useRelativeDate && 'short'" /></div>
 							</div>
 						</div>
 					</div>
@@ -148,10 +149,13 @@
 		margin-bottom: 8px;
 		overflow: clip;
 
-		img.cover {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+		picture.cover {
+			&,
+			:deep(img) {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		}
 
 		.list &,
@@ -178,7 +182,8 @@
 			text-overflow: "⋯⋯";
 		}
 
-		@supports (display: -webkit-box) { // 只有 -webkit-box 才能支持多行省略号
+		@supports (display: -webkit-box) {
+			// 只有 -webkit-box 才能支持多行省略号
 			$title-line-height: 22px;
 			// stylelint-disable-next-line value-no-vendor-prefix
 			display: -webkit-box;
@@ -241,6 +246,11 @@
 				white-space: nowrap;
 				text-overflow: ellipsis;
 			}
+		}
+
+		.duration {
+			font-feature-settings: "case" on;
+			font-variant-numeric: tabular-nums;
 		}
 	}
 </style>

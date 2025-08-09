@@ -13,7 +13,7 @@ export function usePageTransition() {
 	const pageTransition = ref("page-forward");
 
 	watchRoute((slug, prevSlug, path, prevPath) => {
-		pageTransition.value = "page-jump";
+		pageTransition.value = "page-jump-in";
 		if (prevPath.startsWith(path)) pageTransition.value = "page-backward";
 		if (path.startsWith(prevPath)) pageTransition.value = "page-forward";
 		if (path.startsWith(SETTINGS) !== prevPath.startsWith(SETTINGS)) pageTransition.value = "";

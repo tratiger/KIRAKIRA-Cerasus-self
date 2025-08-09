@@ -6,7 +6,7 @@ type CursorType = "col-resize" | "grabbing" | null;
  */
 export function forceCursor(cursor: CursorType) {
 	if (!cursor)
-		delete document.body.dataset.cursor;
+		document.documentElement.style.removeProperty("--cursor");
 	else
-		document.body.dataset.cursor = cursor;
+		document.documentElement.style.setProperty("--cursor", cursor);
 }

@@ -143,14 +143,14 @@
 			}
 
 			case "user": {
-				useToast("暂时不支持这种搜索方法，请使用关键字搜索", "error", 10000); // TODO: 使用多语言
+				useToast(t.under_construction.search_mode, "error", 10000);
 				console.warn("no support search mode: user");
 				await getHomeVideo();
 				break;
 			}
 
 			case "advanced_search": {
-				useToast("暂时不支持这种搜索方法，请使用关键字搜索", "error", 10000); // TODO: 使用多语言
+				useToast(t.under_construction.search_mode, "error", 10000);
 				console.warn("no support search mode: advanced_search");
 				await getHomeVideo();
 				break;
@@ -182,7 +182,6 @@
 	watch(() => displayTags.value, tags => {
 		if (searchMode.value === "tag") {
 			const tagIds = tags.map(tag => tag.tagId);
-			console.log("rrrrrrrr", route.query);
 			router.push({ path: route.path, query: { ...route.query, tagId: tagIds } });
 		}
 	});
@@ -286,10 +285,10 @@
 						<Subheader icon="sort">{{ t.sort.by }}</Subheader>
 						<Sort v-model="data.sort">
 							<SortItem id="upload_date" preferOrder="descending">{{ t.upload_date }}</SortItem>
-							<SortItem id="views" preferOrder="descending">{{ t.sort.view }}</SortItem>
+							<SortItem id="view" preferOrder="descending">{{ t.sort.view }}</SortItem>
 							<SortItem id="danmaku" preferOrder="descending">{{ t.sort.danmaku }}</SortItem>
-							<SortItem id="comments" preferOrder="descending">{{ t.sort.comment }}</SortItem>
-							<SortItem id="favorites" preferOrder="descending">{{ t.sort.favorite }}</SortItem>
+							<SortItem id="comment" preferOrder="descending">{{ t.sort.comment }}</SortItem>
+							<SortItem id="save" preferOrder="descending">{{ t.sort.save }}</SortItem>
 							<SortItem id="duration" preferOrder="descending">{{ t.duration }}</SortItem>
 							<SortItem id="rating">{{ t.rating }}</SortItem>
 						</Sort>

@@ -1,13 +1,11 @@
 export const useAppSettingsStore = defineStore("app-settings", {
 	state: () => ({
-		showCssDoodle: false,
-		sharpAppearanceMode: false,
-		flatAppearanceMode: false,
-
 		lastSettingPage: "appearance",
 		exitSettingRoute: "/",
 
 		isOpenVideoInNewTab: false, // 是否在新标签页打开视频
+		akkarinGuestAvatar: false,
+		relativeDate: false,
 
 		// DELETE: 以下内容已搬迁至 /modules/theme/theme-cookie-binding.ts，不再使用 pinia 储存。
 		// themeType: "system",
@@ -40,7 +38,10 @@ export const useAppSettingsStore = defineStore("app-settings", {
 				fontSizeScale: 1,
 			},
 			controller: {
+				showStop: false,
+				showReplay: false,
 				showFrameByFrame: false,
+				autoResumePlayAfterSeeking: false,
 			},
 			quality: {
 				auto: true,

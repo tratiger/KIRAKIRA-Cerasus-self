@@ -1,8 +1,8 @@
 <script setup lang="ts">
 	// 把该文件放在根目录即可自定义错误（如 404、500）页面样式。
 
-	import type { NuxtError } from "nuxt/dist/app/composables/error";
 	import { httpResponseStatusCodes } from "helpers/http-status";
+	import type { NuxtError } from "nuxt/dist/app/composables/error";
 
 	const props = withDefaults(defineProps<{
 		error: NuxtError;

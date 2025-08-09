@@ -8,6 +8,8 @@
 	const props = defineProps<{
 		/** 视频 ID。 */
 		videoId: number;
+		/** 是否可以编辑 */
+		editable: boolean;
 	}>();
 
 	const emits = defineEmits<{
@@ -30,12 +32,13 @@
 			VueComponent.ThumbVideo,
 			VueComponent.CursorShadow,
 		],
+		content: !props.editable ? '您已被该用户屏蔽，无法发送评论。' : undefined, // TODO: 使用多语言
 		/* content: `
 			<p>我正在用 Vue.js 运行 Tiptap。🎉</p>
 			<p>你看到了吗？这是 Vue 组件。我们真的生活在未来。</p>
 		`, */
 		autofocus: false,
-		editable: true,
+		editable: props.editable,
 		injectCSS: false,
 		onUpdate(props) {
 			textLength.value = props.editor.getText().length;
@@ -110,15 +113,15 @@
 				editor.value?.commands.clearContent()
 				textLength.value = 0
 				useEvent("videoComment:emitVideoComment", videoComment);
-				useToast("评论发出去咯~", "success", 5000); // TODO: 使用多语言
+				useToast(t.toast.comment_sent, "success", 5000);
 			} else {
-				useToast("发送评论失败！", "error", 5000); // TODO: 使用多语言
-				console.error("ERROR", "发送评论失败：请求未成功");
+				useToast(t.toast.something_went_wrong, "error", 5000);
+				console.error("ERROR", "Failed to send comment: request failed.");
 			}
 			isSendingComment.value = false;
 		} catch (error) {
-			useToast("发送评论失败！", "error", 5000); // TODO: 使用多语言
-			console.error("ERROR", "发送评论失败！", error);
+			useToast(t.toast.something_went_wrong, "error", 5000);
+			console.error("ERROR", "Failed to send comment:", error);
 			isSendingComment.value = false;
 		}
 	}
@@ -168,17 +171,17 @@
 		</ClientOnly>
 		<div class="toolbar">
 			<div class="left">
-				<ToolItem :tooltip="t.format.bold" icon="bold" active="bold" @click="toggleBold" />
-				<ToolItem :tooltip="t.format.italic" icon="italic" active="italic" @click="toggleItalic" />
-				<ToolItem :tooltip="t.format.underline" icon="underline" active="underline" @click="toggleUnderline" />
-				<ToolItem :tooltip="t.format.strikethrough" icon="strikethrough" active="strike" @click="toggleStrike" />
-				<ToolItem :tooltip="t.mention" icon="at" @click="showAtList" />
-				<ToolItem :tooltip="t.kaomoji" icon="kaomoji" :active="!!flyoutKaomoji" @click="e => flyoutKaomoji = [e, 'y', -3]" />
-				<ToolItem :tooltip="t.image" icon="photo" @click="addVueComponents" />
+				<ToolItem :tooltip="t.format.bold" icon="format_bold" active="bold" @click="toggleBold" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.italic" icon="format_italic" active="italic" @click="toggleItalic" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.underline" icon="format_underline" active="underline" @click="toggleUnderline" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.format.strikethrough" icon="format_strikethrough" active="strike" @click="toggleStrike" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.mention" icon="at" @click="showAtList" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.kaomoji" icon="kaomoji" :active="!!flyoutKaomoji" @click="e => flyoutKaomoji = [e, 'y', -3]" :disabled="!props.editable" />
+				<ToolItem :tooltip="t.image" icon="photo" @click="addVueComponents" :disabled="!props.editable" />
 			</div>
 			<div class="right">
 				<span class="text-length">{{ textLength }}</span>
-				<ToolItem :tooltip="t.send" icon="send" :disabled="!textLength || isSendingComment" :loading="isSendingComment" @click="sendComment" />
+				<ToolItem :tooltip="t.send" icon="send" :disabled="!textLength || isSendingComment || !props.editable" :loading="isSendingComment" @click="sendComment" />
 			</div>
 		</div>
 	</Comp>

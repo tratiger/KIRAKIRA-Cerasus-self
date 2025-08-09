@@ -13,8 +13,8 @@
 	 * @param fileList - 文件列表。
 	 */
 	async function uploaded(fileList: File[]) {
-		// DELETE ME: 改判定仅测试阶段使用
-		if (selfUserInfoStore.role !== "admin") {
+		// DELETE ME: 该判定仅测试阶段使用
+		if (!selfUserInfoStore.userInfo.roles?.includes("administrator")) {
 			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
 			return;
 		}
@@ -40,7 +40,7 @@
 	 * @returns 合法的文件列表。
 	 */
 	function getValidFiles(fileList?: FileList | null) {
-		if (!fileList || !fileList.length) return [];
+		if (!fileList || fileList.length === 0) return [];
 		const files: File[] = [];
 		for (const file of fileList)
 			if (file.type.startsWith("video") || file.name.endsWith(".mkv"))
@@ -57,9 +57,9 @@
 		const files = e.dataTransfer?.files;
 		if (!files) return;
 		const dropFiles = getValidFiles(files);
-		if (dropFiles.length)
+		if (dropFiles.length > 0)
 			uploaded(dropFiles);
-		else if (files.length)
+		else if (files.length > 0)
 			invalidUploaded();
 	}
 
@@ -71,12 +71,12 @@
 		const input = e.target as HTMLInputElement;
 		const files = getValidFiles(input.files);
 		// DELETE ME: 改判定仅测试阶段使用
-		if (selfUserInfoStore.role !== "admin") {
+		if (!selfUserInfoStore.userInfo.roles?.includes("administrator")) {
 			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
 			return;
 		}
 
-		if (files.length)
+		if (files.length > 0)
 			uploaded(files);
 		else if (input.files?.length)
 			invalidUploaded();
@@ -93,14 +93,29 @@
 		showEditor.value = false;
 		clearFileInput(fileInput);
 	}
+
+	const [DefineCountCard, CountCard] = createReusableTemplate<{
+		value: number | string;
+		icon: DeclaredIcons;
+		name: string;
+	}>();
 </script>
 
 <template>
 	<div class="container" :class="{ 'no-scroll': !showEditor }">
 
-		<InfoBar type="warning" title="警告">
-			测试阶段该功能仅限管理员使用。
-			<!-- TODO: 使用多语言 -->
+		<DefineCountCard v-slot="{ value, icon, name }">
+			<div class="count-card">
+				<div class="title">
+					<Icon :name="icon" />
+					<span>{{ name }}</span>
+				</div>
+				<p class="value">{{ value }}</p>
+			</div>
+		</DefineCountCard>
+
+		<InfoBar type="warning" :title="t.severity.warning">
+			{{ t.under_construction.feature_admin_only }}
 		</InfoBar>
 
 		<!-- TODO: 临时 SoftButton，之后请在 UploadEditor 的 Submit 按钮左边放一个取消。 -->
@@ -114,7 +129,7 @@
 			@change="onChangeFile"
 		/>
 
-		<Transition name="page-jump" mode="out-in">
+		<Transition name="page-jump-in" mode="out-in">
 			<div v-if="!showEditor" class="upload-wrapper">
 				<div
 					v-ripple
@@ -135,6 +150,8 @@
 					<div class="outline normal"></div>
 					<div class="outline successful"></div>
 				</div>
+				<CountCard :value="0" icon="movie" :name="t(2).video" />
+				<CountCard :value="0" icon="play" :name="t.sort.view" />
 			</div>
 
 			<UploadEditor v-else :files />
@@ -143,7 +160,7 @@
 </template>
 
 <style scoped lang="scss">
-	$box-height: 350px;
+	$box-height: 144px;
 
 	.container {
 		display: flex;
@@ -159,8 +176,8 @@
 
 	.upload-wrapper {
 		@include flex-center;
-		flex-direction: column;
-		height: 100%;
+		gap: 16px;
+		// flex-direction: column;
 		margin-top: 1rem;
 
 		.upload {
@@ -168,6 +185,7 @@
 			@include round-large;
 			$color: c(gray-60);
 			position: relative;
+			gap: 16px;
 			width: 100%;
 			height: $box-height;
 			max-height: 100%;
@@ -182,7 +200,7 @@
 
 			h3 {
 				margin-bottom: 8px;
-				font-size: 36px;
+				font-size: 24px;
 			}
 
 			.outline {
@@ -221,6 +239,36 @@
 					animation: uploading $ease-out-smooth 1s 500ms forwards;
 				}
 			}
+		}
+	}
+
+	.count-card {
+		@include card-shadow;
+		@include round-large;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		width: 230px;
+		height: $box-height;
+		padding: 16px;
+
+		.title {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			color: c(icon-color);
+		}
+
+		.icon {
+			font-size: 24px;
+		}
+
+		.value {
+			color: c(accent);
+			font-family: $english-logo-fonts;
+			font-size: 36px;
+			font-weight: bold;
+			line-height: 1;
 		}
 	}
 

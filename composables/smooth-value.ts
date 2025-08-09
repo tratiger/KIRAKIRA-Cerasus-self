@@ -17,7 +17,10 @@ export function useSmoothValue<T extends number | number[] | Point>(current: May
 		const animation = () => {
 			const _speed = isPrefersReducedMotion() ? 1 : speed;
 			const value = toValue(current);
-			const getNewValue = (cur: number, prev: number) => +(prev + (cur - prev) * _speed).toFixed(FRACTION_DIGITS);
+			const getNewValue = (cur: number, prev: number) => {
+				if (Number.isNaN(cur) || Number.isNaN(prev)) return cur;
+				return +(prev + (cur - prev) * _speed).toFixed(FRACTION_DIGITS);
+			};
 			if (typeof value === "number") {
 				const prev = smoothValue as Ref<number>;
 				prev.value = getNewValue(value, prev.value); // (value - prev.value) * _speed;

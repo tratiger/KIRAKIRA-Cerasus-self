@@ -6,24 +6,27 @@
 		nickname: string;
 		/** 用户名。 */
 		username: string;
+		/** 角色。 */
+		roles?: string[];
 		/** 粉丝数。 */
-		fans: number;
+		followers: number;
 		/** 是否已关注？ */
-		isFollowed?: boolean;
+		isFollowing: boolean;
+		/** 是否是自己？ */
+		isSelf?: boolean;
 		/** 用户 UID。 */
-		uid?: number;
+		uid: number;
 	}>();
 </script>
 
 <template>
 	<Comp>
-		<UserContent :avatar="avatar" :nickname="nickname" :username="username" :fans="fans" :uid="uid" size="large" center>
+		<UserContent :avatar="avatar" :nickname="nickname" :followers="followers" :uid="uid" center>
 			<template #description>
-				{{ fans }} {{ t(fans).fans }}
+				{{ followers }} {{ t(followers).follower }}
 			</template>
 		</UserContent>
-		<Button v-if="!isFollowed" icon="add">{{ t.follow_verb }}</Button>
-		<Button v-else disabled icon="check">{{ t.following }}</Button>
+		<FollowButton v-if="!isSelf" :uid :isFollowing />
 	</Comp>
 </template>
 

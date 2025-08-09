@@ -97,7 +97,7 @@
 			const locale = getCurrentLocaleLangCode();
 
 			if (!passwordStr || !emailStr || !passwordHash) {
-				useToast("发送登录验证码失败，邮箱和密码不能为空！", "error", 5000); // TODO: 使用多语言
+				useToast(t.validation.required.email_and_password, "error", 5000);
 				return false;
 			}
 
@@ -110,20 +110,20 @@
 			timeout.startTimeout(); // 开始倒计时
 
 			if (!sendUserEmailAuthenticatorVerificationCodeResult.success) {
-				useToast("发送登录验证码失败，发送失败，请稍后再试！", "error", 5000); // TODO: 使用多语言
+				useToast(t.toast.verification_code_send_failed, "error", 5000);
 				currentPage.value = "login1";
 				return false;
 			}
 
 			if (sendUserEmailAuthenticatorVerificationCodeResult.isCoolingDown) {
-				useToast("发送登录验证码失败，正在冷却中！", "warning", 5000); // TODO: 使用多语言
+				useToast(t.toast.cooling_down, "warning", 5000);
 				currentPage.value = "login1";
 				return false;
 			}
 
 			return true;
 		} catch (error) {
-			useToast("发送登录验证码失败，请刷新页面", "error", 5000); // TODO: 使用多语言
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			currentPage.value = "login1";
 			return false;
 		}
@@ -138,13 +138,13 @@
 			const passwordStr = password.value;
 			const emailStr = email.value;
 			if (!passwordStr || !emailStr) {
-				useToast("邮箱和密码不能为空！", "error", 5000); // TODO: 使用多语言
+				useToast(t.validation.required.email_and_password, "error", 5000);
 				isChecking2FA.value = false;
 				return;
 			}
 
 			if (isInvalidEmail.value) {
-				useToast("邮箱格式不正确！", "error", 5000); // TODO: 使用多语言
+				useToast(t.validation.invalid_format.email, "error", 5000);
 				isChecking2FA.value = false;
 				return;
 			}
@@ -155,7 +155,7 @@
 			const check2FAByEmailResult = await api.user.checkUserHave2FAByEmail(checkUserHave2FARequest);
 
 			if (!check2FAByEmailResult.success) { // 查询用户是否开启 2FA 失败，通常是因为用户不存在
-				useToast("用户信息校验失败！", "error", 5000); // TODO: 使用多语言
+				useToast(t.validation.failed.user_info, "error", 5000);
 				isChecking2FA.value = false;
 				return;
 			}
@@ -213,7 +213,7 @@
 				useToast(t.toast.login_failed, "error");
 			}
 		} else
-			useToast("邮箱和密码不能为空", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.email_and_password, "error");
 		isTryingLogin.value = false;
 	}
 
@@ -222,17 +222,17 @@
 	 */
 	async function checkUsernameAndJumpNextPage() {
 		if (!username.value && username.value.length <= 0) {
-			useToast("用户名不能为空！", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.username, "error");
 			return;
 		}
 
 		if (username.value.length > 200) {
-			useToast("用户名过长！", "error"); // TODO: 使用多语言
+			useToast(t.validation.too_long.username, "error");
 			return;
 		}
 
 		if (nickname.value?.length > 200) {
-			useToast("用户昵称过长！", "error"); // TODO: 使用多语言
+			useToast(t.validation.too_long.nickname, "error");
 			return;
 		}
 		isCheckingUsername.value = true;
@@ -243,12 +243,12 @@
 		if (checkUsernameResult.success && checkUsernameResult.isAvailableUsername)
 			currentPage.value = "register2";
 		else
-			useToast("用户名无效，请更换一个", "warning", 5000); // TODO: 使用多语言
+			useToast(t.validation.username_invalid_or_taken, "warning", 5000);
 		isCheckingUsername.value = false;
 	}
 
 	const PASSWORD_HINT_DO_NOT_ALLOW_INCLUDES_PASSWORD = "密码提示中不允许包含密码本身"; // TODO: 使用多语言
-	const INVITATION_CODE_INVALID_TEXT = "邀请码不能为空或格式有误。"; // TODO: 使用多语言
+	const INVITATION_CODE_INVALID_TEXT = t.validation.invalid_format.invitation_code;
 	/**
 	 * 用户注册，其二。
 	 */
@@ -276,14 +276,15 @@
 						isCheckingEmail.value = false;
 						currentPage.value = "register3";
 					} else
-						useToast("邀请码不合规或者已被使用", "error", 5000); // TODO: 使用多语言
+						useToast(t.validation.invitation_code_invalid_or_used, "error", 5000);
 				} else
-					useToast("该邮箱已注册，请更换", "error", 5000); // TODO: 使用多语言
+					useToast(t.validation.email_registered, "error", 5000);
 			} catch (error) {
-				useToast("注册失败", "error"); // TODO: 使用多语言
+				useToast(t.toast.something_went_wrong, "error");
+				console.error("ERROR", "Registration failed:", error);
 			}
 		} else
-			useToast("请输入邮箱和密码", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.email_and_password, "error");
 		isCheckingEmail.value = false;
 	}
 
@@ -292,7 +293,7 @@
 	 */
 	async function registerUser() {
 		if (!registrationVerificationCode.value) {
-			useToast("注册验证码不能为空", "error"); // TODO: 使用多语言
+			useToast(t.validation.required.verification_code, "error");
 			return;
 		}
 		if (password.value !== confirmPassword.value) {
@@ -316,14 +317,15 @@
 			const registrationResponse = await api.user.registration(userRegistrationRequest);
 
 			if (registrationResponse.success) { // 如果注册成功
-				await api.user.getSelfUserInfo(); // 根据获取到的用户 UID 和 Token 获取用户数据，相当于自动登录
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined }); // 根据获取到的用户 UID 和 Token 获取用户数据，相当于自动登录
 				isTryingRegistration.value = false; // 停止注册按钮加载动画
 				open.value = false; // 关闭登录页
 				currentPage.value = "login1"; // 将登录页设为登录窗口默认页
 			} else
-				useToast("注册失败，请稍后再试", "error"); // TODO: 使用多语言
+				useToast(t.toast.something_went_wrong, "error");
 		} catch (error) {
-			useToast("注册失败，请稍后再试", "error"); // TODO: 使用多语言
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("ERROR", "Registration failed:", error);
 		}
 		isTryingRegistration.value = false; // 停止注册按钮加载动画
 	}
@@ -391,7 +393,7 @@
 			>
 
 				<div class="main left">
-					<!-- 登录 Login -->
+					<!-- 登录 其一 Login #1 -->
 					<div class="login1">
 						<HeadingGroup :name="t.login" englishName="Login" />
 						<form class="form">
@@ -429,20 +431,18 @@
 						</div>
 					</div>
 
+					<!-- 登录 其二点一 Login #2.1 -->
 					<div class="login2-2fa">
 						<HeadingGroup :name="t.login" englishName="Login" />
-						<span>你开启了 2FA，因此需要提供验证码。<br />若验证设备不可用，请使用备用码或恢复码登录。</span>
-						<span>
-							注意：使用恢复码登陆后，你账号的 2FA 将在登录成功后失效。
-						</span>
+						<span><Preserves>{{ t.loginwindow.login_totp_info }}</Preserves></span>
 						<form class="form">
 							<TextBox
 								v-model="clientOtp"
 								type="text"
-								placeholder="验证码"
+								:placeholder="t.totp_verification_code"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
@@ -450,21 +450,22 @@
 							</div>
 						</form>
 						<div class="action margin-left-inset margin-right-inset">
-							<Button @click="currentPage = 'login1'">返回</Button>
-							<Button>需要帮助？</Button>
+							<Button @click="currentPage = 'login1'">{{ t.navigation.back }}</Button>
+							<Button>{{ t.need_help }}</Button>
 						</div>
 					</div>
+					<!-- 登录 其二点二 Login #2.2 -->
 					<div class="login2-email">
 						<HeadingGroup :name="t.login" englishName="Login" />
-						<span>你开启了邮箱 2FA，我们已经向你的邮箱发送了一封包含验证码的邮件。<br />若未收到验证码，请检查垃圾邮件。</span>
+						<span>{{ t.loginwindow.login_email_info }}</span>
 						<form class="form">
 							<TextBox
 								v-model="loginVerificationCode"
 								type="text"
-								placeholder="验证码"
+								:placeholder="t.verification_code"
 								icon="lock"
 								:invalid="isInvalidEmail"
-								autoComplete="username"
+								autoComplete="off"
 								@keyup.enter="loginUser"
 							/>
 							<div class="button login-button-placeholder">
@@ -472,8 +473,8 @@
 							</div>
 						</form>
 						<div class="action margin-left-inset margin-right-inset">
-							<Button @click="currentPage = 'login1'">返回</Button>
-							<Button>需要帮助？</Button>
+							<Button @click="currentPage = 'login1'">{{ t.navigation.back }}</Button>
+							<Button>{{ t.need_help }}</Button>
 						</div>
 					</div>
 				</div>
@@ -642,12 +643,12 @@
 						<div class="line"></div>
 					</div>
 					<div class="avatar">
-						<NuxtImg v-if="selfUserInfoStore.userAvatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userAvatar" alt="avatar" />
+						<NuxtPicture v-if="selfUserInfoStore.userInfo.avatar" :provider="environment.cloudflareImageProvider" :src="selfUserInfoStore.userInfo.avatar" alt="avatar" />
 						<Icon v-else name="person" />
 					</div>
 					<div ref="loginAnimationText" class="texts">
 						<div class="welcome">{{ t.loginwindow.login_welcome }}</div>
-						<div class="name">{{ selfUserInfoStore.userNickname }}</div>
+						<div class="name">{{ selfUserInfoStore.userInfo.userNickname }}</div>
 					</div>
 				</div>
 			</Comp>
@@ -1012,7 +1013,8 @@
 			scale: 0.6;
 		}
 
-		> img {
+		> picture,
+		> picture :deep(img) {
 			width: 100%;
 			aspect-ratio: 1 / 1;
 			object-fit: cover;

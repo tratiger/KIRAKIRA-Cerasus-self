@@ -1,3 +1,5 @@
+import { toTemporalInstant } from "temporal-polyfill";
+
 /**
  * 根据指定的格式来格式化日期时间。
  * @param date - 日期时间对象。
@@ -37,7 +39,7 @@ export function formatDateWithLocale(
 		time?: boolean;
 	} = {},
 ) {
-	const locale = getCurrentLocaleLangCode();
+	const locale = getCurrentLocaleLangCode(undefined, true);
 	const options: Intl.DateTimeFormatOptions = {
 		year: "numeric",
 		month: "2-digit",
@@ -55,8 +57,8 @@ export function formatDateWithLocale(
 
 /**
  * 根据当前语言所对应的时区格式化具有语义的日期。
- * @param timestamp number - 时间戳。
- * @param semanticDays number - 设定前 n 天可以按语义化转化，例如，设定为 2 只会有“今天”和“昨天”，设定为 3 则会有“今天”、“昨天”和“前天”。
+ * @param timestamp - 时间戳。
+ * @param semanticDays - 设定前 n 天可以按语义化转化，例如，设定为 2 只会有“今天”和“昨天”，设定为 3 则会有“今天”、“昨天”和“前天”。
  * @returns 格式化后的字符串。
  */
 export function formatLocalizationSemanticDateTime(timestamp: number, semanticDays: number): string {
@@ -85,9 +87,30 @@ export function formatLocalizationSemanticDateTime(timestamp: number, semanticDa
 
 /**
  * 生成符合 Cloudflare 风格的过期日期字符串，例如："2024-03-17T13:47:28Z"
- * @param expiresIn 有效期限，单位：秒。
+ * @param expiresIn - 有效期限，单位：秒。
  * @returns 符合 Cloudflare 风格的过期日期字符串
  */
 export function getCloudflareRFC3339ExpiryDateTime(expiresIn: number): string {
 	return new Date(new Date().getTime() + expiresIn * 1000).toISOString().replace(/\.\d{3}/, "");
+}
+
+/**
+ * 将绝对日期转换为相对于现在的相对日期字符串。
+ * @param date - 要格式化的日期。
+ * @param style - 格式化相对时间的样式。默认为 `"long"`。
+ * @returns 格式化后的相对日期字符串（如：2 小时前、3 天前）。
+ */
+export function timeAgo(date: Date | Temporal.ZonedDateTime, style: Intl.RelativeTimeFormatStyle = "long") {
+	const now = Temporal.Now.zonedDateTimeISO();
+	const past = date instanceof Date ? toTemporalInstant.call(date).toZonedDateTimeISO(Temporal.Now.timeZoneId()) : date;
+	const diff = now.until(past, { largestUnit: "years", smallestUnit: "seconds", roundingMode: "trunc" });
+
+	const units = ["years", "months", "weeks", "days", "hours", "minutes", "seconds"] as const satisfies Intl.RelativeTimeFormatUnit[]; // 从大到小，不含季度 (quarter)。
+	const maxUnit = units.find(unit => diff[unit]) ?? units.at(-1)!;
+	const value = diff[maxUnit];
+
+	const locale = getCurrentLocaleLangCode(undefined, true);
+	const formatter = new Intl.RelativeTimeFormat(locale, { style, numeric: "auto" });
+
+	return formatter.format(value, maxUnit);
 }

@@ -24,8 +24,6 @@ export async function cookieBaker() {
 		const cookieThemeColor = useCookie(COOKIE_KEY.themeColorCookieKey, DEFAULT_COOKIE_OPTION);
 		const cookieThemeColorCustom = useCookie(COOKIE_KEY.themeColorCustomCookieKey, DEFAULT_COOKIE_OPTION);
 		const cookieColoredSidebar = useCookie(COOKIE_KEY.coloredSidebarCookieKey, DEFAULT_COOKIE_OPTION);
-		const cookieSharpAppearanceMode = useCookie(COOKIE_KEY.sharpAppearanceModeCookieKey, DEFAULT_COOKIE_OPTION);
-		const cookieFlatAppearanceMode = useCookie(COOKIE_KEY.flatAppearanceModeCookieKey, DEFAULT_COOKIE_OPTION);
 		// HACK: 5 在此处添加
 
 		// nuxt cookie 对象 - 是否使用离线样式设置
@@ -44,15 +42,13 @@ export async function cookieBaker() {
 				uid: uid ? parseInt(uid, 10) : -1,
 				token: token || "",
 			};
-			await api.user.getSelfUserInfo(userAuthToken);
-			userSettings = await api.user.getUserSettings(userAuthToken);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: userAuthToken, appSettingsStore: useAppSettingsStore(), selfUserInfoStore: useSelfUserInfoStore(), headerCookie: undefined });
+			userSettings = await api.user.getUserSettings({ getUserSettingsRequest: userAuthToken });
 
 			cookieThemeType.value = userSettings?.userSettings?.themeType || THEME_ENV.SYSTEM_THEME;
 			cookieThemeColor.value = userSettings?.userSettings?.themeColor ? (PALETTE_LIST as unknown as string[]).includes(userSettings.userSettings.themeColor) ? userSettings.userSettings.themeColor : THEME_ENV.CUSTOM_THEME_COLOR : THEME_ENV.DEFAULT_THEME_COLOR;
 			cookieThemeColorCustom.value = userSettings?.userSettings?.themeColorCustom || THEME_ENV.DEFAULT_CUSTOM_THEME_COLOR;
 			cookieColoredSidebar.value = `${userSettings?.userSettings?.coloredSideBar === true}`;
-			cookieSharpAppearanceMode.value = `${userSettings?.userSettings?.sharpAppearanceMode === true}`;
-			cookieFlatAppearanceMode.value = `${userSettings?.userSettings?.flatAppearanceMode === true}`;
 			// HACK: 6 在此处添加
 
 			cookieIsLocalStorage.value = "false";
@@ -76,8 +72,6 @@ export function saveUserSetting2BrowserCookieStore(userSettings: GetUserSettings
 		const themeColor = userSettings?.userSettings?.themeColor ? (PALETTE_LIST as unknown as string[]).includes(userSettings.userSettings.themeColor) ? userSettings.userSettings.themeColor : THEME_ENV.CUSTOM_THEME_COLOR : THEME_ENV.DEFAULT_THEME_COLOR;
 		const themeColorCustom = userSettings?.userSettings?.themeColorCustom || "";
 		const isColoredSidebar = userSettings?.userSettings?.coloredSideBar || false;
-		const isSharpAppearanceMode = userSettings?.userSettings?.sharpAppearanceMode || false;
-		const isFlatAppearanceMode = userSettings?.userSettings?.flatAppearanceMode || false;
 		// HACK: 7 在此处添加
 
 		const userSettingsCookieBasicOption = `; expires=${new Date("9999/9/9").toUTCString()}; path=/; SameSite=Strict`;
@@ -86,8 +80,6 @@ export function saveUserSetting2BrowserCookieStore(userSettings: GetUserSettings
 		if (themeColor) document.cookie = `${COOKIE_KEY.themeColorCookieKey}=${themeColor}${userSettingsCookieBasicOption}`;
 		if (themeColorCustom) document.cookie = `${COOKIE_KEY.themeColorCustomCookieKey}=${themeColorCustom}${userSettingsCookieBasicOption}`;
 		if (isColoredSidebar !== undefined && isColoredSidebar !== null) document.cookie = `${COOKIE_KEY.coloredSidebarCookieKey}=${isColoredSidebar}${userSettingsCookieBasicOption}`;
-		if (isSharpAppearanceMode !== undefined && isSharpAppearanceMode !== null) document.cookie = `${COOKIE_KEY.sharpAppearanceModeCookieKey}=${isSharpAppearanceMode}${userSettingsCookieBasicOption}`;
-		if (isFlatAppearanceMode !== undefined && isFlatAppearanceMode !== null) document.cookie = `${COOKIE_KEY.flatAppearanceModeCookieKey}=${isFlatAppearanceMode}${userSettingsCookieBasicOption}`;
 		// HACK: 8 在此处添加
 	}
 }
@@ -209,28 +201,6 @@ export class SyncUserSettings {
 	public static updateOrCreateUserColoredSidebarSetting(cookieValue: boolean) {
 		const updateOrCreateUserSettingsRequest: UpdateOrCreateUserSettingsRequestDto = {
 			coloredSideBar: cookieValue,
-		};
-		api.user.updateUserSettings(updateOrCreateUserSettingsRequest);
-	}
-
-	/**
-	 * 发送更新用户的 SharpAppearanceMode 设置的请求
-	 * @param cookieValue SharpAppearanceMode 的新的值
-	 */
-	public static updateOrCreateUserSharpAppearanceModeSetting(cookieValue: boolean) {
-		const updateOrCreateUserSettingsRequest: UpdateOrCreateUserSettingsRequestDto = {
-			sharpAppearanceMode: cookieValue,
-		};
-		api.user.updateUserSettings(updateOrCreateUserSettingsRequest);
-	}
-
-	/**
-	 * 发送更新用户的 FlatAppearanceMode 设置的请求
-	 * @param cookieValue FlatAppearanceMode 的新的值
-	 */
-	public static updateOrCreateUserFlatAppearanceModeSetting(cookieValue: boolean) {
-		const updateOrCreateUserSettingsRequest: UpdateOrCreateUserSettingsRequestDto = {
-			sharpAppearanceMode: cookieValue,
 		};
 		api.user.updateUserSettings(updateOrCreateUserSettingsRequest);
 	}

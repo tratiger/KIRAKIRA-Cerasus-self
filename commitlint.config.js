@@ -13,7 +13,7 @@ export default {
 		"subject-full-stop": [RuleConfigSeverity.Error, "never", [".", "。"]],
 		"scope-case": [RuleConfigSeverity.Error, "always", "lower-case"],
 		"type-enum": [RuleConfigSeverity.Error, "always",
-			["build", "chore", "conflict", "ci", "delete", "docs", "feat", "fix", "font", "perf", "refactor", "revert", "stash", "style", "test"],
+			["build", "chore", "conflict", "ci", "delete", "docs", "feat", "fix", "font", "perf", "refactor", "revert", "stash", "style", "test", "try"],
 		],
 	},
 	prompt: {
@@ -107,7 +107,12 @@ export default {
 						description: "暂存文件",
 						title: "Stash Files",
 						emoji: "🗃️",
-					}
+					},
+					try: {
+						description: "尝试做什么但是不起作用，因此仅仅提交来备份代码",
+						title: "Try Something Useless",
+						emoji: "🤷",
+					},
 				},
 			},
 			scope: {

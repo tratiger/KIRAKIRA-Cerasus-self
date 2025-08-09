@@ -10,7 +10,7 @@
 	const is500 = computed(() => +props.statusCode === 500);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 </script>
 
 <template>
@@ -18,8 +18,7 @@
 		<div class="card">
 			<div class="stack">
 				<h2>{{ message }}</h2>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<div v-html="stack"></div>
+				<div v-text="stack"></div>
 			</div>
 			<div class="card-bottom">
 				<div class="bottom-left">

@@ -227,6 +227,7 @@
 
 		.item {
 			height: var(--height);
+			min-height: var(--height);
 			padding: 0 $start-indent;
 		}
 	}

@@ -1,4 +1,7 @@
 <script setup lang="ts" generic="T extends string">
+	/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+	// BUG: 上面那个是 typescript-eslint 的 bug，如果去掉，则会触发 typescript 的报错。简而言之就是目前 typescript-eslint 和 typescript 在互相打架。
+
 	const props = withDefaults(defineProps<{
 		/** 禁用。 */
 		disabled?: boolean;
@@ -107,9 +110,9 @@
 				<div class="radio" :class="{ 'is-animating': isAnimating }"></div>
 			</div>
 		</div>
-		<div v-if="hasLabel">
+		<div v-if="hasLabel" class="content">
 			<label><slot></slot></label>
-			<label class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 	</Comp>
 </template>
@@ -127,6 +130,10 @@
 		gap: 8px;
 		align-items: center;
 		cursor: pointer;
+
+		> .content > label.details {
+			margin-top: 4px;
+		}
 	}
 
 	@mixin short-transition {
@@ -220,11 +227,13 @@
 		@include circle;
 		animation: pressing-back $duration-half $ease-in alternate 2;
 
-		:comp:focus & {
+		:comp:any-hover &,
+		:comp:focus-visible & {
 			@include large-shadow-unchecked-focus;
 		}
 
-		:comp:focus input:checked + & {
+		:comp:any-hover input:checked + &,
+		:comp:focus-visible input:checked + & {
 			@include large-shadow-focus;
 		}
 	}

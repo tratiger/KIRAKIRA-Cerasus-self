@@ -29,15 +29,17 @@
 				aria-modal="true"
 				:aria-label="title"
 			>
-				<div class="body">
-					<Icon name="info" />
-					<div class="content-part">
-						<h2>{{ title ?? "KIRAKIRA 提示您" }}</h2>
-						<div class="content">
-							<slot><em>没有内容。</em></slot>
+				<ScrollContainer overflowX="clip">
+					<div class="body">
+						<Icon name="info" />
+						<div class="content-part">
+							<h2>{{ title ?? "KIRAKIRA 提示您" }}</h2>
+							<div class="content">
+								<slot><em>没有内容。</em></slot>
+							</div>
 						</div>
 					</div>
-				</div>
+				</ScrollContainer>
 				<div class="footer">
 					<div class="left">
 						<slot name="footer-left"></slot>
@@ -71,7 +73,7 @@
 
 		&.v-enter-from,
 		&.v-leave-to {
-			$scale: 1.05;
+			$scale: 1.1;
 			$scale-reciprocal: calc(1 / $scale);
 			scale: $scale;
 			opacity: 0;
@@ -85,6 +87,10 @@
 				translate: 0 $padding;
 				scale: $scale-reciprocal;
 			}
+		}
+
+		&.v-leave-to {
+			scale: 0.9;
 		}
 
 		&.v-enter-active,
@@ -112,14 +118,24 @@
 			margin-top: $margin-top;
 		}
 
-		.body {
+		.scroll-container {
 			@include card-in-card-shadow;
+
+			&:deep(> .scroller > .content) {
+				max-width: 100dvw;
+				max-height: 75dvh;
+			}
+		}
+
+		.body {
 			display: flex;
 			gap: 1rem;
 			padding: $padding;
-			overflow: clip overlay;
-			scrollbar-gutter: stable; // WARN: Chromium 114 开始，overflow 的 overlay 成了 auto 的别名，因此只能提前占位显示来确保不晃动。目前甚至 Chromium 自己的设置页都在依赖于 overlay，太荒谬了。https://bugs.chromium.org/p/chromium/issues/detail?id=1450927
 			background-color: c(main-bg, 45%);
+
+			@include mobile {
+				padding: 16px;
+			}
 
 			.icon {
 				--i: 0;
@@ -141,7 +157,6 @@
 			}
 
 			.content-part {
-				@include fix-page-end-padding;
 				width: 100%;
 			}
 		}
@@ -150,6 +165,10 @@
 			@include flex-center;
 			justify-content: space-between;
 			padding: 18px $padding;
+
+			@include mobile {
+				padding: 14px 16px;
+			}
 
 			.right {
 				--i: 2;

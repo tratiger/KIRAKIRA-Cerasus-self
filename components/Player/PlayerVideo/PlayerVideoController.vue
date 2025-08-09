@@ -71,27 +71,16 @@
 		},
 	});
 	const countdown = ref(false);
-
 	const volumeMenu = ref<MenuModel>();
 	const rateMenu = ref<MenuModel>();
 	const qualityMenu = ref<MenuModel>();
 	const tracksSorted = computed(() => props.tracks.sort((a, b) => (b.height || 0) - (a.height || 0)));
-
-	const currentPercent = computed({
-		get() {
-			const result = model.value / props.duration;
-			return Number.isFinite(result) ? result : 0;
-		},
-		set(percent) {
-			const newTime = percent * props.duration;
-			model.value = newTime;
-		},
-	});
-
+	const isDraggingSlider = ref(false);
+	const pendingTime = ref<number>(NaN);
+	const seekingIcon = ref<DeclaredIcons>();
 	const currentTime = computed(() => new Duration(model.value).toString());
 	const countdownTime = computed(() => new Duration(model.value - props.duration).toString());
 	const duration = computed(() => new Duration(props.duration).toString());
-
 	const mobile = () => getResponsiveDevice() === "mobile";
 
 	/**
@@ -161,6 +150,34 @@
 		useEvent("component:hideAllPlayerVideoMenu");
 		showFullbrowserBtn.value = !props.fullscreen;
 	}
+
+	/**
+	 * 当用户拖拽时间进度滑动条时的事件。
+	 * @param isSeeking - 用户正在拖拽滑动条？
+	 */
+	function onSeeking(isSeeking: boolean) {
+		if (isSeeking)
+			isDraggingSlider.value = true;
+		else {
+			model.value = pendingTime.value;
+			seekingIcon.value = undefined;
+			isDraggingSlider.value = false;
+		}
+	}
+
+	/**
+	 * 当用户拖拽时间进度滑动条时改变为快进或快退的图标。
+	 * @param relativeChangingTime - 相对改变时间，即新时间减去旧时间。
+	 */
+	function setSeekingIcon(relativeChangingTime: number) {
+		if (relativeChangingTime === 0) {
+			if (!seekingIcon.value) seekingIcon.value = "fast_forward";
+		} else seekingIcon.value = relativeChangingTime > 0 ? "fast_forward" : "fast_rewind";
+	}
+
+	watch(model, model => {
+		if (!Number.isNaN(model) && !isDraggingSlider.value) pendingTime.value = model;
+	}, { immediate: true });
 
 	const playbackRateText = (rate: number) => (2 ** rate).toFixed(2).replace(/\.?0+$/, "") + "×";
 	const volumeText = (volume: number) => Math.round(volume * 100) + "%";
@@ -260,23 +277,25 @@
 
 	<Comp role="toolbar" :class="{ mobile: isMobile(), hidden }" v-bind="$attrs">
 		<div class="left">
-			<SoftButton class="play" :disabled="splash" :icon="ended ? 'replay' : playing ? 'pause' : 'play'" @click="playing = !playing" />
-			<Transition>
-				<div v-if="settings?.controller.showFrameByFrame" class="frame-by-frame">
-					<SoftButton :disabled="splash || !getCurrentFrameRate()" icon="caret_left" @click="model -= (1 / getCurrentFrameRate()!)" />
-					<SoftButton :disabled="splash || !getCurrentFrameRate()" icon="caret_right" @click="model += (1 / getCurrentFrameRate()!)" />
-				</div>
-			</Transition>
+			<SoftButton class="play" :disabled="splash" :icon="seekingIcon ?? (ended ? 'replay' : playing ? 'pause' : 'play')" @click="playing = !playing" />
+			<Transition><SoftButton v-if="settings?.controller.showStop && !settings?.controller.showFrameByFrame" :disabled="splash" icon="stop" @click="model = 0; playing = false;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showReplay && !ended" :disabled="splash" icon="replay" @click="model = 0; playing = true;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showStop && settings?.controller.showFrameByFrame" :disabled="splash" icon="skip_previous" @click="model = 0; playing = false;" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_left" @click="model -= (1 / getCurrentFrameRate()!)" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showFrameByFrame" :disabled="splash || !getCurrentFrameRate()" icon="caret_right" @click="model += (1 / getCurrentFrameRate()!)" /></Transition>
+			<Transition><SoftButton v-if="settings?.controller.showStop && settings?.controller.showFrameByFrame" :disabled="splash" icon="skip_next" @click="model = props.duration; playing = false;" /></Transition>
 		</div>
 		<div class="slider-wrapper">
 			<Slider
-				v-model="currentPercent"
+				v-model="pendingTime"
 				:min="0"
-				:max="1"
+				:max="props.duration"
 				:buffered="buffered?.map(timeRanges => timeRanges.map(seconds => seconds / props.duration)) as Buffered"
 				:waiting
 				pending="cursor"
 				:displayValue="pending => new Duration(pending * props.duration).toString()"
+				@changing="(value) => { onSeeking(true); setSeekingIcon(value - model); }"
+				@changed="onSeeking(false)"
 			/>
 		</div>
 		<div class="right">
@@ -327,8 +346,8 @@
 <style scoped lang="scss">
 	$thickness: 36px;
 	$twin-thickness: 60px;
-	$ripple-fix-padding: calc(($thickness * (64px / 40px) - $thickness) / 2); // 修复水波纹切割，用于padding。
-	$ripple-fix-margin: calc(($thickness * (64px / 40px) - $thickness) / -2); // 修复水波纹切割，用于margin。
+	$ripple-fix-padding: calc(($thickness * (64px / 40px) - $thickness) / 2); // 修复水波纹切割，用于 padding。
+	$ripple-fix-margin: calc(($thickness * (64px / 40px) - $thickness) / -2); // 修复水波纹切割，用于 margin。
 
 	:comp {
 		position: relative;
@@ -339,7 +358,7 @@
 		color: c(icon-color);
 		font-size: 14px;
 		font-weight: 600;
-		background-color: c(main-bg);
+		// background-color: c(main-bg);
 
 		.fullscreen & {
 			@include acrylic-background;
@@ -388,14 +407,8 @@
 			padding-left: $ripple-fix-padding;
 		}
 
-		.play {
-			width: $thickness + 10px;
-		}
-
-		.frame-by-frame {
-			display: flex;
-			width: $thickness * 2;
-			margin-right: 6px;
+		> * {
+			width: $thickness;
 
 			&.v-enter-from,
 			&.v-leave-to {
@@ -404,6 +417,14 @@
 				scale: 0;
 				opacity: 0;
 			}
+		}
+
+		.play {
+			width: $thickness + 10px;
+		}
+
+		&:has(.play + *) {
+			margin-right: 6px;
 		}
 	}
 
@@ -442,6 +463,7 @@
 
 		> * {
 			@include flex-center;
+			font-feature-settings: "case" on;
 			font-variant-numeric: tabular-nums;
 			text-align: center;
 		}
@@ -522,7 +544,6 @@
 			font-size: 12px;
 			font-weight: normal;
 			font-variant-numeric: tabular-nums;
-			letter-spacing: 1;
 		}
 	}
 

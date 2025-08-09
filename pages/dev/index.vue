@@ -30,12 +30,13 @@
 		["富文本测试页", "/dev/test-rich-text-editor"],
 		["动态图标测试页", "/dev/test-lottie"],
 		["字体测试页", "/dev/test-font"],
+		["滚动测试页", "/dev/test-scroll"],
 		["滑块测试页", "/dev/test-slider"],
 		["颜色测试页", "/dev/test-color"],
 		["指针类型检测", "/dev/pointer-type"],
 		["示例视频", "/video/kvtest"],
 		["kv1", "/video/kv1"],
-		["kv3", "/video/kv3"], // FIXME: 以路由形式进入不存在的页面不会跳转到对应的 404 或 301 等错误页面，以新窗口打开时则正常。
+		["kv3000", "/video/kv3000"], // FIXME: 以路由形式进入不存在的页面不会跳转到对应的 404 或 301 等错误页面，以新窗口打开时则正常。
 		["示例音频", "/audio"],
 		["示例相簿", "/photo"],
 		["搜索", "/search"],

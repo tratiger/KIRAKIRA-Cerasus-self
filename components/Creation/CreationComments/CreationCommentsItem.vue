@@ -1,4 +1,6 @@
 <script setup lang="ts">
+	import NumberFlow from "@number-flow/vue";
+
 	const props = withDefaults(defineProps<{
 		/** 评论唯一 ID */
 		commentId: string;
@@ -10,6 +12,8 @@
 		nickname?: string;
 		/** 评论发布者用户名。 */
 		username?: string;
+		/** 评论发布者角色 */
+		roles?: string[];
 		/** 评论序号。 */
 		index?: number; // 我不赞成在序号前导 0，因为你怎敢假定评论数在绝大多数情况下小于或等于两位数？
 		/** 评论发布日期。 */
@@ -42,13 +46,13 @@
 	const voteLock = ref(false);
 
 	const userSelfInfoStore = useSelfUserInfoStore();
-	const isSelfComment = computed(() => props.uid === userSelfInfoStore.uid); // 这条评论是否是自己发送的
-	const isAdmin = computed(() => userSelfInfoStore.role === "admin"); // 这条评论是否是自己发送的
+	const isSelfComment = computed(() => props.uid === userSelfInfoStore.userInfo.uid); // 这条评论是否是自己发送的
+	const isAdmin = computed(() => userSelfInfoStore.userInfo.roles?.includes("administrator")); // 用户是否是管理员
 
 	/**
 	 * 点击加分、减分按钮事件。
 	 * @param button - 点击的按钮是加分还是减分。
-	 * @param [noNestingDolls=false] - 禁止套娃，防止递归调用。
+	 * @param [noNestingDolls] - 禁止套娃，防止递归调用。
 	 */
 	function onClickVotes(button: "upvote" | "downvote", noNestingDolls: boolean = false) {
 		// const states = { upvote, isUpvoted, downvote, isDownvoted };
@@ -62,17 +66,17 @@
 		const videoId = props.videoId; // 视频 ID
 
 		if (!props.index || !commentId || videoId === undefined || videoId === null) { // 非空验证
-			useToast("出错啦！请刷新页面再试~", "error"); // TODO: 使用多语言
+			useToast(t.toast.something_went_wrong, "error");
 			return;
 		}
 
 		if (voteLock.value) { // 如果请求的“悲观锁”处于锁定状态，则弹出错误提示并停止
-			useToast("操作过于频繁，请稍后再试~", "error"); // TODO: 使用多语言
+			useToast(t.toast.too_many_requests, "error");
 			return;
 		}
 
 		if (!userSelfInfoStore.isLogined) { // 如果用户未登录，则不允许加分/减分
-			useToast("请登录后再操作~", "error"); // TODO: 使用多语言
+			useEvent("app:requestLogin");
 			return;
 		}
 
@@ -94,16 +98,16 @@
 
 	/**
 	 * 视频评论加分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function emitVideoCommentUpvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
 		const emitVideoCommentUpvoteRequest: EmitVideoCommentUpvoteRequestDto = { id: commentId, videoId };
 		api.videoComment.emitVideoCommentUpvote(emitVideoCommentUpvoteRequest).catch(error => {
 			voteLock.value = false; // 请求锁：释放
-			useToast("加分失败！", "error"); // TODO: 使用多语言
-			console.error("ERROR", "加分失败！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("ERROR", "Failed to upvote:", error);
 		}).finally(() => {
 			voteLock.value = false; // 请求锁：释放
 		});
@@ -118,16 +122,16 @@
 
 	/**
 	 * 取消视频评论加分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function cancelVideoCommentUpvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
 		const cancelVideoCommentUpvoteRequest: CancelVideoCommentUpvoteRequestDto = { id: commentId, videoId };
 		api.videoComment.cancelVideoCommentUpvote(cancelVideoCommentUpvoteRequest).catch(error => {
 			voteLock.value = false; // 请求锁：释放
-			useToast("取消加分失败！", "error"); // TODO: 使用多语言
-			console.error("ERROR", "取消加分失败！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("ERROR", "Failed to undo upvote:", error);
 		}).finally(() => {
 			voteLock.value = false; // 请求锁：释放
 		});
@@ -138,16 +142,16 @@
 
 	/**
 	 * 视频评论减分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function emitVideoCommentDownvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
 		const emitVideoCommentDownvoteRequest: EmitVideoCommentDownvoteRequestDto = { id: commentId, videoId };
 		api.videoComment.emitVideoCommentDownvote(emitVideoCommentDownvoteRequest).catch(error => {
 			voteLock.value = false; // 请求锁：释放
-			useToast("减分失败！", "error"); // TODO: 使用多语言
-			console.error("ERROR", "减分失败！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("ERROR", "Failed to downvote:", error);
 		}).finally(() => {
 			voteLock.value = false; // 请求锁：释放
 		});
@@ -162,16 +166,16 @@
 
 	/**
 	 * 取消视频评论减分
-	 * @param commentId 视频评论 ID
-	 * @param videoId 视频 ID
+	 * @param commentId - 视频评论 ID
+	 * @param videoId - 视频 ID
 	 */
 	function cancelVideoCommentDownvote(commentId: string, videoId: number) {
 		voteLock.value = true; // 请求锁：锁定
 		const cancelVideoCommentDownvoteRequest: CancelVideoCommentDownvoteRequestDto = { id: commentId, videoId };
 		api.videoComment.cancelVideoCommentDownvote(cancelVideoCommentDownvoteRequest).catch(error => {
 			voteLock.value = false; // 请求锁：释放
-			useToast("取消减分失败！", "error"); // TODO: 使用多语言
-			console.error("ERROR", "取消减分失败！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("ERROR", "Failed to undo downvote:", error);
 		}).finally(() => {
 			voteLock.value = false; // 请求锁：释放
 		});
@@ -193,10 +197,10 @@
 		};
 		const deleteVideoResult = await api.videoComment.deleteSelfVideoComment(deleteSelfVideoCommentRequest);
 		if (deleteVideoResult.success) {
-			useToast("删除评论成功！", "success", 5000); // TODO: 使用多语言
+			useToast(t.toast.comment_delete_success, "success", 5000);
 			useEvent("videoComment:deleteVideoComment", commentRoute);
 		} else
-			useToast("删除评论失败！", "error", 5000); // TODO: 使用多语言
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			// TODO: 性能问题
 	}
 
@@ -213,31 +217,34 @@
 		};
 		const deleteVideoResult = await api.videoComment.adminDeleteVideoComment(adminDeleteVideoCommentRequest);
 		if (deleteVideoResult.success) {
-			useToast("删除评论成功！", "success", 5000); // TODO: 使用多语言
+			useToast(t.toast.comment_delete_success, "success", 5000);
 			useEvent("videoComment:deleteVideoComment", commentRoute);
 		} else
-			useToast("删除评论失败！", "error", 5000); // TODO: 使用多语言
+			useToast(t.toast.something_went_wrong, "error", 5000);
 			// TODO: 性能问题
 	}
 </script>
 
 <template>
 	<Comp>
-		<UserContent :avatar :uid :nickname :username :date :index :pinned>
+		<UserContent
+			:avatar
+			:uid
+			:nickname
+			:username
+			:date
+			:index
+			:pinned
+		>
 			<div class="comments">
 				<slot></slot>
 			</div>
 
 			<template #footerLeft>
-				<div class="votes-wrapper">
-					<div class="votes">
-						<SoftButton v-tooltip:bottom="t.upvote" icon="thumb_up" :active="isUpvoted" @click="onClickVotes('upvote')" />
-						<span v-if="upvote">{{ upvote }}</span>
-					</div>
-					<div class="votes">
-						<SoftButton v-tooltip:bottom="t.downvote" icon="thumb_down" :active="isDownvoted" @click="onClickVotes('downvote')" />
-						<span v-if="downvote">{{ downvote }}</span>
-					</div>
+				<div class="votes">
+					<SoftButton v-tooltip:bottom="t.upvote" icon="arrow_up" :active="isUpvoted" @click="onClickVotes('upvote')" />
+					<NumberFlow :value="upvote - downvote" />
+					<SoftButton v-tooltip:bottom="t.downvote" icon="arrow_down" :active="isDownvoted" @click="onClickVotes('downvote')" />
 				</div>
 			</template>
 
@@ -246,8 +253,7 @@
 				<SoftButton v-tooltip:bottom="t.more" icon="more_vert" @click="e => menu = [e, 'y']" />
 				<Menu v-model="menu">
 					<MenuItem v-if="isSelfComment" icon="delete" @click="deleteSelfComment(commentRoute, videoId)">{{ t.delete }}</MenuItem>
-					<!-- TODO: 使用多语言 -->
-					<MenuItem v-if="isAdmin" icon="delete" @click="adminDeleteVideoComment(commentRoute, videoId)">{{ t.delete }}（管理员）</MenuItem>
+					<MenuItem v-if="isAdmin" icon="delete" @click="adminDeleteVideoComment(commentRoute, videoId)">{{ t.delete }}{{ t.admin_operation_suffix }}</MenuItem>
 					<MenuItem :icon="unpinnedCaption" @click="pinned = !pinned">{{ t[unpinnedCaption] }}</MenuItem>
 					<hr />
 					<MenuItem icon="flag">{{ t.report }}</MenuItem>
@@ -300,14 +306,11 @@
 			margin-left: auto;
 		}
 
-		.votes-wrapper {
-			display: flex;
-			gap: 8px;
-		}
-
 		.votes {
 			display: flex;
+			gap: 4px;
 			align-items: center;
+			margin-left: -8px;
 		}
 	}
 </style>

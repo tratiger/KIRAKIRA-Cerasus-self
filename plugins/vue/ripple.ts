@@ -93,9 +93,9 @@ export default defineNuxtPlugin(nuxt => {
 				const IS_FADING_CLASS = "is-fading";
 				for (const circle of document.getElementsByClassName(circleClass)) {
 					if (circle.classList.contains(IS_FADING_CLASS)) continue;
-					const spreadRipple = circle.getAnimations().find(animation => animation.id === spreadRippleId);
-					if (spreadRipple)
-						spreadRipple.updatePlaybackRate(3);
+					// const spreadRipple = circle.getAnimations().find(animation => animation.id === spreadRippleId);
+					// if (spreadRipple)
+					// 	spreadRipple.updatePlaybackRate(3);
 					circle.classList.add(IS_FADING_CLASS);
 					circle.animate([
 						{ opacity: 1 },

@@ -3,9 +3,10 @@
 
 	// const avatar = "/static/images/avatars/aira.webp";
 	const selfUserInfoStore = useSelfUserInfoStore();
+	const appSettingsStore = useAppSettingsStore();
 
 	const newAvatar = ref<string>(); // 新上传的头像
-	const correctAvatar = computed(() => newAvatar.value ?? selfUserInfoStore.userAvatar); // 正确显示的头像（如果用户没有新上传头像，则使用全局变量中的旧头像）
+	const correctAvatar = computed(() => newAvatar.value ?? selfUserInfoStore.userInfo.avatar); // 正确显示的头像（如果用户没有新上传头像，则使用全局变量中的旧头像）
 	const userAvatarUploadFile = ref<string | undefined>(); // 用户上传的头像文件 Blob
 	const isAvatarCropperOpen = ref(false); // 用户头像图片裁剪器是否开启
 	const newAvatarImageBlob = ref<Blob>(); // 用户裁剪后的头像
@@ -13,12 +14,18 @@
 	const isUpdateUserInfo = ref<boolean>(false); // 是否正在上传用户信息
 	const isResetUserInfo = ref<boolean>(false); // 是否正在重置用户信息
 	const profile = reactive({
-		name: selfUserInfoStore.username,
-		nickname: selfUserInfoStore.userNickname,
-		bio: selfUserInfoStore.signature,
-		gender: selfUserInfoStore.gender,
-		birthday: new Date(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-		tags: selfUserInfoStore.tags,
+		name: selfUserInfoStore.userInfo.username?.normalize() ?? "",
+		nickname: selfUserInfoStore.userInfo.userNickname?.normalize() ?? "",
+		bio: selfUserInfoStore.userInfo.signature?.normalize() ?? "",
+		gender: selfUserInfoStore.userInfo.gender?.normalize() ?? "",
+		birthday: (() => {
+			try {
+				return Temporal.PlainDate.from(selfUserInfoStore.userInfo.userBirthday!);
+			} catch {
+				return Temporal.Now.plainDateISO().withCalendar("gregory");
+			}
+		})(),
+		tags: selfUserInfoStore.userInfo.label?.map(label => label.labelName?.normalize()) ?? [],
 	});
 	const cropper = ref<InstanceType<typeof ImageCropper>>(); // 图片裁剪器实例
 	const isUploadingUserAvatar = ref(false); // 是否正在上传头像
@@ -44,8 +51,8 @@
 
 		if (image) {
 			if (!/\.(a?png|jpe?g|jfif|pjp(eg)?|gif|svg|webp)$/i.test(fileInput.value)) {
-				useToast("只能上传图片文件！", "error"); // TODO: 使用多语言
-				console.error("ERROR", "不支持所选头像图片格式！");
+				useToast(t.toast.unsupported_image_format, "error");
+				console.error("ERROR", t.toast.unsupported_image_format);
 				return;
 			}
 
@@ -67,10 +74,10 @@
 				newAvatar.value = imageBlobUrl;
 				newAvatarImageBlob.value = blobImageData;
 			} else
-				useToast("裁剪头像失败，请刷新页面后重试", "error", 5000); // TODO: 使用多语言
+				useToast(t.toast.something_went_wrong, "error", 5000);
 		} catch (error) {
-			useToast("修改头像失败，请刷新页面后重试", "error", 5000); // TODO: 使用多语言
-			console.error("ERROR", "修改头像失败", error);
+			useToast(t.toast.something_went_wrong, "error", 5000);
+			console.error("ERROR", "Failed to update avatar.", error);
 		}
 		isUploadingUserAvatar.value = false;
 		isAvatarCropperOpen.value = false;
@@ -94,12 +101,12 @@
 					}
 				}
 			} else {
-				useToast("无法获取裁切后的图片！", "error"); // TODO: 使用多语言
-				console.error("ERROR", "无法获取裁切后的图片");
+				useToast(t.toast.something_went_wrong, "error");
+				console.error("ERROR", "Failed to get cropped image data.");
 			}
 		} catch (error) {
-			useToast("头像上传失败！", "error"); // TODO: 使用多语言
-			console.error("ERROR", "在上传用户头像时出错", error);
+			useToast(t.toast.avatar_upload_failed, "error");
+			console.error("ERROR", "Failed to upload avatar.", error);
 		}
 	}
 
@@ -108,9 +115,10 @@
 	 *
 	 * 同时具有验证用户 token 的功能。
 	 */
-	async function getUserInfo() {
+	async function getSelfUserInfoController() {
 		try {
-			await api.user.getSelfUserInfo();
+			const headerCookie = useRequestHeaders(["cookie"]);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie });
 		} catch (error) {
 			console.error("无法获取用户信息，请尝试重新登录", error);
 		}
@@ -135,34 +143,34 @@
 			try {
 				await handleSubmitAvatarImage();
 			} catch (error) {
-				useToast("头像上传失败！", "error"); // TODO: 使用多语言
-				console.error("ERROR", "在上传用户头像时出错", error);
+				useToast(t.toast.avatar_upload_failed, "error");
+				console.error("ERROR", "Failed to upload avatar.", error);
 			}
 
 		const updateOrCreateUserInfoRequest: UpdateOrCreateUserInfoRequestDto = {
 			avatar: correctAvatar.value,
-			username: profile.name,
-			userNickname: profile.nickname,
-			signature: profile.bio,
-			gender: profile.gender,
-			userBirthday: new Date().getTime(), // TODO: 日期选择器 // FIXME: 注意：这个值是静态的、非响应式的，不会随时间变化
-			label: profile.tags.map((tag, index) => ({ id: index, labelName: tag })),
+			username: profile.name.normalize(),
+			userNickname: profile.nickname.normalize(),
+			signature: profile.bio.normalize(),
+			gender: profile.gender.normalize(),
+			userBirthday: profile.birthday.toString(),
+			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie: undefined });
 				isUpdateUserInfo.value = false;
 				newAvatarImageBlob.value = undefined;
-				useToast("用户信息已更新！", "success"); // TODO: 使用多语言
+				useToast(t.toast.profile_updated, "success");
 			} else {
 				isUpdateUserInfo.value = false;
-				useToast("用户信息更新失败！", "error"); // TODO: 使用多语言
+				useToast(t.toast.something_went_wrong, "error");
 			}
 		} catch (error) {
 			isUpdateUserInfo.value = false;
-			useToast("用户信息更新失败！", "error"); // TODO: 使用多语言
-			console.error("用户信息更新失败！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("Failed to update profile.", error);
 		}
 	}
 
@@ -191,58 +199,55 @@
 		try {
 			const updateOrCreateUserInfoResult = await api.user.updateOrCreateUserInfo(updateOrCreateUserInfoRequest);
 			if (updateOrCreateUserInfoResult.success) {
-				await api.user.getSelfUserInfo();
+				await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore, selfUserInfoStore, headerCookie: undefined });
 				isResetUserInfo.value = false;
 				showConfirmResetAlert.value = false;
 			} else {
 				isResetUserInfo.value = false;
-				useToast("未能清空用户信息！", "error"); // TODO: 使用多语言
+				useToast(t.toast.something_went_wrong, "error");
 			}
 		} catch (error) {
 			isResetUserInfo.value = false;
-			useToast("未能清空用户信息！", "error"); // TODO: 使用多语言
-			console.error("未能清空用户信息！", error);
+			useToast(t.toast.something_went_wrong, "error");
+			console.error("Failed to reset profile.", error);
 		}
 	}
 
 	/**
 	 * 将 Pinia 中的用户数据拷贝到当前组件的响应式变量 "profile" 中
 	 */
-	function copyPiniaUserInfo2Profile() {
-		profile.name = selfUserInfoStore.username;
-		profile.nickname = selfUserInfoStore.userNickname;
-		profile.bio = selfUserInfoStore.signature;
-		profile.gender = selfUserInfoStore.gender;
-		profile.tags = selfUserInfoStore.tags;
+	function copyPiniaUserInfoToProfile() {
+		profile.name = selfUserInfoStore.userInfo.username?.normalize() ?? "";
+		profile.nickname = selfUserInfoStore.userInfo.userNickname?.normalize() ?? "";
+		profile.bio = selfUserInfoStore.userInfo.signature?.normalize() ?? "";
+		profile.gender = selfUserInfoStore.userInfo.gender?.normalize() ?? "";
+		profile.tags = selfUserInfoStore.userInfo.label?.map(label => label.labelName?.normalize()) ?? [];
 	}
 
 	useEventListener(userAvatarFileInput, "change", handleOpenAvatarCropper); // 监听头像文件变化事件
-	onMounted(async () => { await api.user.getSelfUserInfo(); });
+
+	onMounted(async () => await getSelfUserInfoController());
 	onBeforeUnmount(clearBlobUrl); // 释放内存
-	watch(selfUserInfoStore, copyPiniaUserInfo2Profile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
+	watch(selfUserInfoStore, copyPiniaUserInfoToProfile); // 监听 Pinia 中的用户数据，一定发生改变，则拷贝到当前组件的响应式变量 "profile" 中
 	useListen("user:login", async loginStatus => { // 发生用户登录事件，请求最新用户信息，并修改 Pinia 中的用户数据，然后触发上方的监听
 		if (loginStatus)
-			await api.user.getSelfUserInfo();
+			await getSelfUserInfoController();
 	});
 </script>
 
 <template>
 	<div>
 		<Alert v-model="showConfirmResetAlert" static>
-			<!-- TODO: 使用多语言 -->
-			确定要重置用户信息设置吗？
+			{{ t.confirm.reset_profile }}
 			<template #footer-left>
-				<!-- TODO: 使用多语言 -->
-				<Button @click="reset" :loading="isResetUserInfo" :disabled="isUpdateUserInfo || isResetUserInfo">确认</Button>
+				<Button @click="reset" :loading="isResetUserInfo" :disabled="isUpdateUserInfo || isResetUserInfo">{{ t.step.ok }}</Button>
 			</template>
 			<template #footer-right>
-				<!-- TODO: 使用多语言 -->
-				<Button @click="showConfirmResetAlert = false" class="secondary">取消</Button>
+				<Button @click="showConfirmResetAlert = false" class="secondary">{{ t.step.cancel }}</Button>
 			</template>
 		</Alert>
 
-		<!-- TODO: 使用多语言 -->
-		<Modal v-model="isAvatarCropperOpen" title="更新头像">
+		<Modal v-model="isAvatarCropperOpen" :title="t.profile.edit_avatar">
 			<div class="avatar-cropper">
 				<ImageCropper
 					ref="cropper"
@@ -256,15 +261,13 @@
 				/>
 			</div>
 			<template #footer-right>
-				<!-- TODO: 使用多语言 -->
-				<Button class="secondary" @click="isAvatarCropperOpen = false">取消</Button>
-				<!-- TODO: 使用多语言 -->
-				<Button :loading="isUploadingUserAvatar" @click="handleChangeAvatarImage">更新头像</Button>
+				<Button class="secondary" @click="isAvatarCropperOpen = false">{{ t.step.cancel }}</Button>
+				<Button :loading="isUploadingUserAvatar" @click="handleChangeAvatarImage">{{ t.step.ok }}</Button>
 			</template>
 		</Modal>
 
 		<div v-ripple class="banner">
-			<NuxtImg :src="banner" alt="banner" draggable="false" format="avif" placeholder />
+			<NuxtPicture :src="banner" alt="banner" draggable="false" format="avif" />
 			<span>{{ t.profile.edit_banner }}</span>
 		</div>
 
@@ -292,7 +295,8 @@
 		overflow: clip;
 		background-color: c(gray-5);
 
-		>img {
+		> picture,
+		> picture :deep(img) {
 			z-index: 1;
 			width: 100%;
 			height: 150px;

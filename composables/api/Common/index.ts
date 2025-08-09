@@ -3,9 +3,9 @@ type HeadersObject = Record<string, string>;
 
 /**
  * 带有超时停止的 fetch
- * @param resource 请求的目标
- * @param options 请求中附带的内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param resource - 请求的目标
+ * @param options - 请求中附带的内容
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请求结果
  */
 async function fetchWithTimeout(resource: RequestInfo, options: RequestInit = {}, timeout = 30000) {
@@ -27,10 +27,10 @@ async function fetchWithTimeout(resource: RequestInfo, options: RequestInit = {}
 
 /**
  * 发送 GET 请求
- * @param url 请求的网址
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param url - 请求的网址
+ * @param requestOptions - 请求携带的请求标头
+ * @param headerOptions - 请求携带的 Header 内容
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请取结果
  */
 export async function GET(url: string, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
@@ -49,11 +49,11 @@ export async function GET(url: string, requestOptions: RequestObject = {}, heade
 
 /**
  * 发送 POST 请求
- * @param url 请求的网址
- * @param body 请求的 body 内容
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param url - 请求的网址
+ * @param body - 请求的 body 内容
+ * @param requestOptions - 请求携带的请求标头
+ * @param headerOptions - 请求携带的 Header 内容
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请求结果
  */
 export async function POST(url: string, body: unknown, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
@@ -76,11 +76,11 @@ export async function POST(url: string, body: unknown, requestOptions: RequestOb
 
 /**
  * 发送 DELETE 请求
- * @param url 请求的网址
- * @param body 请求的 body 内容
- * @param requestOptions 请求携带的请求标头
- * @param headerOptions 请求携带的 Header 内容
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param url - 请求的网址
+ * @param body - 请求的 body 内容
+ * @param requestOptions - 请求携带的请求标头
+ * @param headerOptions - 请求携带的 Header 内容
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请求结果
  */
 export async function DELETE(url: string, body: unknown, requestOptions: RequestObject = {}, headerOptions: HeadersObject = {}, timeout?: number): Promise<unknown> {
@@ -103,10 +103,10 @@ export async function DELETE(url: string, body: unknown, requestOptions: Request
 
 /**
  * 发送 PUT 请求向 Cloudflare R2 上传文件
- * @param signedUrl R2 用于上传文件的预编译 URL
- * @param body 上传的文件的 Blob
- * @param contentType 请求负载的数据的媒体类型，例如：'application/json', 'image/png' 等。详细的 Content-Type 请参照本文件最下方的注释
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param signedUrl - R2 用于上传文件的预编译 URL
+ * @param body - 上传的文件的 Blob
+ * @param contentType - 请求负载的数据的媒体类型，例如：'application/json', 'image/png' 等。详细的 Content-Type 请参照本文件最下方的注释
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请求结果，上传成功 true，否则 false
  */
 export async function uploadFile2R2(signedUrl: string, body: Blob, contentType: string, timeout: number = 30000): Promise<void> {
@@ -159,10 +159,10 @@ export async function uploadFile2R2(signedUrl: string, body: Blob, contentType: 
 
 /**
  * 发送 POST 请求向 Cloudflare Image 上传文件
- * @param fileName 上传的文件名
- * @param signedUrl R2 用于上传文件的预编译 URL
- * @param body 上传的文件的 Blob
- * @param timeout 请求超时时间（毫秒），默认：30000ms
+ * @param fileName - 上传的文件名
+ * @param signedUrl - R2 用于上传文件的预编译 URL
+ * @param body - 上传的文件的 Blob
+ * @param timeout - 请求超时时间（毫秒），默认：30000ms
  * @returns 请求结果，上传成功 true，否则 false
  */
 export async function uploadFile2CloudflareImages(fileName: string, signedUrl: string, body: Blob, timeout: number = 30000): Promise<void> {

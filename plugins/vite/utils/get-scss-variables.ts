@@ -1,5 +1,4 @@
-/* eslint-disable require-jsdoc */
-import { VariableName } from "../../../classes/VariableName";
+import VariableName from "variable-name-conversion";
 import { createScssVariablesReference } from "../../../utils/style";
 
 const createScssVariablesReferenceFunctionName = "createScssVariablesReference";
@@ -31,7 +30,7 @@ export function getScssVariables(styles: string | string[]) {
 			numbers[camelName] = parseFloat(value);
 		}
 	}
-	
+
 	return { variables, numbers };
 }
 

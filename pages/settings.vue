@@ -1,5 +1,7 @@
 <script setup lang="ts">
 	definePageMeta({
+		hideAppBar: true,
+		hideBottomNav: true,
 		pageTransition: {
 			name: "settings",
 			mode: "out-in",
@@ -38,7 +40,8 @@
 	const htmlTitle = computed(() => title.value + " - " + settingsString);
 
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const appSettingsStore = useAppSettingsStore();
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
 
@@ -68,7 +71,7 @@
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
 			{ id: "account-linking", icon: "groups" },
-			{ id: "blocklist", icon: "block" },
+			{ id: "block-and-hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],
 		general: [
@@ -93,12 +96,12 @@
 	 * 登出。
 	 */
 	async function logout() {
-		const logoutResult = await api.user.userLogout();
+		const logoutResult = await api.user.userLogout({ appSettingsStore, selfUserInfoStore });
 		if (logoutResult.success) {
 			const curPage = currentSettingsPage();
 			if (settings.general.findIndex(({ id }) => id === curPage) === -1)
 				navigate("/settings/appearance");
-			useToast("你已成功登出！", "success"); // TODO: 使用多语言
+			useToast(t.toast.logout_success, "success");
 			useEvent("user:login", false);
 		}
 	}
@@ -112,43 +115,66 @@
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: useAppSettingsStore().showCssDoodle || useAppSettingsStore().backgroundImage.image.data }">
+	<div v-bind="$attrs" class="settings" :class="{ transparent: appSettingsStore.backgroundImage.image.data }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">
 			<div class="content">
-				<header class="title content padding-end">
-					<header class="title nav-header">
-						<h1>{{ t.settings }}</h1>
-						<TextBox v-model="search" type="search" :placeholder="t.settings.search" icon="search" />
-					</header>
-					<TabBar v-model="currentSettingsRequested" vertical>
-						<Subheader v-if="selfUserInfoStore.isLogined" icon="person">{{ t.settings.user }}</Subheader>
-						<template v-if="selfUserInfoStore.isLogined">
-							<TabItem v-for="setting in settings.personal" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
-						</template>
-						<Subheader icon="apps">{{ t.settings.app }}</Subheader>
-						<TabItem v-for="setting in settings.general" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
-						<!-- TODO: 使用多语言 -->
-						<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
-						<template v-if="isAdmin">
-							<TabItem v-for="setting in settings.admin" :id="setting.id" :key="setting.id" :icon="setting.icon" :to="`/settings/${setting.id}`" @click="showDrawer = false">{{ ti(setting.id) }}</TabItem>
-						</template>
-					</TabBar>
-					<div class="nav-bottom-buttons">
-						<template v-if="isAdmin || isDevMode">
-							<Button icon="build" href="/dev">{{ t.development_test_page }}</Button>
-							<Button icon="apps" href="/dev/components">{{ t.components_test_page }}</Button>
-						</template>
-						<Button v-if="selfUserInfoStore.isLogined" icon="logout" @click="logout">{{ t.logout }}</Button>
-					</div>
+				<header class="title content">
+					<ScrollContainer overflowX="clip">
+						<header class="title nav-header">
+							<h1>{{ t.settings }}</h1>
+							<TextBox v-model="search" type="search" :placeholder="t.settings.search" icon="search" />
+						</header>
+						<TabBar v-model="currentSettingsRequested" vertical>
+							<Subheader v-if="selfUserInfoStore.isLogined" icon="person">{{ t.settings.user }}</Subheader>
+							<template v-if="selfUserInfoStore.isLogined">
+								<TabItem
+									v-for="setting in settings.personal"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
+							</template>
+							<Subheader icon="apps">{{ t.settings.app }}</Subheader>
+							<TabItem
+								v-for="setting in settings.general"
+								:id="setting.id"
+								:key="setting.id"
+								:icon="setting.icon"
+								:to="`/settings/${setting.id}`"
+								@click="showDrawer = false"
+							>{{ ti(setting.id) }}</TabItem>
+							<!-- DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。 -->
+							<Subheader v-if="isAdmin" icon="build_circle">管理设置</Subheader>
+							<template v-if="isAdmin">
+								<TabItem
+									v-for="setting in settings.admin"
+									:id="setting.id"
+									:key="setting.id"
+									:icon="setting.icon"
+									:to="`/settings/${setting.id}`"
+									@click="showDrawer = false"
+								>{{ ti(setting.id) }}</TabItem>
+							</template>
+						</TabBar>
+						<div class="nav-bottom-buttons">
+							<template v-if="isAdmin || isDevMode">
+								<Button icon="build" href="/dev">{{ t.development_test_page }}</Button>
+								<Button icon="apps" href="/dev/components">{{ t.components_test_page }}</Button>
+							</template>
+							<Button v-if="selfUserInfoStore.isLogined" icon="logout" @click="logout">{{ t.logout }}</Button>
+						</div>
+					</ScrollContainer>
 				</header>
 			</div>
 		</nav>
 
 		<div class="card"></div>
 		<main ref="main">
-			<div class="content padding-end">
+			<div class="content">
 				<header class="title page-header" :class="{ colored: cookieColoredSidebar }">
 					<div class="show-drawer-wrapper page-title-icon-wrapper">
 						<SoftButton icon="dehaze" @click="showDrawer = true" />
@@ -164,7 +190,7 @@
 				</header>
 
 				<div class="router-view">
-					<NuxtPage :transition="{ name: 'page-jump', mode: 'out-in' }" />
+					<NuxtPage :transition="{ name: 'page-jump-in', mode: 'out-in' }" />
 				</div>
 			</div>
 		</main>
@@ -199,6 +225,13 @@
 		&.transparent {
 			background: none;
 		}
+
+		.stop-transition > & {
+			&,
+			* {
+				transition: none !important;
+			}
+		}
 	}
 
 	nav {
@@ -213,6 +246,8 @@
 		@include tablet {
 			@include system-card;
 			@include acrylic-background;
+			position: fixed;
+			z-index: 30;
 			transition-duration: $show-drawer-duration;
 
 			&:not(.show) {
@@ -224,25 +259,37 @@
 			display: block !important;
 		}
 
-		> .content > .title.content {
-			display: flex;
-			flex-direction: column;
-			gap: 10px;
-			max-height: 100dvh;
+		.scroll-container {
+			height: 100dvh;
 			padding: 0 $nav-padding-x;
-			overflow: hidden overlay;
-			overscroll-behavior-y: contain;
-			scrollbar-gutter: stable; // WARN: Chromium 114 开始，overflow 的 overlay 成了 auto 的别名，因此只能提前占位显示来确保不晃动。目前甚至 Chromium 自己的设置页都在依赖于 overlay，太荒谬了。https://bugs.chromium.org/p/chromium/issues/detail?id=1450927
-			transition: none;
 
 			@include mobile {
-				max-height: calc(100dvh - $sidebar-width);
 				padding: 0 $mobile-nav-padding-x;
 			}
 
-			> * {
-				flex-shrink: 0;
+			&:deep(.scroller) {
+				padding-bottom: $nav-padding-x;
+				overscroll-behavior-y: contain;
+
+				> .content {
+					display: flex;
+					flex-direction: column;
+					gap: 10px;
+					transition: none;
+
+					> * {
+						flex-shrink: 0;
+					}
+				}
+
+				@include mobile {
+					padding-bottom: $mobile-nav-padding-x;
+				}
 			}
+		}
+
+		> .content > .title.content {
+			padding: 0;
 		}
 
 		.subheader {
@@ -312,10 +359,10 @@
 			flex-direction: column;
 			gap: 1rem;
 			max-width: $max-width;
-			padding: 0 $main-padding-x;
+			padding: 0 $main-padding-x $main-padding-x;
 
 			@include mobile {
-				padding: 0 $mobile-padding;
+				padding: $mobile-toolbar-height $mobile-padding 0;
 			}
 
 			.router-view {
@@ -325,8 +372,8 @@
 					gap: 1rem;
 
 					@include mobile {
-						padding-top: $mobile-toolbar-height + $mobile-padding;
-						padding-bottom: $mobile-toolbar-height + $mobile-padding;
+						padding-top: $mobile-padding;
+						padding-bottom: $mobile-padding;
 					}
 				}
 			}
@@ -422,6 +469,7 @@
 		@include mobile {
 			@include sidebar-shadow;
 			position: fixed;
+			top: 0;
 			align-items: center;
 			width: 100%;
 			height: $mobile-toolbar-height;
@@ -518,6 +566,11 @@
 
 				&:any-hover {
 					background-color: c(hover-overlay);
+				}
+
+				&.toggle-switch {
+					--icon-size: 24px;
+					--icon-margin-right: 16px;
 				}
 			}
 

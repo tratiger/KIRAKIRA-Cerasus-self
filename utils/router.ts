@@ -1,5 +1,5 @@
-import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 import type { NavigateToOptions } from "nuxt/dist/app/composables/router";
+import type { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteLocationRaw } from "vue-router";
 
 const localeCodes = computed(() => useNuxtApp().$i18n.localeCodes.value);
 type Route = RouteLocationNormalized | RouteLocationNormalizedLoaded;
@@ -34,7 +34,7 @@ export function getRoutePath({
  */
 export function getLocaleRouteSlug(route?: Route | string) {
 	if (typeof route !== "string") route = getRoutePath({ route });
-	return route.split("/").filter(i => i);
+	return route.split("/").filter(Boolean);
 }
 
 /**
@@ -84,30 +84,68 @@ export function navigate(to: RouteLocationRaw, options?: NavigateToOptions) {
 export function switchLanguage(lang: string) {
 	if (getCurrentLocale() === lang) return;
 	const switchLocalePath = useSwitchLocalePath();
-	switchLocalePath(lang);
+	switchLocalePath(lang as never);
 	// useRouter().push(switchLocalePath(value)); // 旧方法，不推荐使用。
 	if (lang === "zhs") lang = "/";
 	else lang = `/${lang}/`;
-	const update = () => useRouter().push(lang + getRoutePath());
+	const update = () => { useRouter().push(lang + getRoutePath()); };
 	if (environment.server) update();
 	else { // 切换语言动画。
-		const element = document.querySelector(".settings") ?? document.body;
-		const routerView = element.querySelector(".router-view");
-		routerView?.classList.add("stop-animation");
-		if (!document.startViewTransition)
-			element.animate([
+		const settings = document.querySelector(".settings");
+		const element = settings ?? document.body;
+		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
+		routerView?.classList.add("stop-transition");
+		const TRANSITION_DURATION = 500;
+		if (!document.startViewTransition) {
+			update();
+			document.body.animate([
 				{ filter: "blur(10px)" },
 				{ filter: "blur(0)" },
-			], { duration: 500, easing: eases.easeOutSmooth });
-		else
-			startColorViewTransition(() => {
-				useRouter().push(lang + getRoutePath());
-			}, {
-				clipPath: ["inset(0 0 100%)", "inset(0)"],
-			}, {
-				duration: 500,
+			], { duration: TRANSITION_DURATION, easing: eases.easeOutSmooth });
+		} else
+			startColorViewTransition(update, [
+				[{
+					clipPath: ["inset(0 0 calc(100% + 1rlh))", "inset(0)"],
+				}],
+				[{
+					clipPath: ["inset(0 0 0)", "inset(calc(100% + 1rlh) 0 0)"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+				}],
+				[{
+					filter: ["", "grayscale(1)"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+					easing: eases.easeOutSmooth,
+				}],
+				[{
+					filter: ["grayscale(1) blur(var(--view-transition-blurriness))", "grayscale(0) blur(var(--view-transition-blurriness))"],
+				}, {
+					pseudoElement: "::view-transition-new(root)",
+					easing: eases.easeInSmooth,
+				}],
+				[{
+					scale: ["", "1.05"],
+					transformOrigin: ["bottom", "bottom"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+					easing: eases.easeInMax,
+				}],
+				[{
+					"--view-transition-blurriness": ["5px", ""],
+					scale: ["1.05", ""],
+					transformOrigin: ["top", "top"],
+				}, {
+					pseudoElement: "::view-transition-new(root)",
+					easing: eases.easeOutMax,
+				}],
+			], {
+				duration: TRANSITION_DURATION,
+				cursor: "wait",
 			});
-		// nextTick(() => routerView?.classList.add("stop-animation"));
+		setTimeout(() => {
+			routerView?.classList.remove("stop-transition");
+		}, TRANSITION_DURATION);
 	}
 }
 

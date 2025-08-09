@@ -163,7 +163,10 @@
 		&.v-enter-from,
 		&.v-leave-to {
 			translate: 0 20px;
-			opacity: 0;
+
+			:slotted(> *) {
+				opacity: 0;
+			}
 		}
 
 		@include not-mobile {
@@ -216,8 +219,14 @@
 
 		> .toggle-switch {
 			@include round-small;
-			min-height: 36px;
-			padding: 0 8px;
+			min-height: $menu-item-height;
+			padding-block: $menu-item-padding-block;
+			padding-inline: 8px;
+
+			@include tablet {
+				min-height: $menu-item-height-mobile;
+				padding-block: $menu-item-padding-block-mobile;
+			}
 		}
 	}
 </style>

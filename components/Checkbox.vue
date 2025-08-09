@@ -1,4 +1,7 @@
 <script setup lang="ts" generic="T extends string">
+	/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+	// BUG: 上面那个是 typescript-eslint 的 bug，如果去掉，则会触发 typescript 的报错。简而言之就是目前 typescript-eslint 和 typescript 在互相打架。
+
 	const props = withDefaults(defineProps<{
 		/** 禁用。 */
 		disabled?: boolean;
@@ -114,9 +117,9 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="hasLabel">
+		<div v-if="hasLabel" class="content">
 			<label><slot></slot></label>
-			<label class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 	</Comp>
 </template>
@@ -136,12 +139,16 @@
 		align-items: center;
 		cursor: pointer;
 
-		&:any-hover {
-			--color: #{c(accent-hover)};
-		}
+		// &:any-hover {
+		// 	--color: #{c(accent-hover)};
+		// }
 
 		&:active {
 			--color: #{c(accent-pressed)};
+		}
+
+		> .content > label.details {
+			margin-top: 4px;
 		}
 	}
 
@@ -183,11 +190,11 @@
 		.check-symbol {
 			width: 12px;
 			height: 6px;
+			translate: 0 -1px;
 			opacity: 1;
 			animation:
 				check-symbol-resize $duration-half $duration-half $ease-out-max backwards,
 				cut-in $duration-half step-start;
-			translate: 0 -1px;
 
 			@media (prefers-reduced-motion: reduce) {
 				animation: check-symbol-resize 0s $ease-out-max backwards;
@@ -216,15 +223,15 @@
 	}
 
 	.check-symbol {
-		animation: check-symbol-resize-back $duration-half $ease-out-max reverse backwards;
 		rotate: -50grad;
+		animation: check-symbol-resize-back $duration-half $ease-out-max reverse backwards;
 
 		&::before,
 		&::after {
 			@extend %round-linecap;
+			content: "";
 			position: absolute;
 			display: block;
-			content: "";
 		}
 
 		&::before {
@@ -273,11 +280,15 @@
 		@include circle;
 		animation: pressing-back $duration-half $ease-in alternate 2;
 
-		:comp:focus & {
+		:comp:any-hover &,
+		:comp:focus-visible & {
 			@include large-shadow-unchecked-focus;
 		}
 
-		:comp.checked:focus & {
+		:comp:any-hover input:checked + &,
+		:comp:any-hover input:indeterminate + &,
+		:comp:focus-visible input:checked + &,
+		:comp:focus-visible input:indeterminate + & {
 			@include large-shadow-focus;
 		}
 	}
@@ -294,7 +305,9 @@
 		}
 	}
 
-	@each $key in "", "-back" { // 故意把动画写两遍，让 CSS 以为是两个动画。
+	@each $key in "", "-back" {
+
+		// 故意把动画写两遍，让 CSS 以为是两个动画。
 		@keyframes outer-border-change#{$key} {
 			from {
 				box-shadow: inset 0 0 0 $border-size c(icon-color);

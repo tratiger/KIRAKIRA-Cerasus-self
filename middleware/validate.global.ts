@@ -1,11 +1,11 @@
 import { httpResponseStatusCodes } from "helpers/http-status";
 
 const MEDIA_INFO_MODULE_WASM = "MediaInfoModule.wasm";
-const navigate = (path: string) => navigateTo(useLocalePath()(path));
+// const navigate = (path: string) => navigateTo(useLocalePath()(path));
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 	if (environment.client && environment.development)
-		console.log("to", to, "\nfrom", from, "\nrouteBaseName", useNuxtApp().$getRouteBaseName());
+		console.log("to", to, "\nfrom", from, "\nrouteBaseName(to)", useNuxtApp().$getRouteBaseName(to));
 
 	if (environment.client)
 		document.getElementById(STOP_TRANSITION_ID)?.remove();
@@ -26,14 +26,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 	}
 	if (routeSlug[0] === "video") {
 		const checkKvidResult = await checkKvid(routeSlug[1]);
-		if (checkKvidResult === true) {
+		if (checkKvidResult === true) { // `checkKvidResult === true` is necessary!
 			if (!routeSlug[1] || routeSlug.length >= 3 && !to.name)
 				return navigate(`/video/${routeSlug[1]}`);
 		} else
-			return abortNavigation({
-				statusCode: 301,
-				message: checkKvidResult.message,
-			});
+			return navigateToErrorPage(301);
 	}
 	if (routeSlug[0] === "user") {
 		const uid = await getUserInfo(routeSlug[1]);
@@ -41,10 +38,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 			if (!routeSlug[1] || routeSlug.length >= 3 && !to.name)
 				return navigate(`/user/${uid}`);
 		} else
-			return abortNavigation({
-				statusCode: 404,
-				message: uid.message,
-			});
+			return navigateToErrorPage(404);
 	}
 	if (routeSlug.at(-1) === MEDIA_INFO_MODULE_WASM)
 		return navigateTo(`/${MEDIA_INFO_MODULE_WASM}`);
@@ -120,9 +114,9 @@ async function getUserInfo(uid?: string) {
 	if (checkUserResult.success && checkUserResult.userTokenOk)
 		try {
 			const selfUserInfoStore = useSelfUserInfoStore();
-			await api.user.getSelfUserInfo();
-			if (!selfUserInfoStore.isLogined || selfUserInfoStore.uid === undefined) throw new Error("Unlogined");
-			return BigInt(selfUserInfoStore.uid);
+			await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore, headerCookie: undefined });
+			if (!selfUserInfoStore.isLogined || selfUserInfoStore.userInfo.uid === undefined) throw new Error("Unlogined");
+			return BigInt(selfUserInfoStore.userInfo.uid);
 		} catch (error) { return new Error("你的登录信息已失效，请重新登录"); }
 	else return new Error("你尚未登录，请登录后再试");
 }

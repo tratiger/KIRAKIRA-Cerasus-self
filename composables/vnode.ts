@@ -96,7 +96,7 @@ export function withOneWayProp<T>(model: Ref<T | undefined>, oneWayProp: TypeOrR
 		get: () =>
 			model.value !== undefined && model.value !== null && model.value !== false ? model.value :
 			typeof oneWayProp === "function" ? (oneWayProp as () => T)() : oneWayProp,
-		set: value => model.value = value as T,
+		set: value => model.value = value,
 	});
 	return result;
 }
@@ -160,7 +160,7 @@ export function getSlotItems<
 			}>;
 			return props as Readonly<OverrideProps>;
 		});
-	}).filter(item => item) ?? [];
+	}).filter(Boolean) ?? [];
 }
 
 /**

@@ -1,18 +1,19 @@
 <script lang="ts">
 	export const tabs = [
-		{ id: "", icon: "home" },
-		// { id: "series", icon: "video_library" },
-		{ id: "video", icon: "movie" },
-		// { id: "audio", icon: "music" },
-		// { id: "photo", icon: "photo_library" },
-		{ id: "favorites", icon: "star" },
+		{ id: "", icon: "home" }, // 首页，Markdown自我介绍放在顶部（类似GitHub），下方为显示用户发布的所有内容，类似于「关注（/feed/following）」页面
+		{ id: "videos", name: "video", icon: "movie" }, // 视频
+		// { id: "series", icon: "video_library" }, // 系列
+		// { id: "posts", name: "post", icon: "post" }, // 帖子
+		// { id: "audios", icon: "music" }, // 音频
+		// { id: "albums", icon: "photo_library" }, // 相簿或者相册，类似QQ空间相册，所有帖子配图默认也会放在这里，相簿名称可以直接叫「帖子」。
+		{ id: "collections", name: "collection", icon: "star" },
 	];
 </script>
 
 <script setup lang="ts">
 	definePageMeta({
 		pageTransition: {
-			name: "page-jump",
+			name: "page-jump-in",
 			mode: "out-in",
 		},
 		async middleware(to, from) {
@@ -25,58 +26,101 @@
 					if (index !== prevIndex)
 						to.meta.pageTransition.name = index > prevIndex ? "right" : index < prevIndex ? "left" : "";
 				} else
-					to.meta.pageTransition.name = "page-jump";
+					to.meta.pageTransition.name = "page-jump-in";
 			}
 		},
 	});
 
-	const userSelfInfoStore = useSelfUserInfoStore();
+	const selfUserInfoStore = useSelfUserInfoStore();
 
-	const isSelf = ref(false);
-	const isFollowed = ref(false); // TODO
+	const headerCookie = useRequestHeaders(["cookie"]);
+	await api.user.getSelfUserInfo({ getSelfUserInfoRequest: undefined, appSettingsStore: useAppSettingsStore(), selfUserInfoStore, headerCookie });
+
+	const isSelf = ref(false); // 当前页面是否是自己
+	const isFollowing = ref(false); // 当前页面中的用户是否已经关注
+	const userInfo = ref<GetUserInfoByUidResponseDto>(); // 用户信息（并非自己的用户信息）
 	const actionMenu = ref<FlyoutModel>();
-	const userInfo = ref<GetUserInfoByUidResponseDto["result"]>();
-
-	const urlUid = ref();
-	// SSR
-	urlUid.value = currentUserUid();
-	// CSR
-	const nuxtApp = useNuxtApp();
-	nuxtApp.hook("page:finish", () => {
-		urlUid.value = currentUserUid();
-	});
-
-	watch(urlUid, fetchUserData, { deep: false });
-
-	const selfUid = computed(() => userSelfInfoStore.uid);
-	watch(selfUid, fetchUserData, { deep: false });
-
 	const currentTab = computed(() => currentUserTab());
 
-	/** fetch the user profile data */
+	const urlUid = ref(); // URL 中的 UID
+	urlUid.value = currentUserUid(); // SSR
+	const nuxtApp = useNuxtApp();
+	nuxtApp.hook("page:finish", () => {
+		urlUid.value = currentUserUid(); // CSR
+	});
+
+	const selfUid = computed(() => selfUserInfoStore.userInfo.uid); // 自己的 UID（如果已经登陆）
+
+	/**
+	 * 屏蔽一个用户
+	 */
+	async function blockUser() {
+		try {
+			const blockUid = urlUid.value;
+
+			if (blockUid === undefined || blockUid === null || blockUid < 1) {
+				console.error("ERROR", "屏蔽用户的 UID 格式不正确，不能为空或小于零");
+				// TODO: 使用多语言
+				useToast("屏蔽用户的 UID 格式不正确", "error", 5000);
+				return;
+			}
+
+			if (selfUserInfoStore.userInfo.uid === blockUid) {
+				console.error("ERROR", "不能屏蔽自己");
+				// TODO: 使用多语言
+				useToast("不能屏蔽自己", "error", 5000);
+				return;
+			}
+
+			const blockUserByUidRequest: BlockUserByUidRequestDto = {
+				blockUid,
+			};
+			const blockUserResult = await api.block.blockUserController(blockUserByUidRequest);
+			if (blockUserResult.success) {
+				// TODO: 使用多语言
+				useToast("屏蔽用户成功", "success");
+				navigate("/");
+			} else {
+				console.error("ERROR", "屏蔽用户失败");
+				// TODO: 使用多语言
+				useToast("屏蔽用户失败", "error", 5000);
+			}
+		} catch (error) {
+			console.error("ERROR", "屏蔽用户时出错", error);
+			// TODO: 使用多语言
+			useToast("屏蔽用户时出错", "error", 5000);
+		}
+	}
+
+	/**
+	 * fetch user profile data
+	*/
 	async function fetchUserData() {
-		if (userSelfInfoStore.isLogined && urlUid.value === userSelfInfoStore.uid) {
+		if (urlUid.value === selfUserInfoStore.userInfo.uid)
 			isSelf.value = true;
-			await api.user.getSelfUserInfo(); // 获取当前登录用户的用户信息
-		} else {
+		else {
 			isSelf.value = false;
 			const getUserInfoByUidRequest: GetUserInfoByUidRequestDto = {
 				uid: urlUid.value,
 			};
-			const userInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest); // 获取当前 URL 指向的用户的信息
-			if (userInfoResult.success)
-				userInfo.value = userInfoResult.result;
+			const headerCookie = useRequestHeaders(["cookie"]);
+			const userInfoResult = await api.user.getUserInfo(getUserInfoByUidRequest, headerCookie);
+			if (!userInfoResult.success)
+				useToast("获取用户信息失败", "error", 5000); // TODO: 使用多语言
+
+			if (userInfoResult.isBlocked)
+				navigateToErrorPage(404);
+
+			isFollowing.value = !!userInfoResult.result?.isFollowing;
+			userInfo.value = userInfoResult;
 		}
 	}
 
-	fetchUserData();
+	await fetchUserData();
+	watch(() => [urlUid.value, selfUid.value], fetchUserData);
 
 	const titleAffixString = t.user_page.title_affix; // HACK: Bypass "A composable that requires access to the Nuxt instance was called outside of a plugin."
-
-	const titleUserNickname = computed(() => isSelf.value ? userSelfInfoStore.userNickname ? titleAffixString(userSelfInfoStore.userNickname) : "" : userInfo.value?.userNickname ? titleAffixString(userInfo.value?.userNickname) : "");
-
-	// const titleUserName = computed(() => isSelf.value ? "aaa" : "bbb");
-
+	const titleUserNickname = computed(() => isSelf.value ? selfUserInfoStore.userInfo.userNickname ? titleAffixString(selfUserInfoStore.userInfo.userNickname) : "" : userInfo.value?.result?.userNickname ? titleAffixString(userInfo.value?.result?.userNickname) : "");
 	useHead({ title: titleUserNickname });
 </script>
 
@@ -87,42 +131,39 @@
 				<div class="content">
 					<UserContent
 						v-tooltip="isSelf ? t.profile.edit : undefined"
-						:avatar="isSelf ? userSelfInfoStore.userAvatar : userInfo?.avatar"
-						:username="isSelf ? userSelfInfoStore.username : userInfo?.username"
-						:nickname="isSelf ? userSelfInfoStore.userNickname : userInfo?.userNickname"
-						:gender="isSelf ? userSelfInfoStore.gender : userInfo?.gender"
+						:avatar="isSelf ? selfUserInfoStore.userInfo.avatar : userInfo?.result?.avatar"
+						:username="isSelf ? selfUserInfoStore.userInfo.username : userInfo?.result?.username"
+						:nickname="isSelf ? selfUserInfoStore.userInfo.userNickname : userInfo?.result?.userNickname"
+						:gender="isSelf ? selfUserInfoStore.userInfo.gender : userInfo?.result?.gender"
+						:roles="isSelf ? selfUserInfoStore.userInfo.roles : userInfo?.result?.roles"
 						:to="isSelf ? `/settings/profile` : undefined"
 						size="huge"
 						center
 					>
 						<template #description>
-							{{ isSelf ? userSelfInfoStore.signature : userInfo?.signature }}
+							{{ isSelf ? selfUserInfoStore.userInfo.signature : userInfo?.result?.signature }}
 						</template>
 					</UserContent>
 					<div class="actions">
 						<!-- <SoftButton v-tooltip:top="'私信'" icon="email" /> -->
 						<SoftButton v-if="!isSelf" v-tooltip:top="t.more" icon="more_vert" @click="e => actionMenu = [e, 'y']" />
 						<Menu v-if="!isSelf" v-model="actionMenu">
-							<MenuItem icon="badge">{{ t.modify_memo }}</MenuItem>
 							<MenuItem icon="groups">{{ t.add_to_group }}</MenuItem>
+							<MenuItem icon="badge">{{ t.modify_memo }}</MenuItem>
 							<hr />
-							<MenuItem v-tooltip:x="'老铁们，给我举报他！'" icon="flag">{{ t.report }}</MenuItem>
-							<MenuItem icon="block">{{ t.add_to_blocklist }}</MenuItem>
+							<MenuItem icon="flag">{{ t.report }}</MenuItem>
+							<MenuItem icon="block" @click="blockUser">{{ t.block_user }}</MenuItem>
 						</Menu>
-						<div v-if="!isSelf" class="follow-button">
-							<Button v-if="!isFollowed" icon="add" @click="isFollowed = true">{{ t.follow_verb }}</Button>
-							<!-- TODO: !user.isFollowed -->
-							<Button v-else icon="check" @click="isFollowed = false">{{ t.following }}</Button>
-						</div>
-						<Button v-if="isSelf">{{ t.manage_content }}</Button>
+						<FollowButton v-if="!isSelf" :uid="urlUid" :isFollowing />
+						<Button v-if="isSelf" href="/upload">{{ t.manage_content }}</Button>
 					</div>
 				</div>
 				<TabBar v-model="currentTab">
-					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t[tab.id || "home"] }}</TabItem>
+					<TabItem v-for="tab in tabs" :id="tab.id" :key="tab.id" :icon="tab.icon" :to="`/user/${urlUid}/${tab.id}`">{{ t(2)[tab.name || "home"] }}</TabItem>
 				</TabBar>
 			</div>
 		</header>
-		<div class="slot">
+		<div v-if="!userInfo?.isBlocked" class="slot">
 			<NuxtPage />
 		</div>
 	</div>

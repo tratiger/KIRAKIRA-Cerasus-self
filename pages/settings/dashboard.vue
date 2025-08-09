@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const userBirthdayDisplay = computed(() => selfUserInfoStore.birthday ? formatDateWithLocale(new Date(selfUserInfoStore.birthday)) : "Unknown");
-	const registerDateDisplay = computed(() => selfUserInfoStore.userCreateDateTime ? formatDateWithLocale(new Date(selfUserInfoStore.userCreateDateTime)) : "Unknown");
+	const userBirthdayDisplay = computed(() => selfUserInfoStore.userInfo.birthday ? formatDateWithLocale(new Date(selfUserInfoStore.userInfo.birthday)) : "Unknown"); // TODO: 生日功能
+	const registerDateDisplay = computed(() => selfUserInfoStore.userInfo.userCreateDateTime ? formatDateWithLocale(new Date(selfUserInfoStore.userInfo.userCreateDateTime)) : "Unknown");
 </script>
 
 <template>
@@ -9,16 +9,16 @@
 		<div class="user-profile">
 			<UserContent
 				v-tooltip="t.profile.edit"
-				:avatar="selfUserInfoStore.userAvatar"
-				:username="selfUserInfoStore.username"
-				:nickname="selfUserInfoStore.userNickname"
-				:gender="selfUserInfoStore.gender"
+				:avatar="selfUserInfoStore.userInfo.avatar"
+				:username="selfUserInfoStore.userInfo.username"
+				:nickname="selfUserInfoStore.userInfo.userNickname"
+				:gender="selfUserInfoStore.userInfo.gender"
 				:to="'/settings/profile'"
 				size="huge"
 				center
 			>
 				<template #description>
-					{{ selfUserInfoStore.signature }}
+					{{ selfUserInfoStore.userInfo.signature }}
 				</template>
 			</UserContent>
 		</div>
@@ -26,11 +26,11 @@
 		<div class="user-counts chip">
 			<div>
 				<span class="value">233</span>
-				<p>{{ t.follow }}</p>
+				<p>{{ t.following }}</p>
 			</div>
 			<div>
 				<span class="value">233</span>
-				<p>{{ t.fans }}</p>
+				<p>{{ t(0).follower }}</p>
 			</div>
 			<div>
 				<span class="value">233</span>
@@ -45,8 +45,8 @@
 		<div class="user-info chip">
 			<SettingsChipItem icon="birthday" :details="userBirthdayDisplay">{{ t.user.birthday }}</SettingsChipItem>
 			<SettingsChipItem icon="history" :details="registerDateDisplay">{{ t.user.join_time }}</SettingsChipItem>
-			<SettingsChipItem icon="fingerprint" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.uid : undefined">UID</SettingsChipItem>
-			<SettingsChipItem icon="gift" :details="`TODO`">使用邀请码</SettingsChipItem>
+			<SettingsChipItem icon="fingerprint" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.uid : undefined">UID</SettingsChipItem>
+			<SettingsChipItem icon="gift" :details="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.invitationCode : undefined">使用邀请码</SettingsChipItem>
 		</div>
 	</div>
 </template>

@@ -50,6 +50,7 @@ export function dataToFile(dataUrl: string, fileName?: string) {
 	let n = byteString.length;
 	const bytes = new Uint8Array(n);
 	while (n--)
+		// eslint-disable-next-line unicorn/prefer-code-point
 		bytes[n] = byteString.charCodeAt(n);
 	return fileName != null ?
 		new File([bytes], fileName, { type: mime }) :
@@ -75,4 +76,21 @@ export async function downloadFile(url: string | Blob, filename: string = "") {
 	document.body.appendChild(a);
 	a.click();
 	document.body.removeChild(a);
+	URL.revokeObjectURL(a.href);
+}
+
+/**
+ * 将一个字符串转换为 TXT 文件，并弹出下载
+ * @param content - 文件中的内容
+ * @param fileName - 文件名，最长 200 ***字节***。
+ */
+export async function downloadTxtFileFromString(content: string, fileName: string) {
+	// 文件名长度验证
+	if (encodeURIComponent(fileName).split(/%..|./).length - 1 > 200) {
+		console.error("ERROR", "文件名的字节数不能超过 200");
+		return;
+	}
+	const blob = new Blob([content], { type: "text/plain" });
+	if (!fileName.endsWith(".txt")) fileName += ".txt";
+	await downloadFile(blob, fileName);
 }

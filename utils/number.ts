@@ -5,7 +5,7 @@
  */
 export function normalizeNumber(num: number | bigint | string) {
 	let s = String(num);
-	const regexp = (num: string) => num.trim().toLowerCase().replace(/\+/g, "").replace(/(?<=e|-|^)0*|(?<=\.[^e]*)0*(?=e|$)/g, "").replace(/(?<=-|^)\./, "0.").replace(/\.(?=e|$)/g, "");
+	const regexp = (num: string) => num.trim().toLowerCase().replaceAll("+", "").replaceAll(/(?<=e|-|^)0*|(?<=\.[^e]*)0*(?=e|$)/g, "").replace(/(?<=-|^)\./, "0.").replaceAll(/\.(?=e|$)/g, "");
 	s = regexp(s);
 	if (s.includes("e")) {
 		let [base, exp_str] = s.split("e");
@@ -64,11 +64,11 @@ export function digitCase(n: number | bigint, upperCase: boolean = false, amount
 		if (ints[i] + ints[i + 1] + ints[i + 2] + ints[i + 3] !== "〇〇〇〇" || i === 0)
 			ints[i] += unit[j];
 	int = ints.reverse().join("");
-	int = int.replace(/〇+/g, "〇");
+	int = int.replaceAll(/〇+/g, "〇");
 	for (let i = 0; i < unit.length; i++)
 		int = int.replace("〇" + unit[i], unit[i]);
 	if (int === "元") int = "〇元";
-	int = int.replace(/^一十/g, "十");
+	int = int.replaceAll(/^一十/g, "十");
 	let result = sign + int + dec;
 	if (!amountMode)
 		result = result.replaceAll("元", "").replaceAll("〇", "零");
@@ -110,4 +110,21 @@ export function getCompactDecimal(value: number | bigint) {
 		value_str = value + spaceBeforeUnit + unit[index++];
 	}
 	return value_str;
+}
+
+/**
+ * 将输入值转换为至少两位的字符串，不足时补零。
+ * @param num - 输入值（数字、大数或字符串），最好取值范围在 0~99 内。
+ * @param radix - 可选进制 (2~36)，默认十进制。
+ * @returns 至少两位的字符串。
+ *
+ * @example
+ * ```javascript
+ * padTo2Digit(5) // "05"
+ * padTo2Digit("9") // "09"
+ * padTo2Digit(15, 16) // "0f"
+ * ```
+ */
+export function padTo2Digit(num: number | bigint | string, radix: number = 10) {
+	return num.toString(radix).padStart(2, "0");
 }

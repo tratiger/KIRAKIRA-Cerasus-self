@@ -1,7 +1,7 @@
 <script setup lang="ts">
-	import animationData from "lotties/spinner-dev1.json";
 	import beepSrc from "assets/audios/NOVA 2022.1 Alert Quick.ogg";
 	import type { ToastEvent } from "composables/toast";
+	import animationData from "lotties/spinner-dev1.json";
 
 	const useSyncKiraCookieOptions = { isWatchCookieRef: true, isSyncSettings: true, isListenLoginEvent: true };
 
@@ -54,6 +54,9 @@
 	const comboBoxValue = ref("obtuse angle");
 	const settingsGridItemSelect = ref("");
 	const color = ref(Color.fromHex("#f00"));
+	const timecode = ref(new Duration(0));
+	const time = ref(Temporal.Now.plainTimeISO());
+	const date = ref(Temporal.Now.plainDateISO().withCalendar("gregory"));
 
 	/**
 	 * 单击按钮事件。
@@ -108,6 +111,8 @@
 			</Segmented>
 			<div class="buttons">
 				<Button class="test-button" @click="onClickButton">{{ isClicked ? "我被单击了 呜呜呜~" : "主要按钮" }}</Button>
+				<Button class="test-button" severity="warning">警告按钮</Button>
+				<Button class="test-button" severity="danger">危险按钮</Button>
 				<Button disabled>主要按钮被禁用</Button>
 				<Button @click="showConfetti">{{ t.confetti }}</Button>
 				<Button icon="send">{{ t.send }}</Button>
@@ -131,7 +136,6 @@
 			<ToggleSwitch v-model="toggle">切换开关 {{ toggle ? t.on : t.off }}</ToggleSwitch>
 			<ToggleSwitch disabled>{{ t.disabled }} {{ t.off }}</ToggleSwitch>
 			<ToggleSwitch on disabled>{{ t.disabled }} {{ t.on }}</ToggleSwitch>
-			<ToggleSwitch v-model="useAppSettingsStore().showCssDoodle">{{ t.background.animated }}</ToggleSwitch>
 			<RadioButton v-model="theme" value="light">{{ t.scheme.light }}</RadioButton>
 			<RadioButton v-model="theme" value="dark">{{ t.scheme.dark }}</RadioButton>
 			<RadioButton v-model="theme" value="system">{{ t.scheme.system }}</RadioButton>
@@ -159,8 +163,8 @@
 			</ThumbGrid>
 			<hr />
 			<TextBox v-model="inputValue" placeholder="小小的软软的香香的" :style="{ '--size': 'small' }" />
-			<TextBox v-model="inputValue" type="email" required placeholder="请输入正确的邮箱" />
-			<TextBox v-model="inputValue" icon="lock" type="password" placeholder="密码" :style="{ '--size': 'large' }" />
+			<TextBox v-model="inputValue" icon="kaomoji" required placeholder="正常的" />
+			<TextBox v-model="inputValue" icon="emotions" placeholder="XL TECHNO -More Dance Remix-" :style="{ '--size': 'large' }" />
 			<SendVerificationCode v-model="inputValue" />
 			<em>所有输入框的内容同时输入属正常现象，因为懒得做三个变量。</em>
 			<hr />
@@ -182,6 +186,10 @@
 				<ComboBoxItem id="snap">咔哄呃昵吖</ComboBoxItem>
 				<ComboBoxItem id="eyelid scrub">轮刮眼眶</ComboBoxItem>
 			</ComboBox>
+			<hr />
+			<p>时间码</p><TimecodePicker v-model="timecode" />
+			<p>时间</p><TimePicker v-model="time" />
+			<p>日期</p><DatePicker v-model="date" />
 			<hr />
 			<HeadingComments :count="233" />
 			<hr />
@@ -281,9 +289,9 @@
 					<UploaderAira :hidden="!isUploaderLovinIt" />
 				</AccordionItem>
 				<AccordionItem title="滚动条测试">
-					<div class="scroll-test">
+					<ScrollContainer class="scroll-test">
 						<div class="scroll-test-item"></div>
-					</div>
+					</ScrollContainer>
 				</AccordionItem>
 				<AccordionItem title="工具提示测试">
 					注意触摸屏设备不会触发。
@@ -398,7 +406,6 @@
 	.scroll-test {
 		width: 100%;
 		height: 500px;
-		overflow: overlay;
 
 		.scroll-test-item {
 			@include square(200%);

@@ -27,7 +27,7 @@ export const environment = {
 			}
 			return backendUriHref;
 		} catch (error) {
-			console.error("ERROR", "System startup failed, environment variable BACKEND_URL parsing failed: ", error);
+			console.error("ERROR", "System startup failed, environment variable BACKEND_URL parsing failed:", error);
 			return DEFAULT_BACKEND_URI;
 		}
 	},
@@ -59,7 +59,7 @@ export const environment = {
 
 			return `${subdomainUriHref}{videoId}/manifest/video.mpd`;
 		} catch (error) {
-			console.error("ERROR", "System startup failed, environment variable BACKEND_URL parsing failed: ", error);
+			console.error("ERROR", "System startup failed, environment variable BACKEND_URL parsing failed:", error);
 			return DEFAULT_CLOUDFLARE_STREAM_SUBDOMAIN;
 		}
 	},

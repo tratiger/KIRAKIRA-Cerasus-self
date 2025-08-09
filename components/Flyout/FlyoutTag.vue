@@ -1,6 +1,10 @@
 <script setup lang="ts">
 	const flyout = defineModel<FlyoutModel>();
 	const tags = defineModel<Map<VideoTag["tagId"], VideoTag>>("tags"); // TAG 数据
+	const emit = defineEmits<{
+		(e: "add-new-tag", tag: VideoTag): void;
+	}>();
+
 	const original = ref<[number, string] | undefined>();
 	const search = ref("");
 	const isSearched = computed(() => !!search.value.trim());
@@ -9,15 +13,15 @@
 	const showTagEditor = ref(false); // 是否显示 TAG（创建）编辑器
 	const isCreatingTag = ref(false); // 是否正在创建 TAG
 	const languages = [
-		{ langId: "zhs", langName: t.language.zhs },
-		{ langId: "en", langName: t.language.en },
-		{ langId: "ja", langName: t.language.ja },
-		{ langId: "zht", langName: t.language.zht },
-		{ langId: "ko", langName: t.language.ko },
-		{ langId: "vi", langName: t.language.vi },
-		{ langId: "id", langName: t.language.id },
-		{ langId: "ar", langName: "阿拉伯语" }, // TODO: 使用多语言
-		{ langId: "other", langName: "其它" }, // TODO: 使用多语言
+		{ langId: "zhs", langName: getLocaleName("zh-Hans") },
+		{ langId: "en", langName: getLocaleName("en") },
+		{ langId: "ja", langName: getLocaleName("ja") },
+		{ langId: "zht", langName: getLocaleName("zh-Hant") },
+		{ langId: "ko", langName: getLocaleName("ko") },
+		{ langId: "vi", langName: getLocaleName("vi") },
+		{ langId: "id", langName: getLocaleName("id") },
+		{ langId: "ar", langName: getLocaleName("ar") },
+		{ langId: "other", langName: t.other },
 	] as const; // 可选语言列表
 	type LanguageList = typeof languages[number];
 	type EditorType = { language: LanguageList | { langId: ""; langName: "" }; values: string[]; default: [number, string] | null; original: [number, string] | null }[];
@@ -41,8 +45,8 @@
 					else showCreateNew.value = true;
 				} else showCreateNew.value = true;
 			} catch (error) {
-				console.error("ERROR", "搜索 TAG 时出错：", error);
-				useToast("搜索 TAG 失败", "error"); // TODO: 使用多语言
+				console.error("ERROR", "Failed to search tag:", error);
+				useToast(t.toast.something_went_wrong, "error");
 			}
 	}
 	const debounceVideoTagSearcher = useDebounce(searchVideoTag, 500);
@@ -148,12 +152,15 @@
 			if (checkTagData(tagData)) {
 				isCreatingTag.value = true;
 				const result = await api.videoTag.createVideoTag(tagData);
-				if (result.result?.tagId !== null && result.result?.tagId !== undefined) tags.value?.set(result.result.tagId, result.result);
+				if (result.result?.tagId !== null && result.result?.tagId !== undefined) {
+					tags.value?.set(result.result.tagId, result.result);
+					emit("add-new-tag", result.result);
+				}
 				isCreatingTag.value = false;
 				onFlyoutHide();
 			} else
 				// useToast(t.toast.no_language_selected, "warning");
-				useToast("TAG 未正确填写！ ", "warning"); // TODO: 使用多语言
+				useToast(t.toast.required_not_filled, "warning");
 		} else if (shown === "cancel") showTagEditor.value = false;
 		else {
 			const text = search.value.trim().replaceAll(/\s+/g, " ");
@@ -168,7 +175,10 @@
 	 * @param tag 用户点击的 TAG 数据。
 	 */
 	function addTag(tag: VideoTag) {
-		if (tag.tagId !== undefined && tag.tagId !== null && tag.tagId >= 0) tags.value?.set(tag.tagId, tag);
+		if (tag.tagId !== undefined && tag.tagId !== null && tag.tagId >= 0) {
+			tags.value?.set(tag.tagId, tag);
+			emit("add-new-tag", tag);
+		}
 	}
 
 	watch(editor, editor => {
@@ -250,7 +260,7 @@
 								<ComboBox v-model="item.language.langId" :placeholder="t.unselected.language">
 									<ComboBoxItem v-for="lang in availableLanguages[index]" :id="lang.langId" :key="lang.langId">{{ lang.langName }}</ComboBoxItem>
 								</ComboBox>
-								<TagsEditor v-model="item.values" v-model:default="item.default" v-model:editor-original="item.original" v-model:original="original" />
+								<TagsEditor v-model="item.values" v-model:default="item.default" v-model:editorOriginal="item.original" v-model:original="original" />
 							</template>
 						</div>
 					</div>

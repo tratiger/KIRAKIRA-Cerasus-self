@@ -12,9 +12,12 @@
 		displayPageCount?: number;
 		/** 允许用户使用键盘上左右箭头键翻页。 */
 		enableArrowKeyMove?: boolean;
+		/** 是否禁用？ */
+		disabled?: boolean;
 	}>(), {
 		current: 1,
 		displayPageCount: 7,
+		disabled: false,
 	});
 
 	const model = defineModel<number>();
@@ -94,10 +97,9 @@
 					if (!child) continue;
 					const hasExistAnimations = removeExistAnimations(child);
 					isScrolling.value = true;
-					child.animate([
-						{ right: 0 },
-						{ right: `${merged.finallyPosition * 36}px` },
-					], animationOptions(hasExistAnimations)).finished.then(() => {
+					child.animate({
+						right: ["0", `${merged.finallyPosition * 36}px`],
+					}, animationOptions(hasExistAnimations)).finished.then(() => {
 						scrolledPages.value = nextItems;
 						isScrolling.value = false;
 					}).catch(IGNORE);
@@ -118,14 +120,12 @@
 				}
 				newPageNumber.value.hidden = false;
 				if (!merged) isForceSmallRipple.value = true;
-				pageEdit.value.animate([
-					{ left: 0 },
-					{ left: `${pageLeft ? 36 : -36}px` },
-				], animationOptions(hasExistAnimations));
-				newPageNumber.value.animate([
-					{ left: `${pageLeft ? -36 : 36}px` },
-					{ left: 0 },
-				], animationOptions(hasExistAnimations)).finished.then(() => {
+				pageEdit.value.animate({
+					left: ["0", `${pageLeft ? 36 : -36}px`],
+				}, animationOptions(hasExistAnimations));
+				newPageNumber.value.animate({
+					left: [`${pageLeft ? -36 : 36}px`, "0"],
+				}, animationOptions(hasExistAnimations)).finished.then(() => {
 					setCurrentPage();
 					if (newPageNumber.value) newPageNumber.value.hidden = true;
 					thumb.style.removeProperty("transition-timing-function");
@@ -263,6 +263,7 @@
 	</DefineUnselectedItem>
 
 	<Comp
+		:inert="disabled"
 		role="slider"
 		aria-orientation="horizontal"
 		:aria-label="t.current_page_label(currentPage, pages)"
@@ -358,6 +359,10 @@
 	:comp {
 		position: relative;
 		user-select: none;
+
+		&[inert] {
+			opacity: 0.4;
+		}
 	}
 
 	.thumb {

@@ -1,6 +1,10 @@
+<docs>
+	DELETE: Cerasus内置管理设置即将被单独的控制台Lycoris项目取代。
+</docs>
+
 <script setup lang="ts">
 	const selfUserInfoStore = useSelfUserInfoStore();
-	const isAdmin = computed(() => selfUserInfoStore.role === "admin");
+	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 
 	const showDeleteVideoAlert = ref(false);
 	const isOpeningDeleteVideoAlert = ref(false);
@@ -149,7 +153,7 @@
 			middleware: [
 				(to: unknown) => {
 					const selfUserInfoStore = useSelfUserInfoStore(); // WARN: 此处需要重新创建 Store
-					if (selfUserInfoStore.role !== "admin")
+					if (!selfUserInfoStore.userInfo.roles?.includes("administrator"))
 						return navigate("/settings/appearance");
 
 					if (to && typeof to === "object" && "path" in to && to.path !== "/settings/content")

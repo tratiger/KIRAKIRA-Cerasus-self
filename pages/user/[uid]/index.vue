@@ -88,7 +88,7 @@
 					</div>
 					<div>
 						<span class="value">{{ 0 }}</span>
-						<p>{{ t(0).fans }}</p>
+						<p>{{ t(0).follower }}</p>
 					</div>
 					<div>
 						<span class="value">{{ 0 }}</span>

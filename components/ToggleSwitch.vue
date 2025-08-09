@@ -84,7 +84,7 @@
 		<Icon v-if="icon" :name="icon" />
 		<div v-if="hasLabel" class="content">
 			<label class="title"><slot></slot></label>
-			<label class="details"><slot name="details">{{ details }}</slot></label>
+			<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 		</div>
 		<div class="switch">
 			<div class="base"></div>
@@ -99,11 +99,13 @@
 	$thumb-size: 20px;
 	$focus-ring-thickness: 10px;
 	$icon-size: 20px;
+	$icon-margin-right: 8px;
 
 	@layer props {
 		:comp {
 			/// 图标大小。
 			--icon-size: #{$icon-size};
+			--icon-margin-right: #{$icon-margin-right};
 		}
 	}
 
@@ -113,7 +115,7 @@
 		cursor: pointer;
 
 		> .icon {
-			margin-right: 8px;
+			margin-right: var(--icon-margin-right);
 			color: c(icon-color);
 			font-size: var(--icon-size);
 		}
@@ -125,6 +127,10 @@
 			> * {
 				display: flex;
 				align-items: center;
+			}
+
+			> label.details {
+				margin-top: 4px;
 			}
 		}
 	}
@@ -138,6 +144,7 @@
 
 		.base {
 			@include oval;
+			@include control-inner-shadow;
 			position: absolute;
 			top: calc(($thumb-size - $base-height) / 2);
 			width: $width;
@@ -167,12 +174,14 @@
 			left: 0;
 			background-color: c(white);
 
-			@include tablet { // 增加移动端大小以便拖拽。
+			@include tablet {
+
+				// 增加移动端大小以便拖拽。
 				&::before {
 					@include square(40px);
 					@include circle;
-					position: absolute;
 					content: "";
+					position: absolute;
 				}
 			}
 
@@ -199,24 +208,18 @@
 				background-color: c(accent-disabled);
 			}
 
-			:comp:not(.on):focus & {
-				@include large-shadow-unchecked-focus;
+			:comp:any-hover &,
+			:comp:not(.on):focus-visible & {
+				@include control-ball-shadow-off-hover;
 			}
 
-			:comp.on:not(.disabled):focus & {
-				@include large-shadow-focus;
+			:comp.on:any-hover &,
+			:comp.on:not(.disabled):focus-visible & {
+				@include control-ball-shadow-hover;
 			}
 
 			:comp:active & {
 				transform: scale(calc(19 / 20));
-			}
-
-			:comp.on:hover:not(:focus) & {
-				@include control-ball-shadow-hover;
-			}
-
-			:comp:hover:not(:focus) & {
-				@include control-ball-shadow-off-hover;
 			}
 		}
 	}

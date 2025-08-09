@@ -5,30 +5,30 @@
 
 <script setup lang="ts">
 	import type shaka from "shaka-player";
-	import { createDanmakuComment, basicDanmakuCommentStyle } from "./PlayerVideoPanel/PlayerVideoPanelDanmaku/PlayerVideoPanelDanmakuSender.vue";
-	import beepSound from "assets/audios/NOVA 2022.1 Alert Quick.ogg";
-	const beepSoundAudio = ref<HTMLAudioElement>();
+	import { numbers } from "virtual:scss-var:theme/_variables";
+	import { basicDanmakuCommentStyle, createDanmakuComment } from "./PlayerVideoDanmakuSender.vue";
 
 	const props = defineProps<{
 		/** 视频源。 */
 		src: string;
 		/** 视频 ID。 */
-		id: number;
-		/** 视频评分。 */
-		rating: number;
+		videoId: number;
 		/** 视频标题。 */
 		title: string;
 		/** 视频封面地址。 */
 		thumbnail: string;
 	}>();
 
-	const playing = ref(false);
+	const windowSize = useWindowSize();
+	const isMobileWidth = computed(() => windowSize.width.value <= numbers.tabletMaxWidth);
+
+	const playing = defineModel("playing", { default: false });
 	const playbackRate = ref(1);
 	const preservesPitch = ref(false);
 	const continuousRateControl = ref(false);
 	const volume = ref(1);
 	const muted = ref(false);
-	const currentTime = ref(NaN);
+	const currentTime = defineModel<number>("currentTime", { default: NaN });
 	const duration = ref(NaN);
 	const buffered = ref<[number, number][]>([]);
 	const isTimeUpdating = ref(false);
@@ -46,7 +46,10 @@
 			opacity: 1,
 		},
 		controller: {
+			showStop: false,
+			showReplay: false,
 			showFrameByFrame: false,
+			autoResumePlayAfterSeeking: false,
 		},
 		filter: {
 			horizontalFlip: false,
@@ -80,7 +83,7 @@
 		if (filter.saturate !== 1) filters.push(`saturate(${filter.saturate})`);
 		if (filter.contrast !== 1) filters.push(`contrast(${filter.contrast})`);
 		if (filter.brightness !== 1) filters.push(`brightness(${filter.brightness})`);
-		if (filters.length) style.filter = filters.join(" ");
+		if (filters.length > 0) style.filter = filters.join(" ");
 		return style;
 	});
 
@@ -99,8 +102,8 @@
 	const dblClickCount = ref(0);
 	const dblClickTimeoutId = ref<Timeout>();
 	const refreshStatsIntervalId = ref<Timeout>();
-	const willSendDanmaku = ref<DanmakuComment[]>();
-	const willInsertDanmaku = ref<DanmakuListItem[]>();
+	const willSendDanmaku = defineModel<DanmakuComment[]>("sendDanmaku");
+	const willInsertDanmaku = defineModel<DanmakuListItem[]>("insertDanmaku");
 	const initialDanmaku = ref<DanmakuComment[]>();
 	const screenOrientationBeforeFullscreen = ref<OrientationType>("portrait-primary");
 	const playerVideoControllerMouseDown = ref(false);
@@ -131,24 +134,8 @@
 		video.value.playbackRate = playbackRate;
 	});
 
-	/**
-	 * 如果视频已暂停，则在修改音量时鸣笛。
-	 * @param logarithmicVolume - 对数音量。
-	 */
-	function beepIfPaused(logarithmicVolume?: number) {
-		if (beepSoundAudio.value) {
-			if (logarithmicVolume !== undefined)
-				beepSoundAudio.value.volume = logarithmicVolume;
-			if (video.value?.paused !== false) { // passed when true or undefined
-				beepSoundAudio.value.currentTime = 0;
-				beepSoundAudio.value.play();
-			}
-		}
-	}
-
 	watch(volume, volume => {
 		const logarithmicVolume = volume ** 2; // 使用对数音量。
-		beepIfPaused(logarithmicVolume);
 		if (video.value) {
 			video.value.volume = logarithmicVolume;
 			playerConfig.audio.volume = volume;
@@ -156,7 +143,6 @@
 	});
 
 	watch(muted, muted => {
-		if (!muted) beepIfPaused();
 		if (video.value) {
 			video.value.muted = muted;
 			playerConfig.audio.muted = muted;
@@ -175,8 +161,20 @@
 		playerConfig.danmaku.fontSizeScale = size;
 	});
 
+	watch(() => settings.controller.showStop, showStop => {
+		playerConfig.controller.showStop = showStop;
+	});
+
+	watch(() => settings.controller.showReplay, showReplay => {
+		playerConfig.controller.showReplay = showReplay;
+	});
+
 	watch(() => settings.controller.showFrameByFrame, showFrameByFrame => {
 		playerConfig.controller.showFrameByFrame = showFrameByFrame;
+	});
+
+	watch(() => settings.controller.autoResumePlayAfterSeeking, autoResumePlayAfterSeeking => {
+		playerConfig.controller.autoResumePlayAfterSeeking = autoResumePlayAfterSeeking;
 	});
 
 	watch(fullscreen, fullscreen => { // 全屏时请求横屏。在设备不支持或安全问题时有可能会报错。
@@ -202,7 +200,7 @@
 	 */
 	async function fetchDanmaku() {
 		try {
-			const getDanmakuByKvidRequest: GetDanmakuByKvidRequestDto = { videoId: props.id };
+			const getDanmakuByKvidRequest: GetDanmakuByKvidRequestDto = { videoId: props.videoId };
 			const danmakuListResult = await api.danmaku.getDanmakuByKvid(getDanmakuByKvidRequest);
 
 			if (danmakuListResult.success && danmakuListResult.danmaku && danmakuListResult.danmaku.length > 0) {
@@ -226,10 +224,10 @@
 			}
 		} catch (error) {
 			useToast(t.player.error.getDanmaku, "error");
-			console.error("ERROR", t.player.error.getDanmaku);
+			console.error("ERROR", "Failed to get danmaku:", error);
 		}
 	}
-	watch(() => props.id, fetchDanmaku, { immediate: true });
+	watch(() => props.videoId, fetchDanmaku, { immediate: true });
 
 	watch(willSendDanmaku, danmaku => {
 		if (danmaku)
@@ -251,7 +249,10 @@
 	settings.autoplay = playerConfig.autoplay;
 	settings.danmaku.opacity = playerConfig.danmaku.opacity;
 	settings.danmaku.fontSizeScale = playerConfig.danmaku.fontSizeScale;
+	settings.controller.showStop = playerConfig.controller.showStop;
+	settings.controller.showReplay = playerConfig.controller.showReplay;
 	settings.controller.showFrameByFrame = playerConfig.controller.showFrameByFrame;
+	settings.controller.autoResumePlayAfterSeeking = playerConfig.controller.autoResumePlayAfterSeeking;
 
 	const player = ref<shaka.Player>();
 	const playerVersion = ref("");
@@ -331,7 +332,7 @@
 							break;
 						}
 			} catch (error) {
-				console.error("Unable to load the video", error);
+				console.error("ERROR", "Failed to load the video:", error);
 			}
 		}
 	});
@@ -339,7 +340,7 @@
 	const selectedTrack = computed({
 		get: () => activeTrack.value,
 		set: track => {
-			player.value?.selectVariantTrack(track!, true);
+			player.value?.selectVariantTrack(track, true);
 			playerConfig.quality.preferred = track!.height!;
 		},
 	});
@@ -557,7 +558,7 @@
 
 		const image = new Image();
 		const blob = await new Promise<Blob>(resolve => canvas.toBlob(resolve as never));
-		downloadFile(blob, `${props.title} (kv${props.id}) - ${new Duration(currentTime.value).toString()}`);
+		downloadFile(blob, `${props.title} (kv${props.videoId}) - ${new Duration(currentTime.value).toString()}`);
 		return image;
 	}
 
@@ -717,19 +718,30 @@
 				@focusin="hideController = false"
 			/>
 		</div>
-		<audio ref="beepSoundAudio" :src="beepSound"></audio>
 
-		<PlayerVideoPanel
-			v-if="!fullscreen"
-			v-model:sendDanmaku="willSendDanmaku"
-			v-model:insertDanmaku="willInsertDanmaku"
-			:videoId="id"
-			:currentTime
-			:rating
-			:playing
-			:thumbnail
-			:settings
-		/>
+		<div v-if="!isMobileWidth && !fullscreen" class="panel-container">
+			<ClientOnly>
+				<LazyPlayerVideoPanel
+					v-model:insertDanmaku="willInsertDanmaku"
+					:videoId
+					:currentTime
+					:playing
+					:thumbnail
+					:settings
+				>
+					<template #danmaku>
+						<slot name="danmaku"></slot>
+					</template>
+				</LazyPlayerVideoPanel>
+
+				<template #fallback>
+					<div class="danmaku-loading">
+						<LogoDanmakuLoading />
+						<span>{{ t.danmaku.list.loading }}</span>
+					</div>
+				</template>
+			</ClientOnly>
+		</div>
 		<Menu v-model="menu" noFade>
 			<MenuItem icon="camera" @click="() => getScreenshot()">{{ t.player.screenshot }}</MenuItem>
 			<MenuItem icon="info" @click="showStats = true">{{ t.player.stats }}</MenuItem>
@@ -741,7 +753,7 @@
 
 <style scoped lang="scss">
 	:comp {
-		@include player-shadow;
+		// @include player-shadow;
 		display: flex;
 		flex-direction: row;
 
@@ -754,7 +766,6 @@
 
 	.main {
 		position: relative;
-		background-color: black;
 		pointer-events: auto !important;
 		view-transition-name: player-video-main;
 
@@ -792,12 +803,23 @@
 		}
 	}
 
+	.panel-container {
+		flex-shrink: 0;
+		width: 350px;
+		height: inherit;
+
+		@include tablet {
+			display: none;
+		}
+	}
+
 	table {
 		border-radius: 0;
 	}
 
 	.screen {
 		position: relative;
+		background-color: black;
 
 		.contents {
 			> * {
@@ -817,6 +839,7 @@
 	}
 
 	.stats {
+		flex-grow: 1;
 		min-width: 320px;
 		user-select: text;
 
@@ -827,6 +850,19 @@
 				font-variant-numeric: tabular-nums;
 				text-align: right;
 			}
+		}
+	}
+
+	.danmaku-loading {
+		@include flex-center;
+		flex-direction: column;
+		gap: 12px;
+		height: 100%;
+		color: c(icon-color);
+
+		.icon {
+			color: c(accent);
+			font-size: 48px;
 		}
 	}
 </style>

@@ -7,7 +7,7 @@
 
 	const drawerItems: { name: string; icon: DeclaredIcons; route?: string }[] = [
 		{ name: t.history, icon: "history", route: "/history" },
-		{ name: t.favorite, icon: "star", route: "/favorite" },
+		{ name: t(2).collection, icon: "star", route: "/collections" },
 		{ name: t.upload, icon: "upload", route: "/upload" },
 	];
 
@@ -37,13 +37,13 @@
 	<Comp>
 		<div class="user">
 			<UserAvatar
-				v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.login"
-				:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userAvatar : undefined"
+				v-tooltip="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.login"
+				:avatar="selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.avatar : undefined"
 				@click="onClickUser"
 			/>
-			<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userNickname : t.pleaseLogin }}</p>
-			<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.username }}</p>
-			<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.signature" class="bio">{{ selfUserInfoStore.signature }}</p>
+			<p class="nickname">{{ selfUserInfoStore.isLogined ? selfUserInfoStore.userInfo.userNickname : t.pleaseLogin }}</p>
+			<p v-if="selfUserInfoStore.isLogined" class="username">@{{ selfUserInfoStore.userInfo.username }}</p>
+			<p v-if="selfUserInfoStore.isLogined && selfUserInfoStore.userInfo.signature" class="bio">{{ selfUserInfoStore.userInfo.signature }}</p>
 		</div>
 		<div class="grid">
 			<div v-for="item in drawerItems" :key="item.icon" v-ripple class="drawer-item" @click="to(item.route)">
@@ -86,14 +86,14 @@
 	}
 
 	.tab-bar {
-		margin: 0 -14px;
+		margin-inline: -14px;
 	}
 
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 8px;
-		margin: 12px 0;
+		margin-block: 12px;
 
 		.drawer-item {
 			@include round-large;
@@ -102,10 +102,11 @@
 			flex-direction: column;
 			gap: 4px;
 			align-items: center;
-			padding: 12px 0;
+			padding-block: 12px;
 			color: c(icon-color);
 			font-size: 13px;
 			background-color: c(main-bg, 50%);
+			cursor: pointer;
 
 			.icon {
 				font-size: 32px;

@@ -2,7 +2,6 @@
  * 参考：Vue 中如何获取插槽的 DOM 对象
  * @see https://free_pan.gitee.io/freepan-blog/articles/05-vue3/vue3-杂项/vue中如何获取插槽的dom对象.html
  */
-/* eslint-disable vue/one-component-per-file */
 
 type SlotNode = InstanceType<ReturnType<typeof useCustomFactory>>;
 type CallFun = (slotNode: SlotNode) => void;
@@ -31,13 +30,13 @@ export const useCustomFactory = ({ mounted, updated, unmounted }: RenderCallback
 		},
 		mounted() {
 			// 这个 this.$el 就代表当前 vnode 的 DOM 对象。
-			mounted?.(this);
+			mounted?.(this as never);
 		},
 		updated() {
-			updated?.(this);
+			updated?.(this as never);
 		},
 		unmounted() {
-			unmounted?.(this);
+			unmounted?.(this as never);
 		},
 		render(props: { vnode: VNode[] }) {
 			return props.vnode;

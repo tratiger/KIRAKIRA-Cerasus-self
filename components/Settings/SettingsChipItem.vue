@@ -10,6 +10,8 @@
 		details?: Readable;
 		/** 尾随操作图标。 */
 		trailingIcon?: DeclaredIcons;
+		/** 是否禁止尾随操作图片点击 */
+		trailingIconDisabled?: boolean;
 		/** 尾随操作图标单击事件。 */
 		onTrailingIconClick?: () => void;
 		/** 点击链接。支持外链和内链。 */
@@ -23,7 +25,7 @@
 	<Comp v-ripple role="listitem">
 		<div :class="{ pictorial: image || icon }">
 			<div v-if="image" class="image">
-				<NuxtImg
+				<NuxtPicture
 					:src="image"
 					:provider="environment.cloudflareImageProvider"
 					alt="image"
@@ -37,11 +39,11 @@
 			<Icon v-else-if="icon" :name="icon" :filled class="item-icon" />
 			<div class="text">
 				<label class="title"><slot></slot></label>
-				<label class="details"><slot name="details">{{ details }}</slot></label>
+				<label v-if="details || $slots.details" class="details"><slot name="details">{{ details }}</slot></label>
 			</div>
 			<template v-if="trailingIcon">
 				<Icon v-if="!onTrailingIconClick" class="trailing-icon" :name="trailingIcon" />
-				<SoftButton v-else :icon="trailingIcon" class="trailing-icon" @click.stop="onTrailingIconClick" />
+				<SoftButton v-else :icon="trailingIcon" :disabled="trailingIconDisabled" class="trailing-icon" @click.stop="onTrailingIconClick" />
 			</template>
 			<template v-if="href">
 				<a v-if="isExtenalLink" draggable="false" :href target="_blank" class="link lite"></a>
@@ -57,6 +59,11 @@
 			/// 指定组件的尺寸，可选的值为：large | small。
 			--size: large;
 		}
+	}
+
+	:comp {
+		position: relative;
+		overflow: hidden;
 	}
 
 	:comp:any-hover {
@@ -77,7 +84,8 @@
 			@include circle;
 			overflow: clip;
 
-			> img {
+			> picture,
+			> picture :deep(img) {
 				@include square(100%);
 				z-index: 1;
 				object-fit: cover;
