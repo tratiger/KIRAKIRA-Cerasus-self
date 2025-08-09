@@ -131,7 +131,9 @@
 								<div v-if="'values' in field" :ref="el => menuValues[key][name] = el as HTMLDivElement" class="values" :style="{ minWidth: toValue(minWidth) }" @wheel="e => onWheel(e, name)">
 									<!-- 虽说不推荐将数组索引值作为 key，但是假如元素太少（例如12小时制），则会出现一轮包含多个相同的 key，从而导致出现异常。 -->
 									<template v-for="(value, i) in visibleValues[name]" :key="getOffsetFromIndex(i)">
-										<p v-if="value !== undefined" class="item" @click="setField(name, value); spining(name, getOffsetFromIndex(i))">{{ field.getDisplayValue?.(value) ?? value }}</p>
+										<p v-if="value !== undefined" v-ripple class="item" @click="setField(name, value); spining(name, getOffsetFromIndex(i))">
+											{{ field.getDisplayValue?.(value) ?? value }}
+										</p>
 										<p v-else class="item nothing"></p>
 									</template>
 								</div>
@@ -156,12 +158,12 @@
 	$menu-bottom-buttons-height: 42px;
 	$menu-padding-inline: 4px;
 	$item-padding-inline: 16px;
+	$item-gap: calc(9px / 2);
 
 	:comp {
 		@include chip-shadow;
 		@include round-large;
 		display: flex;
-		gap: 9px;
 		justify-content: space-evenly;
 		align-items: stretch;
 		width: fit-content;
@@ -189,6 +191,7 @@
 
 		p {
 			@extend %item-value;
+			padding-inline: $item-gap;
 		}
 	}
 
@@ -244,7 +247,6 @@
 
 		.items {
 			display: flex;
-			gap: 9px;
 			justify-content: space-evenly;
 			align-items: stretch;
 			width: 100%;
@@ -260,27 +262,17 @@
 			);
 
 			.item {
+				@include round-small;
 				@extend %item-value;
 				position: relative;
 				height: $item-height;
+				margin-inline: -$item-gap;
+				padding-inline: $item-gap * 2;
 				white-space: nowrap;
 				cursor: pointer;
 
-				&::after {
-					@include round-small;
-					content: "";
-					position: absolute;
-					inset: 0;
-					inset-inline: -9px;
-					display: block;
-				}
-
-				&:any-hover::after {
+				&:any-hover {
 					background-color: c(hover-overlay);
-				}
-
-				&:active::after {
-					background-color: c(ripple);
 				}
 
 				&.nothing {
@@ -291,6 +283,7 @@
 			.values {
 				height: $item-height * ($menu-item-count * 2 - 1);
 				margin-top: -$half-items-height;
+				padding-inline: 0;
 			}
 
 			&.shadow {
@@ -319,6 +312,10 @@
 				@extend %item-value;
 				align-self: center;
 				white-space: nowrap;
+			}
+
+			> * {
+				padding-inline: $item-gap;
 			}
 		}
 
