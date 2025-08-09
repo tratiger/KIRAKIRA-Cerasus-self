@@ -50,6 +50,7 @@ export default {
 		sharp_mode: "直角スタイル",
 		flat_mode: "フラットスタイル",
 		colorful_navbar: "カラフル ナビバー",
+		akkarin_guest_avatar: "Akkarinゲストアバターフレーム",
 	},
 	confetti: "紙吹雪",
 	send: "送信",
@@ -637,4 +638,8 @@ export default {
 		developer: "開発者",
 	},
 	info: "情報",
+	calendar: {
+		gregory: "グレゴリア",
+		chinese: "中国語",
+	},
 } as const satisfies LocaleIdentifiers;

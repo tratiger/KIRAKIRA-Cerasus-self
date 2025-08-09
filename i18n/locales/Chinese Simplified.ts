@@ -50,6 +50,7 @@ export default {
 		sharp_mode: "直角模式",
 		flat_mode: "扁平模式",
 		colorful_navbar: "彩色导航栏",
+		akkarin_guest_avatar: "阿卡林游客头像",
 	},
 	confetti: "五彩纸屑",
 	send: "发送",

@@ -25,10 +25,13 @@ const file = await (async () => {
 	while (true) {
 		const files = await readdir(path);
 		if (path === resolve(path, "/")) throw new Error("Could not find project path");
-		if (files.includes("locales")) break;
+		if (files.includes("i18n")) {
+			const i18nFiles = await readdir(resolve(path, "i18n"));
+			if (i18nFiles.includes("locales")) break;
+		}
 		path = resolve(path, "..");
 	}
-	return resolve(path, `locales/${SOURCE_LANGUAGE}.ts`);
+	return resolve(path, `i18n/locales/${SOURCE_LANGUAGE}.ts`);
 })();
 const fileContent = await readFile(file, "utf-8");
 

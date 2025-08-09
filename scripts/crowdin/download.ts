@@ -63,18 +63,64 @@ async function mergeFolders(sourceFolder: string, targetFolder: string) {
 async function moveLocaleFiles(extractedPath: string, projectFolderName: string) {
 	let path = extractedPath;
 	while (true) {
+		const stats = await stat(path);
+		if (!stats.isDirectory()) throw new Error(`Path is not a directory: ${path}`);
 		const files = await readdir(path);
 		if (!files.length) throw new Error(`Could not find any files in ${path}`);
-		path = resolve(path, files[0]);
-		if (files[0] === projectFolderName) break;
+		if (files.includes("i18n")) {
+			const i18nPath = resolve(path, "i18n");
+			const i18nStats = await stat(i18nPath);
+			if (i18nStats.isDirectory()) {
+				const i18nFiles = await readdir(i18nPath);
+				if (i18nFiles.includes("locales")) {
+					path = resolve(i18nPath, "locales");
+					break;
+				}
+			}
+		}
+		if (files.includes("locales")) {
+			const localesPath = resolve(path, "locales");
+			const localesStats = await stat(localesPath);
+			if (localesStats.isDirectory()) {
+				path = localesPath;
+				break;
+			}
+		}
+		// 只递归进入第一个是目录的文件夹
+		let foundDir = false;
+		for (const file of files) {
+			const nextPath = resolve(path, file);
+			const nextStats = await stat(nextPath);
+			if (nextStats.isDirectory()) {
+				path = nextPath;
+				foundDir = true;
+				break;
+			}
+		}
+		if (!foundDir) throw new Error(`No directory found in ${path}`);
 	}
 	let projectPath = __dirname;
 	while (true) {
 		const files = await readdir(projectPath);
 		if (projectPath === resolve(projectPath, "/")) throw new Error("Could not find project path");
-		if (files.includes(projectFolderName)) {
-			projectPath = resolve(projectPath, projectFolderName);
-			break;
+		if (files.includes("i18n")) {
+			const i18nPath = resolve(projectPath, "i18n");
+			const i18nStats = await stat(i18nPath);
+			if (i18nStats.isDirectory()) {
+				const i18nFiles = await readdir(i18nPath);
+				if (i18nFiles.includes("locales")) {
+					projectPath = resolve(i18nPath, "locales");
+					break;
+				}
+			}
+		}
+		if (files.includes("locales")) {
+			const localesPath = resolve(projectPath, "locales");
+			const localesStats = await stat(localesPath);
+			if (localesStats.isDirectory()) {
+				projectPath = localesPath;
+				break;
+			}
 		}
 		projectPath = resolve(projectPath, "..");
 	}
@@ -86,7 +132,7 @@ const filePath = resolve(tmpdir(), "l10n.zip");
 await downloadFile(downloadUrl, filePath);
 const extractedPath = resolve(tmpdir(), "l10n");
 await extractZip(filePath, extractedPath);
-await moveLocaleFiles(extractedPath, "locales");
+await moveLocaleFiles(extractedPath, "i18n/locales");
 const remove = (path: string) => rm(path, { recursive: true, force: true });
 await Promise.all([
 	remove(filePath),

@@ -154,6 +154,7 @@ export default {
 			replay: "Luôn hiện nút phát lại",
 			replay_description: "Tới khung hình đầu tiên và phát",
 			first_last_frame: "Hiện nút Khung hình đầu tiên & cuối cùng",
+			first_last_frame_description: "Tới khung hình đầu tiên hoặc cuối cùng và dừng",
 			frame_by_frame: "Hiển thị nút điều khiển từng khung hình",
 			frame_by_frame_description: "Điều chỉnh thời gian chính xác theo từng khung hình",
 			auto_resume_play_after_seeking: "Tự động tiếp tục phát sau khi tua",
@@ -636,4 +637,5 @@ export default {
 		developer: "Lập trình viên",
 	},
 	info: "Thông tin",
+	calendar: {},
 } as const satisfies LocaleIdentifiers;

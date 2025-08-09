@@ -189,4 +189,9 @@
 		"statusBar.background": "#00c16a1f",
 	},
 	"material-icon-theme.activeIconPack": "vue_vuex",
+	"cSpell.words": [
+		"kira",
+		"nuxt",
+		"akkarin"
+	],
 }

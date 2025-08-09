@@ -185,7 +185,7 @@
 		<Subheader icon="more_horiz">{{ t(2).other }}</Subheader>
 		<section list>
 			<ToggleSwitch v-model="cookieColoredSidebar" v-ripple icon="dehaze">{{ t.appearance.colorful_navbar }}</ToggleSwitch>
-			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" v-ripple :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">使用阿卡林游客头像</ToggleSwitch>
+			<ToggleSwitch v-model="appSettings.akkarinGuestAvatar" v-ripple :icon="appSettings.akkarinGuestAvatar ? 'akkarin' : 'person'">{{ t.appearance.akkarin_guest_avatar }}</ToggleSwitch>
 		</section>
 
 		<section list>
