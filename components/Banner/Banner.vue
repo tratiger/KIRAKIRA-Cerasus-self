@@ -92,7 +92,9 @@
 			}
 		}
 
-		> .page-user {
+		> .page-user,
+		> .page-user :deep(img) {
+			@include square(100%);
 			object-fit: cover;
 		}
 
