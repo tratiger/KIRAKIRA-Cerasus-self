@@ -4,15 +4,19 @@
 	基于 Vue I18n 官方的 `<I18nT>` 组件对项目进行适配。
 </docs>
 
-<script setup lang="ts">
-	const props = defineProps<{
-		/** i18n 键。 */
-		keypath: string;
-	}>();
+<script lang="tsx">
+	export default defineComponent({
+		inheritAttrs: false,
+		props: {
+			/** i18n 键。 */
+			keypath: {
+				type: String,
+				required: true,
+			},
+		},
+		render() {
+			// 直接写 `this.$slots` 会返回 Proxy 不能正常渲染，只能浅复制一次才行。
+			return <I18nT keypath={this.$props.keypath} scope="global">{{ ...this.$slots }}</I18nT>;
+		},
+	});
 </script>
-
-<template>
-	<I18nT :keypath scope="global">
-		<slot></slot>
-	</I18nT>
-</template>
