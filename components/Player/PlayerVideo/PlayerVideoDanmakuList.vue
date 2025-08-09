@@ -91,41 +91,41 @@
 <template>
 	<Comp>
 		<ClientOnly>
-			<ScrollContainer>
-				<table class="lite">
-					<thead>
-						<th v-for="(header, column, j) in headers" :key="header" v-ripple :width="colWidths[j]" @click="() => sort(j)">
-							<span>{{ header }}</span>
-							<Icon
-								name="chevron_up"
-								:class="sortBy[0] === column && {
-									ascending: sortBy[1] === 'ascending',
-									descending: sortBy[1] === 'descending',
-								}"
-							/>
+			<!-- <ScrollContainer> -->
+			<table class="lite">
+				<thead>
+					<th v-for="(header, column, j) in headers" :key="header" v-ripple :width="colWidths[j]" @click="() => sort(j)">
+						<span>{{ header }}</span>
+						<Icon
+							name="chevron_up"
+							:class="sortBy[0] === column && {
+								ascending: sortBy[1] === 'ascending',
+								descending: sortBy[1] === 'descending',
+							}"
+						/>
+					</th>
+					<tr class="shadow">
+						<th v-for="(header, _column, j) in headers" :key="header" :width="colWidths[j]">
+							<div class="grip" :data-index="j" @pointerdown="onGripDown"></div>
 						</th>
-						<tr class="shadow">
-							<th v-for="(header, _column, j) in headers" :key="header" :width="colWidths[j]">
-								<div class="grip" :data-index="j" @pointerdown="onGripDown"></div>
-							</th>
+					</tr>
+				</thead>
+				<tbody>
+					<RecycleScroller
+						v-slot="{ item }"
+						class="scroller"
+						:itemSize="28"
+						:buffer="100"
+						keyField="key"
+						:items="danmakuList"
+					>
+						<tr :key="item.key" v-ripple @contextmenu.prevent="e => { currentDanmaku = item.item; danmakuItemMenu = e; }">
+							<td v-for="(value, key, j) in item.item" :key="key" :width="colWidths[j]">{{ handleTableDataCellText(value) }}</td>
 						</tr>
-					</thead>
-					<tbody>
-						<RecycleScroller
-							v-slot="{ item }"
-							class="scroller"
-							:itemSize="28"
-							keyField="key"
-							:items="danmakuList"
-							pageMode
-						>
-							<tr :key="item.key" v-ripple @contextmenu.prevent="e => { currentDanmaku = item.item; danmakuItemMenu = e; }">
-								<td v-for="(value, key, j) in item.item" :key="key" :width="colWidths[j]">{{ handleTableDataCellText(value) }}</td>
-							</tr>
-						</RecycleScroller>
-					</tbody>
-				</table>
-			</ScrollContainer>
+					</RecycleScroller>
+				</tbody>
+			</table>
+			<!-- </ScrollContainer> -->
 
 			<Menu v-model="danmakuItemMenu">
 				<MenuItem icon="copy" @click="copyDanmaku">{{ t.copy }}</MenuItem>
@@ -142,6 +142,7 @@
 
 	:comp {
 		flex-grow: 1;
+		overflow-x: auto;
 		color: c(icon-color);
 
 		> .scroll-container {
@@ -156,6 +157,7 @@
 			position: relative;
 			display: block;
 			width: fit-content;
+			min-width: 100%;
 			height: 100%;
 			table-layout: fixed;
 			background-color: c(main-bg);
@@ -212,6 +214,7 @@
 					position: absolute;
 					left: 0;
 					height: 100%;
+					overflow: clip;
 					pointer-events: none;
 
 					> th {
