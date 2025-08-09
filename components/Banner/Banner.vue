@@ -50,7 +50,7 @@
 			</div>
 			<Transition name="page-jump-in">
 				<LogoCover v-if="currentPage === 'home'" noAnimation />
-				<NuxtPicture v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
+				<NuxtImg v-else-if="currentPage === 'user'" class="page-user" :src="banner" :key="banner" />
 				<BannerStandard
 					v-else
 					:name="t(2)[pageListStandard.find(i => i.id === currentPage)!.name]"
@@ -92,8 +92,7 @@
 			}
 		}
 
-		> .page-user,
-		> .page-user :deep(img) {
+		> .page-user {
 			@include square(100%);
 			object-fit: cover;
 		}

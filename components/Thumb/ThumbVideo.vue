@@ -44,7 +44,7 @@
 		<div class="card-wrapper">
 			<div v-ripple class="card">
 				<div class="cover-wrapper">
-					<NuxtPicture
+					<NuxtImg
 						v-if="image"
 						:provider="environment.cloudflareImageProvider"
 						:src="image"
@@ -149,7 +149,7 @@
 		margin-bottom: 8px;
 		overflow: clip;
 
-		picture.cover {
+		img.cover {
 			&,
 			:deep(img) {
 				width: 100%;

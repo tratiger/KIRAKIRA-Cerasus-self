@@ -227,7 +227,7 @@ export default defineNuxtConfig({
 	},
 
 	image: {
-		format: ["avif", "webp"], // 只适用于 <NuxtPicture>，对 <NuxtPicture> 无效。
+		format: ["avif", "webp"], // 只适用于 <NuxtImg>，对 <NuxtImg> 无效。
 		providers: {
 			cloudflareProd: {
 				name: "cloudflare-prod", // optional value to overrider provider name
