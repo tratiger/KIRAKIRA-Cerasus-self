@@ -267,7 +267,7 @@
 		</Modal>
 
 		<div v-ripple class="banner">
-			<NuxtPicture :src="banner" alt="banner" draggable="false" format="avif" />
+			<NuxtImg :src="banner" alt="banner" draggable="false" format="avif" />
 			<span>{{ t.profile.edit_banner }}</span>
 		</div>
 
@@ -295,8 +295,7 @@
 		overflow: clip;
 		background-color: c(gray-5);
 
-		> picture,
-		> picture :deep(img) {
+		> img {
 			z-index: 1;
 			width: 100%;
 			height: 150px;

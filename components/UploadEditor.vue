@@ -326,7 +326,7 @@
 			<div class="toolbox-card left">
 				<div v-ripple class="cover" @click="thumbnailInput?.click()">
 					<div class="mask">{{ t.select_cover }}</div>
-					<NuxtPicture
+					<NuxtImg
 						v-if="thumbnailUrl"
 						:provider
 						:src="thumbnailUrl"
@@ -525,17 +525,17 @@
 				opacity: 1;
 			}
 
-			img { // TODO: 转换为 picture 元素。
+			img {
 				scale: 115%;
 				filter: brightness(0.75) blur(2px);
 			}
 		}
 
-		&:not(:any-hover) img { // TODO: 转换为 picture 元素。
+		&:not(:any-hover) img {
 			transition-duration: 1s;
 		}
 
-		img { // TODO: 转换为 picture 元素。
+		img {
 			width: 100%;
 			aspect-ratio: 16 / 9;
 			object-fit: cover;
