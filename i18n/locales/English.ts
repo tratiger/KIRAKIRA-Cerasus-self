@@ -46,6 +46,7 @@ export default {
 		sharp_mode: "Sharp Mode",
 		flat_mode: "Flat Mode",
 		colorful_navbar: "Colorful Navigation Bar",
+		akkarin_guest_avatar: "Akkarin Guest Avatar",
 	},
 	confetti: "Confetti",
 	send: "Send",

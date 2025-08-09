@@ -50,6 +50,7 @@ export default {
 		sharp_mode: "crwdns2262:0crwdne2262:0",
 		flat_mode: "crwdns2264:0crwdne2264:0",
 		colorful_navbar: "crwdns2266:0crwdne2266:0",
+		akkarin_guest_avatar: "crwdns3660:0crwdne3660:0",
 	},
 	confetti: "crwdns2268:0crwdne2268:0",
 	send: "crwdns2270:0crwdne2270:0",
@@ -637,4 +638,8 @@ export default {
 		developer: "crwdns3648:0crwdne3648:0",
 	},
 	info: "crwdns3650:0crwdne3650:0",
+	calendar: {
+		gregory: "crwdns3662:0crwdne3662:0",
+		chinese: "crwdns3664:0crwdne3664:0",
+	},
 } as const satisfies LocaleIdentifiers;

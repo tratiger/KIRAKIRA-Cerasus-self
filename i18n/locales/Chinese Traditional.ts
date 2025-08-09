@@ -464,4 +464,5 @@ export default {
 		disable_email: {},
 	},
 	role: {},
+	calendar: {},
 } as const satisfies LocaleIdentifiers;

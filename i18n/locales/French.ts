@@ -50,6 +50,7 @@ export default {
 		sharp_mode: "Mode sharp",
 		flat_mode: "Mode plat",
 		colorful_navbar: "Barre de navigation colorée",
+		akkarin_guest_avatar: "Avatar de l'invité Akkarin",
 	},
 	confetti: "Confettis",
 	send: "Envoyer",
@@ -637,4 +638,8 @@ export default {
 		developer: "Développeur",
 	},
 	info: "Infos",
+	calendar: {
+		gregory: "Grégorien",
+		chinese: "Chinois",
+	},
 } as const satisfies LocaleIdentifiers;
