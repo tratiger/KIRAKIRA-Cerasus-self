@@ -84,7 +84,7 @@
 				<div class="user-counts">
 					<div>
 						<span class="value">{{ 0 }}</span>
-						<p>{{ t(0).follow }}</p>
+						<p>{{ t(0).following }}</p>
 					</div>
 					<div>
 						<span class="value">{{ 0 }}</span>
