@@ -50,6 +50,7 @@ export default {
 		sharp_mode: "Sắc sảo",
 		flat_mode: "Đơn giản",
 		colorful_navbar: "Thêm màu vào thanh điều hướng",
+		akkarin_guest_avatar: "Ảnh đại diện Akarin khách",
 	},
 	confetti: "Pháo bông",
 	send: "Gửi",
@@ -637,5 +638,8 @@ export default {
 		developer: "Lập trình viên",
 	},
 	info: "Thông tin",
-	calendar: {},
+	calendar: {
+		gregory: "Dương lịch",
+		chinese: "Âm lịch",
+	},
 } as const satisfies LocaleIdentifiers;

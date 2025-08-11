@@ -5,6 +5,7 @@ import type { LocaleIdentifiers } from "./types";
 export default {
 	colon: ": ",
 	semicolon: "; ",
+	enumerationComma: ", ",
 	home: "Beranda",
 	category: {
 		_: "Kategori",
@@ -41,6 +42,7 @@ export default {
 		sharp_mode: "Mode Tajam",
 		flat_mode: "Mode Dasar",
 		colorful_navbar: "Bilah Navigasi Berwarna-warni",
+		akkarin_guest_avatar: "Avatar Tamu Akkarin",
 	},
 	confetti: "Konfeti",
 	send: "Kirim",
@@ -421,7 +423,9 @@ export default {
 		_: "Kode Undangan",
 		invalid: "Kode Undangan Tidak Valid",
 	},
-	announcement: {},
+	announcement: {
+		homepage: "Situs kecil ini masih berkembang~! Bergabunglah ke {discord-server} kami untuk melihat perkembangannya dan chat sama pengembangnya! (๑˃ᴗ˂)ﻭ Bisa ngoding? Kami akan sangat senang jika kamu bergabung dengan kami dalam petualangan ini~!! (๑•̀ㅂ•́)و✧",
+	},
 	under_construction: {},
 	severity: {},
 	http_status_code: {},
