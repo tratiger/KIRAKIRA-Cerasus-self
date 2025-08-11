@@ -70,7 +70,6 @@
 			{ id: "traces", icon: "history" },
 			{ id: "privacy", icon: "shield" },
 			{ id: "security", icon: "lock" },
-			{ id: "account-linking", icon: "groups" },
 			{ id: "block-and-hide", icon: "block" },
 			{ id: "invitation-code", icon: "gift" },
 		],

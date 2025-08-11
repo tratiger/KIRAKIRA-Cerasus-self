@@ -114,7 +114,6 @@ export default {
 		new_retype: "Retype New Password",
 		hint: "Password Hint",
 	},
-	account_linking: "Account Linking",
 	block_and_hide: {
 		_: "Block and Hide",
 		block: {

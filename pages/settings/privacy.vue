@@ -74,7 +74,6 @@
 		{ id: "platform.tiktok", name: "TikTok", logo: "tiktok" }, // TikTok（抖音海外版）
 		{ id: "platform.pixiv", name: t.platform.pixiv, logo: "pixiv" },
 		{ id: "platform.github", name: t.platform.github, logo: "github" },
-		// { name: "电话号码", icon: "phone", privacy: "private" },
 	];
 
 	/**
@@ -233,8 +232,8 @@
 			>{{ item.name }}</SettingsPrivacyItem>
 		</section>
 
-		<div class="privacy-header">
-			<!-- TODO: 使用多语言 -->
+		<!-- DELETE: 即将取消关联平台设定，改为与 GitHub 类似的链接。 -->
+		<!-- <div class="privacy-header">
 			<Subheader icon="visibility">关联平台可见性</Subheader>
 			<div class="options">
 				<SoftButton v-tooltip:top="t.privacy.public" icon="visibility" @click="setColonLinkedAccountVisibility('public')" />
@@ -251,7 +250,7 @@
 				@update:modelValue="$event => updateLinkedAccountVisibilities($event)"
 				:icon="'mono-logo/' + item.logo"
 			>{{ item.name }}</SettingsPrivacyItem>
-		</section>
+		</section> -->
 
 		<div class="submit">
 			<Button icon="reset" :disabled="isPending" :loading="isReactVisibilitiesSetting" class="secondary" @click="resetColonVisibility()">{{ t.step.reset }}</Button>
