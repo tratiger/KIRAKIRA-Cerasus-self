@@ -46,9 +46,9 @@
 	const PRIVARY_VISIBILITIES_SETTING_ITEMS = [
 		{ id: "privary.birthday", name: t.user.birthday, icon: "birthday" },
 		{ id: "privary.age", name: t.user.age, icon: "calendar" },
-		{ id: "privary.follow", name: t.follow, icon: "person_add" },
-		{ id: "privary.fans", name: t.fans, icon: "person_heart" },
-		{ id: "privary.favorites", name: t.favorites, icon: "star" },
+		{ id: "privary.follow", name: t.following, icon: "person_add" },
+		{ id: "privary.fans", name: t(0).follower, icon: "person_heart" },
+		{ id: "privary.favorites", name: t(0).collection, icon: "star" },
 	];
 
 	const LINKED_ACCOUNT_VISIBILITIES_SETTING_ITEMS = [
@@ -74,12 +74,11 @@
 		{ id: "platform.tiktok", name: "TikTok", logo: "tiktok" }, // TikTok（抖音海外版）
 		{ id: "platform.pixiv", name: t.platform.pixiv, logo: "pixiv" },
 		{ id: "platform.github", name: t.platform.github, logo: "github" },
-		// { name: "电话号码", icon: "phone", privacy: "private" },
 	];
 
 	/**
 	 * 获取某一项隐私的可见性设置。
-	 * @param privaryId 隐私项名称。
+	 * @param privaryId - 隐私项名称。
 	 * @returns 用户对该隐私项的可见性设置。
 	 */
 	function getPrivaryVisibilitiesSetting(privaryId: string): PrivacyType {
@@ -93,7 +92,7 @@
 	/**
 	 * 更新 privaryVisibilities 的方法。
 	 * 如果新的设置在 privaryVisibilities 中存在，则更新对应项，如果不存在，则追加。
-	 * @param visibilitieSetting 新的隐私设置。
+	 * @param visibilitieSetting - 新的隐私设置。
 	 */
 	function updatePrivaryVisibilities(visibilitieSetting: { id: string; visibilitiesType: PrivacyType }) {
 		// 找到 privaryVisibilities 中与传入的 visibilitieSetting 的 privaryId 相同的项
@@ -107,7 +106,7 @@
 
 	/**
 	 * 获取某一平台关联账号的可见性设置。
-	 * @param platformId 隐私项名称。
+	 * @param platformId - 隐私项名称。
 	 * @returns 用户对该平台关联账号的可见性设置。
 	 */
 	function getLinkedAccountVisibilitiesSetting(platformId: string): PrivacyType {
@@ -121,7 +120,7 @@
 	/**
 	 * 更新 linkedAccountVisibilities 的方法。
 	 * 如果新的设置在 linkedAccountVisibilities 中存在，则更新对应项，如果不存在，则追加。
-	 * @param linkedAccountVisibilities 新的隐私设置。
+	 * @param linkedAccountVisibilities - 新的隐私设置。
 	 */
 	function updateLinkedAccountVisibilities(visibilitieSetting: { id: string; visibilitiesType: PrivacyType }) {
 		// 找到 linkedAccountVisibilities 中与传入的 visibilitieSetting 的 platformId 相同的项
@@ -140,7 +139,7 @@
 	function setColonPrivacyVisibility(privacy: PrivacyType) {
 		privaryVisibilities.value = PRIVARY_VISIBILITIES_SETTING_ITEMS.map(item => { return { privaryId: item.id, visibilitiesType: privacy }; });
 	}
-	
+
 	/**
 	 * 快速设置关联账号隐私列的可见性。
 	 * @param privacy - 隐私可见性。
@@ -233,8 +232,8 @@
 			>{{ item.name }}</SettingsPrivacyItem>
 		</section>
 
-		<div class="privacy-header">
-			<!-- TODO: 使用多语言 -->
+		<!-- DELETE: 即将取消关联平台设定，改为与 GitHub 类似的链接。 -->
+		<!-- <div class="privacy-header">
 			<Subheader icon="visibility">关联平台可见性</Subheader>
 			<div class="options">
 				<SoftButton v-tooltip:top="t.privacy.public" icon="visibility" @click="setColonLinkedAccountVisibility('public')" />
@@ -251,7 +250,7 @@
 				@update:modelValue="$event => updateLinkedAccountVisibilities($event)"
 				:icon="'mono-logo/' + item.logo"
 			>{{ item.name }}</SettingsPrivacyItem>
-		</section>
+		</section> -->
 
 		<div class="submit">
 			<Button icon="reset" :disabled="isPending" :loading="isReactVisibilitiesSetting" class="secondary" @click="resetColonVisibility()">{{ t.step.reset }}</Button>
