@@ -637,4 +637,5 @@ export default {
 		gregory: "Gregorian",
 		chinese: "Chinese",
 	},
+	reselect: "Reselect",
 } as const;

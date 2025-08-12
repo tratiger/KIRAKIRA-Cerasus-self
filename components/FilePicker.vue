@@ -140,7 +140,6 @@
 		>
 			<template v-if="!picked">
 				<Icon name="upload" class="upload-icon" />
-				<!-- TODO: 多语言 -->
 				<p>{{ unselectedText }}</p>
 			</template>
 
@@ -151,10 +150,8 @@
 						<p>{{ file?.name }}</p>
 					</div>
 					<div class="buttons">
-						<!-- TODO: 多语言 -->
-						<SoftButton v-tooltip:bottom="'Repick'" icon="upload" @click="fileInput?.click()" />
-						<!-- TODO: 多语言 -->
-						<SoftButton v-tooltip:bottom="'Remove'" icon="close" @click="removePicked" />
+						<SoftButton v-tooltip:bottom="t.reselect" icon="upload" @click="fileInput?.click()" />
+						<SoftButton v-tooltip:bottom="t.remove" icon="close" @click="removePicked" />
 					</div>
 					<div class="inner-shadow"></div>
 				</div>
