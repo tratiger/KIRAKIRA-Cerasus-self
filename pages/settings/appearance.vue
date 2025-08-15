@@ -95,27 +95,7 @@
 		</section>
 
 		<Subheader icon="palette">{{ t.palette }}</Subheader>
-		<section ref="paletteSection" grid force-multi-column>
-			<SettingsGridItem
-				v-if="backgroundImages.shown"
-				id="wallpaper"
-				key="wallpaper"
-				v-model="cookieThemeColor"
-				title="背景图像主色"
-				class="wallpaper-color force-color"
-			>
-				<div class="palette-card">
-					<img :src="backgroundImages.currentImage" alt="Background Image Dominant Color" />
-					<div class="overlay light"></div>
-					<div class="overlay color"></div>
-					<div>
-						<!-- TODO: 多语言。 -->
-						<h3>背景图像主色</h3>
-						<p lang="en">Background Image Dominant Color</p>
-					</div>
-					<Icon name="wallpaper" />
-				</div>
-			</SettingsGridItem>
+		<section ref="paletteSection" grid>
 			<SettingsGridItem
 				v-for="item in paletteList"
 				:id="item.color"
@@ -161,13 +141,31 @@
 					<Icon name="edit" />
 				</div>
 			</SettingsGridItem>
+			<SettingsGridItem
+				v-if="backgroundImages.shown"
+				id="wallpaper"
+				key="wallpaper"
+				v-model="cookieThemeColor"
+				:title="t.background"
+				class="wallpaper-color force-color"
+			>
+				<div class="palette-card">
+					<img :src="backgroundImages.currentImage" :alt="t.background" />
+					<div class="overlay light"></div>
+					<div class="overlay color"></div>
+					<div>
+						<h3>{{ t.background }}</h3>
+						<p>{{ t.palette.follow_bg }}</p>
+					</div>
+					<Icon name="wallpaper" />
+				</div>
+			</SettingsGridItem>
 		</section>
 
 		<Subheader icon="wallpaper">{{ t.background }}</Subheader>
 		<section>
-			<!-- TODO: 多语言。 -->
-			<Button class="upload-bg-image-btn" icon="upload" @click="addBackgroundImage">浏览</Button>
-			<section grid force-multi-column>
+			<Button class="upload-bg-image-btn" icon="upload" @click="addBackgroundImage">{{ t.file_picker.choose }}</Button>
+			<section grid force-multi-column class="section-background-images">
 				<TransitionGroup appear>
 					<SettingsGridItem
 						v-for="item in backgroundImages.items"
@@ -178,7 +176,7 @@
 						:style="{ '--accent-50': item.color }"
 						@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item, e.currentTarget])"
 					>
-						<Icon v-if="item.key === -1" name="prohibited" :style="{ fontSize: '48px' }" />
+						<Icon v-if="item.key === -1" name="prohibited" />
 						<img v-else :src="item.url" alt="" />
 					</SettingsGridItem>
 				</TransitionGroup>
@@ -214,7 +212,6 @@
 					pending="current"
 					:displayValue="backgroundSliderDisplayValue"
 				>{{ t.background.blur }}</SettingsSlider>
-			<!-- TODO: 滑块上方的气泡定位有问题。 -->
 			</template>
 		</section>
 
@@ -224,7 +221,7 @@
 				<MenuItem icon="arrow_left" :disabled="backgroundImageItemMenu[1].displayIndex <= 0" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex - 1)">往前挪</MenuItem>
 				<MenuItem icon="arrow_right" :disabled="backgroundImageItemMenu[1].displayIndex >= backgroundImages.items.length - 2" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex + 1)">往后挪</MenuItem>
 				<hr />
-				<MenuItem icon="delete" @click="confirmDeleteBackgroundImageFlyout = [[backgroundImageItemMenu[2], 'y'], () => backgroundImages.delete(backgroundImageItemMenu[1].key)]">删除</MenuItem>
+				<MenuItem icon="delete" @click="confirmDeleteBackgroundImageFlyout = [[backgroundImageItemMenu[2], 'y'], () => backgroundImages.delete(backgroundImageItemMenu[1].key)]">{{ t.delete }}</MenuItem>
 			</Menu>
 
 			<Flyout v-model="confirmDeleteBackgroundImageFlyout[0]">
@@ -310,19 +307,12 @@
 		}
 
 		h3 {
-			margin-bottom: calc(2px + 0.1cqh);
-
-			@include mobile {
-				display: none;
-			}
+			margin-bottom: calc(4px + 0.1cqh);
+			line-height: 1;
 		}
 
 		p {
 			font-size: calc(14px + 1cqw);
-
-			@include mobile {
-				font-weight: bold;
-			}
 		}
 
 		.icon {
@@ -378,6 +368,9 @@
 		}
 
 		@container style(--column: single) {
+			padding: 8px;
+
+			h3,
 			p {
 				display: none;
 			}
@@ -397,8 +390,16 @@
 		margin: 16px;
 	}
 
+	section.section-background-images {
+		padding-top: 0;
+
+		&:not(:last-child) {
+			padding-bottom: 0;
+		}
+	}
+
 	.upload-bg-image-btn {
-		margin: 10px 20px;
+		margin: 20px;
 
 		& + section:empty {
 			display: none;
@@ -410,6 +411,11 @@
 			@include square(100%);
 			aspect-ratio: inherit;
 			object-fit: inherit;
+		}
+
+		.icon {
+			color: c(icon-color);
+			font-size: 48px;
 		}
 
 		&.v-enter-from,
