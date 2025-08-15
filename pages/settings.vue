@@ -546,7 +546,9 @@
 		}
 
 		section {
-			@extend %chip;
+			&:not(section section) {
+				@extend %chip;
+			}
 
 			&[list] > * {
 				$extra-padding: 16px;
