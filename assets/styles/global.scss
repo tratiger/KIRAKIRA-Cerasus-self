@@ -254,6 +254,16 @@ img.jipt-loader-logo {
 	pointer-events: auto;
 }
 
+// 使 JS 获取 100lvh 高度。
+#large-viewport-size {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100lvw;
+	height: 100lvh;
+	visibility: hidden;
+}
+
 @layer base {
 	#popovers > * {
 		position: fixed;
@@ -303,16 +313,6 @@ html[style*="--cursor"] {
 ::view-transition-new(root) {
 	mix-blend-mode: normal;
 	animation: none;
-}
-
-::view-transition-old(root),
-.dark.changing-theme::view-transition-new(root) {
-	z-index: 1;
-}
-
-::view-transition-new(root),
-.dark.changing-theme::view-transition-old(root) {
-	z-index: calc(infinity);
 }
 // #endregion
 

@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
+	const backgroundImages = useBackgroundImages();
 	const showDrawer = ref(false);
 	const isSettingsPage = ref(false);
 
@@ -37,8 +38,8 @@
 
 <template>
 	<ClientOnly>
-		<div v-if="backgroundImageSettingsStore.image.data" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
-			<img :src="backgroundImageSettingsStore.image.data" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
+		<div v-if="backgroundImages.shown" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
+			<img :src="backgroundImages.currentImage" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
 			<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
 		</div>
 	</ClientOnly>

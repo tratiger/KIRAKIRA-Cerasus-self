@@ -377,6 +377,48 @@ export async function startViewTransition(callback: () => MaybePromise<void>) {
 	else await callback();
 }
 
+let lastClickMouseEvent: MouseEvent | undefined;
+try {
+	if (typeof document !== "undefined")
+		document?.addEventListener("click", e => lastClickMouseEvent = e, true);
+} catch (error) {
+	console.error("ERROR", "Client-side code (adding global event listeners) should not be run on the server. (Error catched in modules/theme/theme-cookie-binding.ts)");
+	console.error("ERROR", error);
+}
+
+export function startCircleViewTransition(isSpread: boolean, changeFunc: () => MaybePromise<void | unknown>) {
+	return new Promise<void>(resolve => {
+		// It is difficult to get 100lvh (large viewport) height in JavaScript.
+		const lvsEl = document.getElementById("large-viewport-size");
+		const lvh = lvsEl?.offsetHeight ?? window.innerHeight, lvw = lvsEl?.offsetWidth ?? window.innerWidth;
+		const { x, y } = lastClickMouseEvent ?? { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+		const endRadius = Math.hypot(Math.max(x, lvw - x), Math.max(y, lvh - y));
+		const clipPath = [
+			`circle(0px at ${x}px ${y}px)`,
+			`circle(${endRadius}px at ${x}px ${y}px)`,
+		];
+		startColorViewTransition(changeFunc, [
+			[{
+				clipPath: isSpread ? clipPath : clipPath.toReversed(),
+			}, {
+				pseudoElement: isSpread ? "::view-transition-new(root)" : "::view-transition-old(root)",
+			}],
+			[{
+				zIndex: ["1", "1"],
+			}, {
+				pseudoElement: !isSpread ? "::view-transition-new(root)" : "::view-transition-old(root)",
+			}],
+			[{
+				zIndex: ["calc(infinity)", "calc(infinity)"],
+			}, {
+				pseudoElement: isSpread ? "::view-transition-new(root)" : "::view-transition-old(root)",
+			}],
+		], { cursor: "progress" }).then(() => {
+			resolve();
+		});
+	});
+}
+
 /**
  * 获取一个会根据周期动态改变的随机数。
  * @param interval - 改变周期。单位：毫秒。

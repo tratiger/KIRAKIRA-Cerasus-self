@@ -12,6 +12,7 @@
 		{ color: "red", subtitle: "奈津恵" },
 	] as const;
 	const paletteSection = ref<HTMLElement>();
+	const DEFAULT_PALETTE = "pink" satisfies PaletteType;
 
 	// HACK: 16 请参照此部分 ↓ ↓ ↓
 
@@ -34,16 +35,17 @@
 	const flyoutColorPicker = ref<FlyoutModel>();
 	watch(customColor, customColor => cookieThemeCustomColor.value = customColor.hex);
 
+	// 背景图片
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
-	const backgroundImageFiles = ref<File[]>([]);
-	const backgroundImageFile = computed(() => backgroundImageFiles.value[0]);
 	const backgroundSliderDisplayValue = (value: number) => value.toFixed(2);
+	const backgroundImages = useBackgroundImages();
+	const backgroundImageItemMenu = ref<[MenuModel | undefined, BackgroundImageRowWithMore]>([undefined, DEFAULT_BACKGROUND_IMAGE_ROW]);
 
-	watch(backgroundImageFile, async file => {
-		const bgImage = backgroundImageSettingsStore.image;
-		bgImage.name = file?.name ?? "";
-		bgImage.data = file ? await fileToData(file) : "";
-	});
+	async function addBackgroundImage() {
+		const files = await openFile({ accept: "image/*", multiple: true });
+		for (const file of files)
+			await backgroundImages.add(file);
+	}
 
 	const useCookieAndLocalStorageOptions = { isWatchCookieRef: true, isSyncSettings: false };
 	// 在 cookie 和 localStorage 中同步的 Cookie，是否开启主题同步
@@ -63,11 +65,6 @@
 		if (paletteSection.value)
 			for (const item of paletteSection.value.children)
 				item.classList.remove("light", "dark");
-
-		// 从设置存储中加载背景图片
-		const bgImage = backgroundImageSettingsStore.image;
-		if (bgImage.data)
-			backgroundImageFiles.value = [dataToFile(bgImage.data, bgImage.name)];
 	});
 </script>
 
@@ -99,6 +96,26 @@
 		<Subheader icon="palette">{{ t.palette }}</Subheader>
 		<section ref="paletteSection" grid force-multi-column>
 			<SettingsGridItem
+				v-if="backgroundImages.shown"
+				id="wallpaper"
+				key="wallpaper"
+				v-model="cookieThemeColor"
+				title="背景图像主色"
+				class="wallpaper-color force-color"
+			>
+				<div class="palette-card">
+					<img :src="backgroundImages.currentImage" alt="Background Image Dominant Color" />
+					<div class="overlay light"></div>
+					<div class="overlay color"></div>
+					<div>
+						<!-- TODO: 多语言。 -->
+						<h3>背景图像主色</h3>
+						<p lang="en">Background Image Dominant Color</p>
+					</div>
+					<Icon name="wallpaper" />
+				</div>
+			</SettingsGridItem>
+			<SettingsGridItem
 				v-for="item in paletteList"
 				:id="item.color"
 				:key="item.color"
@@ -106,6 +123,7 @@
 				:title="t.palette[item.color]"
 				class="force-color"
 				:class="[item.color]"
+				:checked="item.color === DEFAULT_PALETTE && cookieThemeColor === 'wallpaper' && !backgroundImages.shown || undefined"
 			>
 				<div class="palette-card">
 					<NuxtImg
@@ -137,7 +155,7 @@
 					<div class="hue-gradient"></div>
 					<div>
 						<h3>{{ t.custom }}</h3>
-						<p>Make It Yours</p>
+						<p lang="en">Make It Yours</p>
 					</div>
 					<Icon name="edit" />
 				</div>
@@ -146,8 +164,25 @@
 
 		<Subheader icon="wallpaper">{{ t.background }}</Subheader>
 		<section>
-			<FilePicker v-model="backgroundImageFiles" accept="image/*" cover :unselectedText="t.unselected.image" />
-			<template v-if="backgroundImageFile">
+			<!-- TODO: 多语言。 -->
+			<Button class="upload-bg-image-btn" icon="upload" @click="addBackgroundImage">浏览</Button>
+			<section grid force-multi-column>
+				<TransitionGroup appear>
+					<SettingsGridItem
+						v-for="item in backgroundImages.items"
+						:id="item.key"
+						:key="item.key"
+						v-model="backgroundImages.backgroundImage"
+						class="preview-bg-image force-color"
+						:style="{ '--accent-50': item.color }"
+						@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item])"
+					>
+						<Icon v-if="item.key === -1" name="prohibited" :style="{ fontSize: '48px' }" />
+						<img v-else :src="item.url" alt="" />
+					</SettingsGridItem>
+				</TransitionGroup>
+			</section>
+			<template v-if="backgroundImages.shown">
 				<SettingsSlider
 					v-model="backgroundImageSettingsStore.opacity"
 					:min="0"
@@ -181,6 +216,16 @@
 			<!-- TODO: 滑块上方的气泡定位有问题。 -->
 			</template>
 		</section>
+
+		<ClientOnly>
+			<Menu v-model="backgroundImageItemMenu[0]">
+				<!-- TODO: 多语言。 -->
+				<MenuItem icon="arrow_left" :disabled="backgroundImageItemMenu[1].displayIndex <= 0" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex - 1)">往前挪</MenuItem>
+				<MenuItem icon="arrow_right" :disabled="backgroundImageItemMenu[1].displayIndex >= backgroundImages.items.length - 2" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex + 1)">往后挪</MenuItem>
+				<hr />
+				<MenuItem icon="delete" @click="backgroundImages.delete(backgroundImageItemMenu[1].key)">删除</MenuItem>
+			</Menu>
+		</ClientOnly>
 
 		<Subheader icon="more_horiz">{{ t(2).other }}</Subheader>
 		<section list>
@@ -238,6 +283,10 @@
 			color: inherit;
 		}
 
+		.wallpaper-color & {
+			color: var(--accent-wallpaper);
+		}
+
 		> * {
 			position: relative;
 		}
@@ -291,6 +340,10 @@
 				opacity: 0.6;
 				mix-blend-mode: color;
 
+				.wallpaper-color & {
+					background-color: var(--accent-wallpaper);
+				}
+
 				html.dark & {
 					mix-blend-mode: hue;
 				}
@@ -329,5 +382,26 @@
 	.file-picker {
 		width: 300px;
 		margin: 16px;
+	}
+
+	.upload-bg-image-btn {
+		margin: 10px 20px;
+
+		& + section:empty {
+			display: none;
+		}
+	}
+
+	.preview-bg-image {
+		img {
+			@include square(100%);
+			aspect-ratio: inherit;
+			object-fit: inherit;
+		}
+
+		&.v-enter-from,
+		&.v-leave-to {
+			scale: 0;
+		}
 	}
 </style>

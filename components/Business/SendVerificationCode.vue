@@ -1,10 +1,10 @@
 <script setup lang="ts">
 	const props = defineProps<{
-		/** 邀请码的用途 */
+		/** 邀请码的用途。 */
 		verificationCodeFor: "registration" | "change-email" | "change-password" | "delete-email-2fa";
-		/** 邮箱 */ // WARN 当 verificationCodeFor 为 change-password 时无需传递该参数。
+		/** 邮箱。 */ // WARN 当 verificationCodeFor 为 change-password 时无需传递该参数。
 		email?: string;
-		/** 是否是禁用状态 */
+		/** 禁用？ */
 		disabled?: boolean;
 	}>();
 

@@ -544,10 +544,10 @@
 	}
 
 	/**
-	* 给视频截个图。
-	* @param scale - 截图缩放比率，默认为 1。
-	* @returns 截图后的图片元素。
-	*/
+	 * 给视频截个图。
+	 * @param scale - 截图缩放比率，默认为 1。
+	 * @returns 截图后的图片元素。
+	 */
 	async function getScreenshot(scale: number = 1) {
 		if (!video.value) return;
 

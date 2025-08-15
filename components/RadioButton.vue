@@ -3,11 +3,11 @@
 	// BUG: 上面那个是 typescript-eslint 的 bug，如果去掉，则会触发 typescript 的报错。简而言之就是目前 typescript-eslint 和 typescript 在互相打架。
 
 	const props = withDefaults(defineProps<{
-		/** 禁用。 */
+		/** 禁用？ */
 		disabled?: boolean;
 		/** 值。 */
 		value?: T;
-		/** 已勾选，单向绑定使用。 */
+		/** 已勾选？（单向绑定使用） */
 		checked?: boolean;
 		/** 详细信息。 */
 		details?: Readable;
