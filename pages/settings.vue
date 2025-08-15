@@ -263,6 +263,7 @@
 		.scroll-container {
 			height: 100dvh;
 			padding: 0 $nav-padding-x;
+			transition: none;
 
 			@include mobile {
 				padding: 0 $mobile-nav-padding-x;
@@ -432,12 +433,10 @@
 	}
 
 	.nav-header {
-		margin-right: (-$nav-padding-x);
+		margin-inline: (-$nav-padding-x);
 		margin-bottom: -10px;
-		margin-left: (-$nav-padding-x);
-		padding-right: $nav-padding-x;
+		padding-inline: $nav-padding-x;
 		padding-bottom: 10px;
-		padding-left: $nav-padding-x;
 		background-color: c(gray-5, 80%);
 
 		h1 {
@@ -445,10 +444,8 @@
 		}
 
 		@include mobile {
-			margin-right: (-$mobile-nav-padding-x);
-			margin-left: (-$mobile-nav-padding-x);
-			padding-right: $mobile-nav-padding-x;
-			padding-left: $mobile-nav-padding-x;
+			margin-inline: (-$mobile-nav-padding-x);
+			padding-inline: $mobile-nav-padding-x;
 		}
 	}
 
@@ -459,12 +456,10 @@
 		background-color: c(main-bg, 80%);
 
 		@include not-mobile {
-			margin-right: (-$main-padding-x);
+			margin-inline: (-$main-padding-x);
 			margin-bottom: -0.5rem;
-			margin-left: (-$main-padding-x);
-			padding-right: $main-padding-x;
+			padding-inline: $main-padding-x;
 			padding-bottom: 0.5rem;
-			padding-left: $main-padding-x;
 		}
 
 		@include mobile {
@@ -598,9 +593,9 @@
 			display: flex;
 			gap: 8px;
 			justify-content: flex-end;
-			margin: 0 (-$main-padding-x) (-$submit-margin-y);
-			margin-top: 0;
-			padding: 0 $main-padding-x $submit-margin-y;
+			margin-inline: (-$main-padding-x);
+			margin-bottom: (-$main-padding-x);
+			padding: calc($submit-margin-y / 2) $main-padding-x $submit-margin-y;
 			background-color: c(main-bg, 80%);
 			backdrop-filter: $backdrop-filter;
 		}
