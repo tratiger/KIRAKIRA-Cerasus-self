@@ -107,7 +107,6 @@ export default {
 		new_retype: "確認新密碼",
 		hint: "密碼提示",
 	},
-	account_linking: "關聯社群平臺",
 	block_and_hide: {
 		block: {
 			description: "不想與其交流的使用者，其將被禁止與你互動。",
@@ -465,4 +464,5 @@ export default {
 	},
 	role: {},
 	calendar: {},
+	file_picker: {},
 } as const satisfies LocaleIdentifiers;

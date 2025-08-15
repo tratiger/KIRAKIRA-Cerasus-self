@@ -32,6 +32,7 @@ export default {
 		yellow: "Syaro Yellow",
 		cyan: "Maya Cyan",
 		red: "Megu Red",
+		follow_bg: "Follow Background",
 	},
 	language: "Language",
 	background: {
@@ -637,5 +638,8 @@ export default {
 		gregory: "Gregorian",
 		chinese: "Chinese",
 	},
-	reselect: "Reselect",
+	file_picker: {
+		choose: "Choose File",
+		rechoose: "Rechoose",
+	},
 } as const;

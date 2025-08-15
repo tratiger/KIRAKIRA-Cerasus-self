@@ -36,6 +36,7 @@ export default {
 		yellow: "crwdns2852:0crwdne2852:0",
 		cyan: "crwdns2234:0crwdne2234:0",
 		red: "crwdns2854:0crwdne2854:0",
+		follow_bg: "crwdns3666:0crwdne3666:0",
 	},
 	language: "crwdns3380:0crwdne3380:0",
 	background: {
@@ -118,7 +119,6 @@ export default {
 		new_retype: "crwdns2356:0crwdne2356:0",
 		hint: "crwdns2358:0crwdne2358:0",
 	},
-	account_linking: "crwdns2360:0crwdne2360:0",
 	block_and_hide: {
 		_: "crwdns3386:0crwdne3386:0",
 		block: {
@@ -641,5 +641,9 @@ export default {
 	calendar: {
 		gregory: "crwdns3662:0crwdne3662:0",
 		chinese: "crwdns3664:0crwdne3664:0",
+	},
+	file_picker: {
+		choose: "crwdns3668:0crwdne3668:0",
+		rechoose: "crwdns3670:0crwdne3670:0",
 	},
 } as const satisfies LocaleIdentifiers;

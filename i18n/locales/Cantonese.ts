@@ -117,7 +117,6 @@ export default {
 		new_retype: "確認新密碼",
 		hint: "密碼提醒",
 	},
-	account_linking: "關連社交媒體",
 	block_and_hide: {
 		_: "封鎖同隱藏",
 		block: {
@@ -621,4 +620,5 @@ export default {
 	},
 	info: "資訊",
 	calendar: {},
+	file_picker: {},
 } as const satisfies LocaleIdentifiers;

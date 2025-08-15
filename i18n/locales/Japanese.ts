@@ -36,6 +36,7 @@ export default {
 		yellow: "シャロ 黄",
 		cyan: "マヤ 青緑",
 		red: "メグ 赤",
+		follow_bg: "背景をフォロー",
 	},
 	language: "言語",
 	background: {
@@ -118,7 +119,6 @@ export default {
 		new_retype: "新しいパスワードの確認",
 		hint: "パスワードのヒント",
 	},
-	account_linking: "SNSリンク",
 	block_and_hide: {
 		_: "ブロックと非表示",
 		block: {
@@ -641,5 +641,9 @@ export default {
 	calendar: {
 		gregory: "グレゴリア",
 		chinese: "中国語",
+	},
+	file_picker: {
+		choose: "ファイルを選択",
+		rechoose: "Rechose",
 	},
 } as const satisfies LocaleIdentifiers;

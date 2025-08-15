@@ -36,6 +36,7 @@ export default {
 		yellow: "纱路黄",
 		cyan: "麻耶青",
 		red: "小惠红",
+		follow_bg: "跟随背景",
 	},
 	language: "语言",
 	background: {
@@ -118,7 +119,6 @@ export default {
 		new_retype: "确认新密码",
 		hint: "密码提示",
 	},
-	account_linking: "关联社交平台",
 	block_and_hide: {
 		_: "屏蔽和隐藏",
 		block: {
@@ -641,5 +641,9 @@ export default {
 	calendar: {
 		gregory: "公历",
 		chinese: "农历",
+	},
+	file_picker: {
+		choose: "选择文件",
+		rechoose: "重新选择",
 	},
 } as const satisfies LocaleIdentifiers;

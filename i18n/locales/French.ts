@@ -36,6 +36,7 @@ export default {
 		yellow: "Syaro Jaune",
 		cyan: "Maya Cyan",
 		red: "Megu Rouge",
+		follow_bg: "Suivre l'arrière-plan",
 	},
 	language: "Langue",
 	background: {
@@ -118,7 +119,6 @@ export default {
 		new_retype: "Retapez le nouveau mot de passe",
 		hint: "Indice mot de passe",
 	},
-	account_linking: "Liaison de Compte",
 	block_and_hide: {
 		_: "Bloquer et masquer",
 		block: {
@@ -641,5 +641,9 @@ export default {
 	calendar: {
 		gregory: "Grégorien",
 		chinese: "Chinois",
+	},
+	file_picker: {
+		choose: "Choisir un fichier",
+		rechoose: "Rechoisir",
 	},
 } as const satisfies LocaleIdentifiers;

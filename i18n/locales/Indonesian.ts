@@ -102,7 +102,6 @@ export default {
 		new_retype: "Ketik Ulang Kata Sandi Baru",
 		hint: "Petunjuk Password",
 	},
-	account_linking: "Penautan Akun",
 	block_and_hide: {
 		block: {},
 		hide: {},
@@ -437,4 +436,5 @@ export default {
 	},
 	role: {},
 	calendar: {},
+	file_picker: {},
 } as const satisfies LocaleIdentifiers;

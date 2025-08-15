@@ -118,7 +118,6 @@ export default {
 		new_retype: "Nhập lại mật khẩu mới",
 		hint: "Gợi ý mật khẩu",
 	},
-	account_linking: "Liên kết tài khoản",
 	block_and_hide: {
 		_: "Chặn và Ẩn",
 		block: {
@@ -231,7 +230,7 @@ export default {
 			_: "Mã nguồn",
 			frontend: "Kho lưu trữ GitHub Frontend và phản hồi về các vấn đề",
 			backend: "Kho lưu trữ GitHub Backend và phản hồi về các vấn đề",
-			markdown: "Kho lưu trữ mã nguồn Markdown của người dùng và phản hồi các vấn đề",
+			markdown: "Kho lưu trữ mã nguồn Markdown của người dùng và phản hồi về các vấn đề",
 		},
 		team: "Đội ngũ",
 		staff: {
@@ -642,4 +641,5 @@ export default {
 		gregory: "Dương lịch",
 		chinese: "Âm lịch",
 	},
+	file_picker: {},
 } as const satisfies LocaleIdentifiers;
