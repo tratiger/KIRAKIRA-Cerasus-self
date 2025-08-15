@@ -39,7 +39,8 @@
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
 	const backgroundSliderDisplayValue = (value: number) => value.toFixed(2);
 	const backgroundImages = useBackgroundImages();
-	const backgroundImageItemMenu = ref<[MenuModel | undefined, BackgroundImageRowWithMore]>([undefined, DEFAULT_BACKGROUND_IMAGE_ROW]);
+	const backgroundImageItemMenu = ref<[MenuModel | undefined, BackgroundImageRowWithMore, HTMLElement | undefined]>([undefined, DEFAULT_BACKGROUND_IMAGE_ROW, undefined]);
+	const confirmDeleteBackgroundImageFlyout = ref<[FlyoutModel | undefined, () => void]>([undefined, useNoop]);
 
 	async function addBackgroundImage() {
 		const files = await openFile({ accept: "image/*", multiple: true });
@@ -175,7 +176,7 @@
 						v-model="backgroundImages.backgroundImage"
 						class="preview-bg-image force-color"
 						:style="{ '--accent-50': item.color }"
-						@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item])"
+						@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item, e.currentTarget])"
 					>
 						<Icon v-if="item.key === -1" name="prohibited" :style="{ fontSize: '48px' }" />
 						<img v-else :src="item.url" alt="" />
@@ -223,8 +224,20 @@
 				<MenuItem icon="arrow_left" :disabled="backgroundImageItemMenu[1].displayIndex <= 0" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex - 1)">往前挪</MenuItem>
 				<MenuItem icon="arrow_right" :disabled="backgroundImageItemMenu[1].displayIndex >= backgroundImages.items.length - 2" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex + 1)">往后挪</MenuItem>
 				<hr />
-				<MenuItem icon="delete" @click="backgroundImages.delete(backgroundImageItemMenu[1].key)">删除</MenuItem>
+				<MenuItem icon="delete" @click="confirmDeleteBackgroundImageFlyout = [[backgroundImageItemMenu[2], 'y'], () => backgroundImages.delete(backgroundImageItemMenu[1].key)]">删除</MenuItem>
 			</Menu>
+
+			<Flyout v-model="confirmDeleteBackgroundImageFlyout[0]">
+				<div class="flyout-content">
+					<h4>{{ t.delete }}</h4>
+					<!-- TODO: 多语言。 -->
+					<p>确定要删除该背景图像吗？</p>
+					<div class="flyout-buttons">
+						<Button @click="confirmDeleteBackgroundImageFlyout[0] = undefined">{{ t.step.cancel }}</Button>
+						<Button @click="confirmDeleteBackgroundImageFlyout[0] = undefined; confirmDeleteBackgroundImageFlyout[1]();" :style="{ '--appearance': 'secondary' }">{{ t.step.ok }}</Button>
+					</div>
+				</div>
+			</Flyout>
 		</ClientOnly>
 
 		<Subheader icon="more_horiz">{{ t(2).other }}</Subheader>
@@ -402,6 +415,18 @@
 		&.v-enter-from,
 		&.v-leave-to {
 			scale: 0;
+		}
+	}
+
+	.flyout-content {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: min(250px, 100dvw);
+
+		.flyout-buttons {
+			display: flex;
+			gap: 8px;
 		}
 	}
 </style>

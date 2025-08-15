@@ -1,8 +1,10 @@
 import IndexedDBStore from "classes/IndexedDBStore";
-import { FastAverageColor } from "fast-average-color";
+import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
+import PipelineWorker from "node-vibrant/worker.worker?worker";
+
+Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 const DATABASE_VERSION = 1;
-const fac = new FastAverageColor();
 
 interface BackgroundImageRow {
 	imageData: Blob;
@@ -79,14 +81,13 @@ export function useBackgroundImages() {
 	async function add(image: File) {
 		if (!store.value) return;
 		const length = await store.value.length;
-		const imgResource = new Image();
-		imgResource.src = await fileToData(image);
-		const color = await fac.getColorAsync(imgResource);
+		const palette = await Vibrant.from(await fileToData(image)).getPalette();
+		const color = palette.Vibrant?.hex ?? "";
 		await store.value.add({
 			imageData: image,
 			filename: image.name,
 			displayIndex: length,
-			color: color.hex,
+			color,
 		});
 		await updateItems();
 	}
