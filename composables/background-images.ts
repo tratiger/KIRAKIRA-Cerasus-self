@@ -2,9 +2,8 @@ import IndexedDBStore from "classes/IndexedDBStore";
 import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
 import PipelineWorker from "node-vibrant/worker.worker?worker";
 
-Vibrant.use(new WorkerPipeline(PipelineWorker as never));
-
 const DATABASE_VERSION = 1;
+Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 interface BackgroundImageRow {
 	imageData: Blob;
