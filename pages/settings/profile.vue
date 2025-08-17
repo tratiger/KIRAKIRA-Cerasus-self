@@ -153,7 +153,7 @@
 			userNickname: profile.nickname.normalize(),
 			signature: profile.bio.normalize(),
 			gender: profile.gender.normalize(),
-			// userBirthday: profile.birthday.toString(), // TODO: 请在后端实现生日信息存储后启用。
+			userBirthday: profile.birthday.toString(),
 			label: profile.tags?.map((tag, index) => ({ id: index, labelName: tag.normalize() })),
 		};
 		try {
