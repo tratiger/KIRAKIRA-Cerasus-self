@@ -487,7 +487,7 @@ export default {
 		cooling_down: "冷却中！(・_・;) 请稍后再试",
 		unsupported_file: "不支持的文件格式！",
 		no_cover: "请上传封面！",
-		login_failed: "登入失败！用户名或密码错误",
+		login_failed: "登入失败！登入信息错误",
 		logout_success: "登出成功~",
 		password_changed: "密码已更改~",
 		password_mismatch: "两次输入密码不一致！",

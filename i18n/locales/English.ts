@@ -483,7 +483,7 @@ export default {
 		cooling_down: "Cooling down! (・_・;) Please try again later.",
 		unsupported_file: "Unsupported file format!",
 		no_cover: "Please upload the cover!",
-		login_failed: "Login failed! The username or password is incorrect.",
+		login_failed: "Login failed! Invalid credentials.",
 		logout_success: "Logged out successfully~",
 		password_changed: "Password changed~",
 		password_mismatch: "The two passwords entered do not match!",

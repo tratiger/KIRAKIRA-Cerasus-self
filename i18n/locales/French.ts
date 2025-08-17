@@ -487,7 +487,7 @@ export default {
 		cooling_down: "Refroidissement! (・_・;) Veuillez réessayer plus tard.",
 		unsupported_file: "Format de fichier non pris en charge !",
 		no_cover: "Veuillez télécharger la couverture !",
-		login_failed: "Connexion échouée ! Le nom d'utilisateur ou le mot de passe est incorrect.",
+		login_failed: "Échec de la connexion ! Identifiants invalides.",
 		logout_success: "Déconnexion réussie~",
 		password_changed: "Mot de passe modifié~",
 		password_mismatch: "Les deux mots de passe saisis ne correspondent pas !",

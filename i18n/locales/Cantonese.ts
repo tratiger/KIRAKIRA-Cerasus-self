@@ -483,7 +483,6 @@ export default {
 		cooling_down: "冷卻緊！(・_・;) 唔該陣間試多次。",
 		unsupported_file: "唔支援此檔案格式！",
 		no_cover: "請上載封面！",
-		login_failed: "登入失敗！用戶名或密碼錯誤。",
 		logout_success: "登出咗喇~",
 		password_changed: "密碼改咗喇~",
 		password_mismatch: "兩次輸入嘅密碼唔同！",

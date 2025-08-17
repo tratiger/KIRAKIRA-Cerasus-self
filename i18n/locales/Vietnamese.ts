@@ -36,6 +36,7 @@ export default {
 		yellow: "Syaro Vàng",
 		cyan: "Maya Xanh Dương",
 		red: "Megu Đỏ",
+		follow_bg: "Theo hình nền",
 	},
 	language: "Ngôn Ngữ",
 	background: {
@@ -486,7 +487,7 @@ export default {
 		cooling_down: "Đang hạ hỏa... (・_・;) Hãy thử lại sau.",
 		unsupported_file: "Định dạng file không được hỗ trợ!",
 		no_cover: "Hãy thêm bìa cho video!",
-		login_failed: "Đăng nhập thất bại! Tên người dùng hoặc mật khẩu không đúng.",
+		login_failed: "Đăng nhập thất bại! Thông tin đăng nhập không hợp lệ.",
 		logout_success: "Đăng xuất thành công~",
 		password_changed: "Đã đổi mật khẩu~",
 		password_mismatch: "Hai mật khẩu vừa nhập không khớp!",
@@ -641,5 +642,8 @@ export default {
 		gregory: "Dương lịch",
 		chinese: "Âm lịch",
 	},
-	file_picker: {},
+	file_picker: {
+		choose: "Chọn tệp",
+		rechoose: "Chọn lại",
+	},
 } as const satisfies LocaleIdentifiers;

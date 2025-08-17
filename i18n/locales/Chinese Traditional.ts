@@ -421,7 +421,6 @@ export default {
 	click_to_refresh: "重新整理",
 	toast: {
 		no_cover: "請上傳封面！",
-		login_failed: "登入失敗！使用者名稱或密碼錯誤。",
 		password_mismatch: "兩次輸入密碼不一致！",
 		copied: "已複製～",
 		modification_failed: "修改失敗！",

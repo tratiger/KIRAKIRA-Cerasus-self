@@ -487,7 +487,7 @@ export default {
 		cooling_down: "クールダウン中! (・_・;) 後でもう一度お試しください。",
 		unsupported_file: "サポートされていないファイル形式です！",
 		no_cover: "サムネイルを指定してください！",
-		login_failed: "ログインに失敗しました！ユーザー名またはパスワードが間違っています。",
+		login_failed: "ログインに失敗しました！無効な資格情報です。",
 		logout_success: "ログアウトしました~",
 		password_changed: "パスワードを変更しました~",
 		password_mismatch: "パスワードが一致しません！",

@@ -487,7 +487,7 @@ export default {
 		cooling_down: "crwdns3376:0crwdne3376:0",
 		unsupported_file: "crwdns3378:0crwdne3378:0",
 		no_cover: "crwdns2828:0crwdne2828:0",
-		login_failed: "crwdns2830:0crwdne2830:0",
+		login_failed: "crwdns3674:0crwdne3674:0",
 		logout_success: "crwdns3242:0crwdne3242:0",
 		password_changed: "crwdns3418:0crwdne3418:0",
 		password_mismatch: "crwdns2832:0crwdne2832:0",
