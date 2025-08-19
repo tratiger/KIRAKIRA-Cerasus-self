@@ -713,8 +713,8 @@
 				:settings
 				:hidden="hideController"
 				@mousedown="playerVideoControllerMouseDown = true"
-				@touchstart="onPlayerVideoControllerTouchStart"
-				@touchend="onPlayerVideoControllerTouchEnd"
+				@touchstart.passive="onPlayerVideoControllerTouchStart"
+				@touchend.passive="onPlayerVideoControllerTouchEnd"
 				@focusin="hideController = false"
 			/>
 		</div>
