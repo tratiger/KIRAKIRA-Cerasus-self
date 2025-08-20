@@ -306,6 +306,12 @@ html[style*="--cursor"] {
 	inherits: false;
 	initial-value: 0;
 }
+
+@property --view-transition-pixel-gradient {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: calc(infinity * 1px);
+}
 // #endregion
 
 // #region 主题过渡

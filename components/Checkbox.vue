@@ -46,7 +46,7 @@
 		const nextState: CheckState = nextChecked ? "checked" : "unchecked";
 		const modelValue = model.value ?? [];
 		if (props.value)
-			if (nextChecked) arrayPushDistinct(modelValue, props.value);
+			if (nextChecked) arrayPushUniquely(modelValue, props.value);
 			else arrayRemoveAllItem(modelValue, props.value);
 		model.value = modelValue;
 		single.value = nextChecked;

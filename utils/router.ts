@@ -96,6 +96,7 @@ export function switchLanguage(lang: string) {
 		const routerView = settings?.closest(".router-view") ?? element.querySelector(".router-view");
 		routerView?.classList.add("stop-transition");
 		const TRANSITION_DURATION = 500;
+		const PIXEL_SIZE = 4;
 		if (!document.startViewTransition) {
 			update();
 			document.body.animate([
@@ -139,9 +140,28 @@ export function switchLanguage(lang: string) {
 					pseudoElement: "::view-transition-new(root)",
 					easing: eases.easeOutMax,
 				}],
+				[{
+					"--view-transition-pixel-gradient": ["0", `${PIXEL_SIZE * Math.SQRT1_2}px`],
+				}, {
+					pseudoElement: "::view-transition-new(root)",
+					easing: "cubic-bezier(0, 0, 0.7, 1)",
+				}],
+				[{
+					"--view-transition-pixel-gradient": [`${PIXEL_SIZE * Math.SQRT1_2}px`, "0"],
+				}, {
+					pseudoElement: "::view-transition-old(root)",
+					easing: "cubic-bezier(0.3, 0, 1, 1)",
+				}],
 			], {
 				duration: TRANSITION_DURATION,
 				cursor: "wait",
+				staticStyle: `
+					:root::view-transition-old(root),
+					:root::view-transition-new(root) {
+						mask-image: radial-gradient(white var(--view-transition-pixel-gradient), transparent var(--view-transition-pixel-gradient));
+						mask-size: ${PIXEL_SIZE}px ${PIXEL_SIZE}px;
+					}
+				`,
 			});
 		setTimeout(() => {
 			routerView?.classList.remove("stop-transition");
