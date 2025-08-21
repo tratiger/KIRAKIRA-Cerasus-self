@@ -307,7 +307,7 @@ html[style*="--cursor"] {
 	initial-value: 0;
 }
 
-@property --view-transition-pixel-gradient {
+@property --view-transition-halftone-gradient {
 	syntax: "<length>";
 	inherits: false;
 	initial-value: calc(infinity * 1px);
