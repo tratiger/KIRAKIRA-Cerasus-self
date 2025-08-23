@@ -336,6 +336,9 @@
 		isTryingRegistration.value = false; // 停止注册按钮加载动画
 	}
 
+	/**
+	 * 跳转到重置密码页面。
+	 */
 	async function jump2ResetPasswordPage() {
 		isChecking2FA.value = true;
 		try {
@@ -356,7 +359,7 @@
 				isChecking2FA.value = false;
 				return;
 			}
-			if (check2FAByEmailResult.have2FA && check2FAByEmailResult.type === "email") {
+			if (!check2FAByEmailResult.have2FA || check2FAByEmailResult.have2FA && check2FAByEmailResult.type === "email") {
 				const locale = getCurrentLocaleLangCode();
 				const requestSendForgotPasswordVerificationCodeRequest: RequestSendForgotPasswordVerificationCodeRequestDto = {
 					email: emailStr,
