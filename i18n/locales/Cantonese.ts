@@ -36,6 +36,7 @@ export default {
 		yellow: "紗路黃",
 		cyan: "麻耶青",
 		red: "小惠紅",
+		follow_bg: "跟返背景",
 	},
 	language: "語言",
 	background: {
@@ -374,8 +375,6 @@ export default {
 		forgot_title: "唔記得密碼",
 		reset_title: "重設密碼",
 		register_email_sent_info: "我哋經已送出驗證碼到閣下嘅電郵度，唔該喺度輸入驗證碼。\n未有收到嘅話，你可以選擇重新傳送。",
-		forgot_info: "唔該喺呢度寫低閣下嘅電郵，\n我哋會送出一封信到閣下嘅電郵度，唔該撳吓封信入邊條link重設密碼。",
-		reset_successful_info: "驗證成功！\n唔該寫低你一定要記住嘅新密碼。",
 	},
 	unselected: {
 		combobox: "請揀一項",
@@ -581,7 +580,9 @@ export default {
 	},
 	admin_operation_suffix: " （管理員）",
 	need_help: "需要協助？",
-	http_status_code: {},
+	http_status_code: {
+		code_403: "你冇權限進入呢個頁面。",
+	},
 	two_factor_authentication: {
 		_: "雙重驗證（2FA）",
 		description: "啓用雙重驗證可提升你嘅帳戶保安。若然你需要切換雙重驗證類型，唔該停用而家用嘅先。",
@@ -605,6 +606,7 @@ export default {
 		},
 		enable_email: {
 			_: "啓用電郵雙重驗證",
+			ensure: "請確保你依然可以使用呢個電郵！",
 		},
 		disable_email: {
 			_: "停用電郵雙重驗證",
@@ -619,5 +621,8 @@ export default {
 	},
 	info: "資訊",
 	calendar: {},
-	file_picker: {},
+	file_picker: {
+		choose: "揀選檔案",
+		rechoose: "重新揀選",
+	},
 } as const satisfies LocaleIdentifiers;

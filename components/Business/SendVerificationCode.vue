@@ -122,7 +122,14 @@
 </script>
 
 <template>
-	<TextBox v-model="value" required icon="verified" :placeholder="t.verification_code" :pattern autoComplete="one-time-code">
+	<TextBox
+		v-model="value"
+		required
+		icon="verified"
+		:placeholder="t.verification_code"
+		:pattern
+		autoComplete="one-time-code"
+	>
 		<template #actions>
 			<Button :disabled="!timeout.isTimeouted || props.disabled === true || isSendingEmail" @click="startTimeout(); sendVerificationCode();">
 				{{ (timeout.isResent ? t.resend : t.send) + (timeout.isTimeouted ? "" : ` (${timeout.timeout})`) }}
