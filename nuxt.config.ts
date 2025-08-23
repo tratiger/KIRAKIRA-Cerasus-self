@@ -119,6 +119,7 @@ export default defineNuxtConfig({
 				"@vueuse/gesture",
 				"mitt",
 				"tus-js-client",
+				'node-vibrant/worker',
 			],
 			needsInterop: [
 				"mediainfo.js",
