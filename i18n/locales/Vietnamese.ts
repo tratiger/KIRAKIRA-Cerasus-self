@@ -635,7 +635,6 @@ export default {
 	},
 	enable: "Kích hoạt",
 	disable: "Vô hiệu",
-	sync_across_devices: "Đồng bộ với mọi thiết bị",
 	role: {
 		administrator: "Quản trị viên",
 		developer: "Lập trình viên",

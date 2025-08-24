@@ -614,7 +614,6 @@ export default {
 	},
 	enable: "啓用",
 	disable: "停用",
-	sync_across_devices: "跨裝置同步",
 	role: {
 		administrator: "管理員",
 		developer: "開發者",

@@ -44,7 +44,7 @@
 	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
-	const backgroundImages = useBackgroundImages();
+	const appSettingsCookies = useAppSettingsCookies();
 
 	// 彩色侧边栏
 	const cookieColoredSidebar = useCookie<boolean>(COOKIE_KEY.coloredSidebarCookieKey);
@@ -115,8 +115,7 @@
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: backgroundImages.shown }">
-		<!-- BUG: 在设置页面刷新时，如果已开启背景图片，由于水合期间不会改变元素的 attr（如 class），这导致了设置页背景不会立即变透明，需要退出设置再重新进入才能正常。经典 SSR 与 LocalStorage 的老问题，不多说了。 -->
+	<div v-bind="$attrs" class="settings" :class="{ transparent: appSettingsCookies.bgShown }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">

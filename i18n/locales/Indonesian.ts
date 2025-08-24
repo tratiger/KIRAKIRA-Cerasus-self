@@ -630,7 +630,6 @@ export default {
 	},
 	enable: "Aktifkan",
 	disable: "Nonaktifkan",
-	sync_across_devices: "Sinkronkan Antar Perangkat",
 	role: {
 		administrator: "Pengelola",
 		developer: "Pengembang",

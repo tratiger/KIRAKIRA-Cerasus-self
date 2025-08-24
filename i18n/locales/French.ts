@@ -636,7 +636,7 @@ export default {
 	},
 	enable: "Activer",
 	disable: "Désactiver",
-	sync_across_devices: "Synchroniser entre les appareils",
+	sync_color_settings_across_devices: "Synchroniser les paramètres de couleur à travers les appareils",
 	role: {
 		administrator: "Administrateur",
 		developer: "Développeur",

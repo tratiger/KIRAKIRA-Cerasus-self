@@ -636,7 +636,7 @@ export default {
 	},
 	enable: "有効にする",
 	disable: "無効",
-	sync_across_devices: "デバイス間で同期",
+	sync_color_settings_across_devices: "端末間で色設定を同期",
 	role: {
 		administrator: "管理者",
 		developer: "開発者",

@@ -636,7 +636,7 @@ export default {
 	},
 	enable: "crwdns3504:0crwdne3504:0",
 	disable: "crwdns3506:0crwdne3506:0",
-	sync_across_devices: "crwdns3554:0crwdne3554:0",
+	sync_color_settings_across_devices: "crwdns3700:0crwdne3700:0",
 	role: {
 		administrator: "crwdns3646:0crwdne3646:0",
 		developer: "crwdns3648:0crwdne3648:0",

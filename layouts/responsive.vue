@@ -39,7 +39,9 @@
 <template>
 	<ClientOnly>
 		<div v-if="backgroundImages.shown" class="background" :style="{ opacity: backgroundImageSettingsStore.opacity }">
-			<img :src="backgroundImages.currentImage" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
+			<Transition appear>
+				<img :src="backgroundImages.currentImage" :style="{ filter: `blur(${backgroundImageSettingsStore.blur}px)` }" />
+			</Transition>
 			<div class="overlay" :style="{ opacity: backgroundImageSettingsStore.tint }"></div>
 		</div>
 	</ClientOnly>
@@ -137,6 +139,17 @@
 			position: fixed;
 			inset: 0;
 			object-fit: cover;
+
+			&.v-enter-from,
+			&.v-leave-to {
+				scale: 1.1;
+				opacity: 0;
+			}
+
+			&.v-enter-active,
+			&.v-leave-active {
+				transition: scale $ease-out-smooth 1s, opacity ease 1s;
+			}
 		}
 
 		.overlay {

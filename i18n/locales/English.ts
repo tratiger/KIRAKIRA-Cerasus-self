@@ -632,7 +632,7 @@ export default {
 	},
 	enable: "Enable",
 	disable: "Disable",
-	sync_across_devices: "Sync Across Devices",
+	sync_color_settings_across_devices: "Sync Color Settings Across Devices",
 	role: {
 		administrator: "Administrator",
 		developer: "Developer",

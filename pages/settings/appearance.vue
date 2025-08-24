@@ -162,60 +162,60 @@
 			</SettingsGridItem>
 		</section>
 
-		<Subheader icon="wallpaper">{{ t.background }}</Subheader>
-		<section>
-			<Button class="upload-bg-image-btn" icon="upload" @click="addBackgroundImage">{{ t.file_picker.choose }}</Button>
-			<section grid force-multi-column class="section-background-images">
-				<TransitionGroup appear>
-					<SettingsGridItem
-						v-for="item in backgroundImages.items"
-						:id="item.key"
-						:key="item.key"
-						v-model="backgroundImages.backgroundImage"
-						class="preview-bg-image force-color"
-						:style="{ '--accent-50': item.color }"
-						@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item, e.currentTarget])"
-					>
-						<Icon v-if="item.key === -1" name="prohibited" />
-						<img v-else :src="item.url" alt="" />
-					</SettingsGridItem>
-				</TransitionGroup>
-			</section>
-			<template v-if="backgroundImages.shown">
-				<SettingsSlider
-					v-model="backgroundImageSettingsStore.opacity"
-					:min="0"
-					:max="0.4"
-					:step="0.01"
-					:defaultValue="0.2"
-					icon="opacity"
-					pending="current"
-					:displayValue="backgroundSliderDisplayValue"
-				>{{ t.background.opacity }}</SettingsSlider>
-				<SettingsSlider
-					v-model="backgroundImageSettingsStore.tint"
-					:min="0"
-					:max="1"
-					:step="0.01"
-					:defaultValue="0.75"
-					icon="join_inner"
-					pending="current"
-					:displayValue="backgroundSliderDisplayValue"
-				>{{ t.background.tint }}</SettingsSlider>
-				<SettingsSlider
-					v-model="backgroundImageSettingsStore.blur"
-					:min="0"
-					:max="64"
-					:step="1"
-					:defaultValue="0"
-					icon="blur"
-					pending="current"
-					:displayValue="backgroundSliderDisplayValue"
-				>{{ t.background.blur }}</SettingsSlider>
-			</template>
-		</section>
-
 		<ClientOnly>
+			<Subheader icon="wallpaper">{{ t.background }}</Subheader>
+			<section>
+				<Button class="upload-bg-image-btn" icon="upload" @click="addBackgroundImage">{{ t.file_picker.choose }}</Button>
+				<section grid force-multi-column class="section-background-images">
+					<TransitionGroup appear>
+						<SettingsGridItem
+							v-for="item in backgroundImages.items"
+							:id="item.key"
+							:key="item.key"
+							v-model="backgroundImages.backgroundImage"
+							class="preview-bg-image force-color"
+							:style="{ '--accent-50': item.color }"
+							@contextmenu.prevent="e => item.key !== -1 && (backgroundImageItemMenu = [e, item, e.currentTarget])"
+						>
+							<Icon v-if="item.key === -1" name="prohibited" />
+							<img v-else :src="item.url" alt="" />
+						</SettingsGridItem>
+					</TransitionGroup>
+				</section>
+				<template v-if="backgroundImages.shown">
+					<SettingsSlider
+						v-model="backgroundImageSettingsStore.opacity"
+						:min="0"
+						:max="0.4"
+						:step="0.01"
+						:defaultValue="0.2"
+						icon="opacity"
+						pending="current"
+						:displayValue="backgroundSliderDisplayValue"
+					>{{ t.background.opacity }}</SettingsSlider>
+					<SettingsSlider
+						v-model="backgroundImageSettingsStore.tint"
+						:min="0"
+						:max="1"
+						:step="0.01"
+						:defaultValue="0.75"
+						icon="join_inner"
+						pending="current"
+						:displayValue="backgroundSliderDisplayValue"
+					>{{ t.background.tint }}</SettingsSlider>
+					<SettingsSlider
+						v-model="backgroundImageSettingsStore.blur"
+						:min="0"
+						:max="64"
+						:step="1"
+						:defaultValue="0"
+						icon="blur"
+						pending="current"
+						:displayValue="backgroundSliderDisplayValue"
+					>{{ t.background.blur }}</SettingsSlider>
+				</template>
+			</section>
+
 			<Menu v-model="backgroundImageItemMenu[0]">
 				<!-- TODO: 多语言。 -->
 				<MenuItem icon="arrow_left" :disabled="backgroundImageItemMenu[1].displayIndex <= 0" @click="backgroundImages.reorder(backgroundImageItemMenu[1].key, backgroundImageItemMenu[1].displayIndex - 1)">往前挪</MenuItem>
@@ -250,7 +250,7 @@
 				:disabled="!selfUserInfoStore.isLogined"
 				icon="sync"
 			>
-				{{ t.sync_across_devices }}
+				{{ t.sync_color_settings_across_devices }}
 			</ToggleSwitch>
 		</section>
 	</div>
