@@ -107,7 +107,7 @@ export const getSelfUserInfo = async (props: { getSelfUserInfoRequest: GetSelfUs
 	const selfUserInfoResult = data.value?.result;
 	if (data.value?.success && selfUserInfoResult) {
 		if (props.appSettingsStore)
-			props.appSettingsStore.typeOf2FA = selfUserInfoResult.typeOf2FA || "none";
+			props.appSettingsStore.authenticatorType = selfUserInfoResult.authenticatorType || "none";
 		if (props.selfUserInfoStore) {
 			props.selfUserInfoStore.isEffectiveCheckOnce = true; // 成功 fetch 用户信息时才能设为 true
 			props.selfUserInfoStore.isLogined = true;
@@ -176,7 +176,7 @@ export async function userLogout(props: { appSettingsStore: AppSettingsStoreType
 	const logoutResult = await GET(`${USER_API_URI}/logout`, { credentials: "include" }) as UserLogoutResponseDto;
 	if (logoutResult.success) {
 		if (props.appSettingsStore)
-			props.appSettingsStore.typeOf2FA = "none";
+			props.appSettingsStore.authenticatorType = "none";
 		if (props.selfUserInfoStore) {
 			props.selfUserInfoStore.isLogined = false;
 			props.selfUserInfoStore.userInfo = {};
@@ -415,7 +415,7 @@ export const checkUserHave2FAByUUID = async (headerCookie: { cookie?: string | u
 	const checkUserHave2FAResponse = result.value as CheckUserHave2FAResponseDto;
 	if (checkUserHave2FAResponse.success) {
 		const appSettings = useAppSettingsStore();
-		appSettings.typeOf2FA = checkUserHave2FAResponse.type || "none";
+		appSettings.authenticatorType = checkUserHave2FAResponse.type || "none";
 	}
 	return checkUserHave2FAResponse;
 };
