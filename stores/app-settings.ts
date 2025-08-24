@@ -40,7 +40,7 @@ export const useAppSettingsStore = defineStore("app-settings", {
 			},
 		},
 
-		typeOf2FA: "email", // 2FA 的类型
+		authenticatorType: "none", // 2FA 的类型
 	}),
 	getters: {
 		getExitSettingRoute: state => {

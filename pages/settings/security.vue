@@ -27,24 +27,24 @@
 	// 2FA 相关
 	const checkUser2FAResult = ref<CheckUserHave2FAResponseDto>(); // 获取到的用户 2FA 类型
 	const authenticatorAddDateDisplay = computed(() => formatDateWithLocale(new Date(checkUser2FAResult.value?.totpCreationDateTime ?? 0)));
-	type TypeOf2FA = "none" | "email" | "totp";
-	const categoryOf2FAComputed = computed<TypeOf2FA>({ // 2FA 的类型，带有副作用
+	type AuthenticatorType = "none" | "email" | "totp";
+	const categoryOf2FAComputed = computed<AuthenticatorType>({ // 2FA 的类型，带有副作用
 		get() {
-			return appSettingsStore.typeOf2FA === "email" || appSettingsStore.typeOf2FA === "totp" ? appSettingsStore.typeOf2FA : "none";
+			return appSettingsStore.authenticatorType === "email" || appSettingsStore.authenticatorType === "totp" ? appSettingsStore.authenticatorType : "none";
 		},
-		set(newValue) {
-			if (appSettingsStore.typeOf2FA === "totp" && newValue !== "totp" && checkUser2FAResult.value?.type === "totp") {
+		set(newValue: string) {
+			if (appSettingsStore.authenticatorType === "totp" && newValue !== "totp" && checkUser2FAResult.value?.type === "totp") {
 				// 当响应式变量从 totp 改变为其他非 totp 的值，且用户的 2FA 类型为 totp 时，打开解绑 TOTP 的模态框，且不会导致导致响应式变量的变更
 				useToast(t.toast.must_remove_totp_first, "warning", 5000);
 				openDeleteTotpModel();
-			} else if (appSettingsStore.typeOf2FA === "email" && newValue !== "email" && checkUser2FAResult.value?.type === "email") {
+			} else if (appSettingsStore.authenticatorType === "email" && newValue !== "email" && checkUser2FAResult.value?.type === "email") {
 				// 当响应式变量从 email 改变为其他非 email 的值，且用户的 2FA 类型为 email 时，打开删除 Email 2FA 的模态框，且不会导致导致响应式变量的变更
 				openDeleteEmail2FAModel();
 				useToast(t.toast.must_verify_email_first, "warning", 5000);
-			} else if (newValue === "email" && appSettingsStore.typeOf2FA !== "email" && checkUser2FAResult.value?.type !== "email")
+			} else if (newValue === "email" && appSettingsStore.authenticatorType !== "email" && checkUser2FAResult.value?.type !== "email")
 				openCreateEmail2FAModel();
 			else
-				appSettingsStore.typeOf2FA = newValue;
+				appSettingsStore.authenticatorType = newValue;
 		},
 	});
 	const hasBoundTotp = computed(() => checkUser2FAResult.value?.success && checkUser2FAResult.value.have2FA && checkUser2FAResult.value?.type === "totp"); // 是否已经有 TOTP，当 2FA 存在且类型为 totp 时，开启编辑 TOTP 的模态框，否则开启创建 TOTP 的模态框
@@ -52,7 +52,7 @@
 	const isTotp2FADisable = computed(() => checkUser2FAResult.value?.type === "email" || categoryOf2FAComputed.value === "email");
 
 	// 警告相关
-	const isUnsafeAccount = computed(() => selfUserInfo.isLogined && (appSettingsStore.typeOf2FA === "none" || !checkUser2FAResult.value?.have2FA));
+	const isUnsafeAccount = computed(() => selfUserInfo.isLogined && (appSettingsStore.authenticatorType === "none" || !checkUser2FAResult.value?.have2FA));
 
 	// 创建 TOTP 2FA 相关
 	const showCreateTotpModel = ref(false); // 是否显示创建 TOTP 模态框
@@ -194,7 +194,7 @@
 
 			isCreatingEmail2FA.value = false;
 			showCreateEmail2FAModel.value = false;
-			appSettingsStore.typeOf2FA = "email";
+			appSettingsStore.authenticatorType = "email";
 			useToast(t.toast.email_2fa_enabled, "success", 3000);
 			checkUserHave2FAByUUID();
 		} catch (error) {
@@ -332,7 +332,7 @@
 	 * 下载 TOTP 生成的备份码和恢复码。
 	 */
 	function downloadBackupCodeAndRecoveryCode() {
-		const backupCodeAndRecoveryCode = `${t.two_factor_authentication.add_totp.backup_codes}\n${displayBackupCode.value}\n\n${t.two_factor_authentication.add_totp.recovery_code}\n${recoveryCode.value}`;
+		const backupCodeAndRecoveryCode = `${t.two_factor_authentication.add_totp.backup_code}\n${displayBackupCode.value}\n\n${t.two_factor_authentication.add_totp.recovery_code}\n${recoveryCode.value}`;
 		const filename = `KIRAKIRA TOTP CODE ${selfUserInfoStore.userInfo.username} (UID ${selfUserInfoStore.userInfo.uid}) ${new Date().getTime()}`;
 		downloadTxtFileFromString(backupCodeAndRecoveryCode, filename);
 	}
