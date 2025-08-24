@@ -3,6 +3,8 @@
 </docs>
 
 <script setup lang="ts">
+	import { Analytics } from "@vercel/analytics/nuxt";
+
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
 	const backgroundImages = useBackgroundImages();
 	const showDrawer = ref(false);
@@ -52,6 +54,7 @@
 		<Offcanvas v-if="showDrawer" v-model="showDrawer" />
 	</Transition>
 	<div class="viewport">
+		<Analytics />
 		<SideBar :hideAppBar :flatAppBar :hideBottomNav :isSettingsPage :overrideLogoText="showDrawer ? t.navigation.back : undefined" />
 		<ScrollContainer
 			scrollElId="mainScroller"
