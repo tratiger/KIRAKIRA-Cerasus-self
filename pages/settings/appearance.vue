@@ -422,6 +422,10 @@
 		&.v-leave-to {
 			scale: 0;
 		}
+
+		&.v-leave-active {
+			position: absolute;
+		}
 	}
 
 	.flyout-content {
