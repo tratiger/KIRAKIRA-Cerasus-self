@@ -26,16 +26,12 @@ export function useBackgroundImages() {
 	type Store = IndexedDBStore<BackgroundImageRow>;
 	const store = shallowRef<Store>();
 	const backgroundImageSettingsStore = useAppSettingsStore().backgroundImage;
-	const appSettingsCookies = useAppSettingsCookies();
 	const backgroundImage = computed({
 		get: () => backgroundImageSettingsStore.imageIndex,
 		set: current => {
 			const previous = backgroundImageSettingsStore.imageIndex;
 			if (current !== previous)
-				startCircleViewTransition(current !== -1, () => {
-					backgroundImageSettingsStore.imageIndex = current;
-					appSettingsCookies.bgShown = !!~current;
-				});
+				startCircleViewTransition(current !== -1, () => backgroundImageSettingsStore.imageIndex = current);
 		},
 	});
 	const currentItem = computed(() => items.value.find(item => item.key === backgroundImage.value));

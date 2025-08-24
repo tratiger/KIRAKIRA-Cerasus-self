@@ -44,7 +44,8 @@
 	const isAdmin = computed(() => selfUserInfoStore.userInfo.roles?.includes("administrator"));
 	const isDevMode = toNewRef(isAdmin);
 	provide("isDevMode", isDevMode);
-	const appSettingsCookies = useAppSettingsCookies();
+	const backgroundImages = useBackgroundImages();
+	const backgroundShown = ref(false);
 
 	// 彩色侧边栏
 	const cookieColoredSidebar = useCookie<boolean>(COOKIE_KEY.coloredSidebarCookieKey);
@@ -112,10 +113,14 @@
 		if (environment.client && !selfUserInfoStore.isLogined && settings.personal.some(setting => setting.id === currentSettingsRequested.value))
 			navigate("/settings/appearance");
 	});
+
+	onMounted(() => {
+		backgroundShown.value = backgroundImages.shown;
+	});
 </script>
 
 <template>
-	<div v-bind="$attrs" class="settings" :class="{ transparent: appSettingsCookies.bgShown }">
+	<div v-bind="$attrs" class="settings" :class="{ transparent: backgroundShown }">
 		<ShadingIcon icon="settings" position="right top" rotating />
 
 		<nav :class="{ show: showDrawer }">
