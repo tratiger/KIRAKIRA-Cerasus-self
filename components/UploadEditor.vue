@@ -304,8 +304,6 @@
 				<ImageCropper
 					ref="cropper"
 					:image="thumbnailBlob"
-					:autoCropWidth="480"
-					:autoCropHeight="270"
 					:fixed="true"
 					:fixedNumber="[16, 9]"
 					:full="true"
