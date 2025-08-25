@@ -65,13 +65,12 @@
 
 code,
 pre,
-kbd,
 samp,
 tt,
 xmp {
 	&,
 	* {
-		font-family: "SF Compact", $monospace-fonts !important;
+		font-family: $monospace-fonts !important;
 	}
 }
 
