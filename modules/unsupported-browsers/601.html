@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-Hans-CN" class="zh-Hans-CN">
+<html lang="zh-CN" class="zh-CN">
+<!-- IE 不支持 zh-Hans-CN 或 zh-Hant-TW，它只支持老旧的 zh-CN 和 zh-TW。 -->
 
 <head>
 	<meta charset="UTF-8" />
@@ -32,25 +33,26 @@
 			else if (lang.match(/^vi/i)) lang = "vi";
 			else if (lang.match(/^id/i)) lang = "id";
 			else if (lang.match(/^fr/i)) lang = "fr";
-			else if (lang.match(/^yue/i)) lang = "yue";
+			else if (lang.match(/^yue/i)) lang = "zh-HK"; // 没有早期系统支持粤语，因此回退到香港地区中文，否则没机会显示。
 			else if (lang.match(/^zh/i)) {
-				if (lang.match(/(CN|SG|MY)$/i) || lang === "zhs") lang = "zh-Hans-CN";
-				else if (lang.match(/(TW|HK|MO)$/i) || lang === "zht") lang = "zh-Hant-TW";
+				if (lang.match(/(CN|SG|MY)$/i) || lang === "zhs") lang = "zh-CN";
+				else if (lang.match(/(TW)$/i) || lang === "zht") lang = "zh-TW";
+				else if (lang.match(/(HK|MO)$/i)) lang = "zh-HK";
 				else return;
 			}
 			else return;
 			document.documentElement.lang = lang;
 			document.documentElement.className = lang;
 			var titles = {
-				"zh-Hans-CN": "是时候更换你的浏览器了",
-				"zh-Hant-TW": "是時候更換你的瀏覽器了",
+				"zh-CN": "是时候更换你的浏览器了",
+				"zh-TW": "是時候更換你的瀏覽器了",
 				en: "Time to Change Your Browser",
 				ja: "ブラウザを変える時だ",
 				ko: "{{!Time to Change Your Browser}}",
 				vi: "Đến lúc đổi trình duyệt rồi",
 				id: "{{!Time to Change Your Browser}}",
 				fr: "Il est temps de changer de navigateur",
-				yue: "係時候換咗你嘅Browser喇"
+				"zh-HK": "係時候換咗你嘅Browser喇"
 			};
 			var title = titles[lang];
 			if (title) document.title = title + " - KIRAKIRA☆DOUGA";
@@ -63,8 +65,9 @@
 		/* stylelint-disable property-no-vendor-prefix */
 		/* stylelint-disable selector-class-pattern */
 
+		/* 使用垂直居中引号。（直接使用 Unicode 垂直居中引号则日语字体太丑。） */
 		@font-face {
-			font-family: CJKEllipsis;
+			font-family: "CJK Ellipsis";
 			src: local("SimSun");
 			unicode-range: U+2026;
 		}
@@ -73,7 +76,7 @@
 		body {
 			margin: 0;
 			padding: 0;
-			font-family: CJKEllipsis, "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", SimHei, sans-serif;
+			font-family: "CJK Ellipsis", "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", SimHei, sans-serif;
 			background: #fafafa;
 			background-color: #fafafa;
 			cursor: default;
@@ -83,17 +86,17 @@
 			user-select: none;
 		}
 
-		html.zh-Hant-TW body,
-		html.yue body {
-			font-family: CJKEllipsis, "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Microsoft JhengHei", "Microsoft YaHei", SimHei, sans-serif;
+		html.zh-TW body,
+		html.zh-HK body {
+			font-family: "CJK Ellipsis", "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Microsoft JhengHei", "Microsoft YaHei", SimHei, sans-serif;
 		}
 
 		html.ja body {
-			font-family: CJKEllipsis, "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Yu Gothic", Meiryo, "MS Gothic", SimHei, sans-serif;
+			font-family: "CJK Ellipsis", "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Yu Gothic", Meiryo, "MS Gothic", SimHei, sans-serif;
 		}
 
 		html.ko body {
-			font-family: CJKEllipsis, "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Malgun Gothic", Dotum, SimHei, sans-serif;
+			font-family: "CJK Ellipsis", "Segoe UI", Verdana, Tahoma, "Helvetica Neue", Helvetica, Arial, "Malgun Gothic", Dotum, SimHei, sans-serif;
 		}
 
 		@keyframes intro {
@@ -215,6 +218,14 @@
 			margin: 0 16px;
 		}
 
+		#browser-card-4 {
+			margin-left: 172px;
+		}
+
+		#browser-card-4 h4 {
+			margin-top: 10px;
+		}
+
 		.browser-image {
 			display: block;
 			width: 66px;
@@ -244,23 +255,13 @@
 			background-image: url("/static/images/601/mozilla_firefox.svg");
 		}
 
-		.browser-cards.old #browser-card-1,
-		.browser-cards.old #browser-card-2,
-		.browser-cards.old #browser-card-3 {
+		.browser-image-4 {
+			background-image: url("/static/images/601/supermium.svg");
+		}
+
+		.browser-cards.old .browser-card.new,
+		.browser-cards.new .browser-card.old {
 			display: none;
-		}
-
-		.browser-cards.old #browser-card-4 {
-			display: block;
-			margin-left: 172px;
-		}
-
-		#browser-card-4 {
-			display: none;
-		}
-
-		#browser-card-4 h4 {
-			margin-top: 10px;
 		}
 
 		.left {
@@ -302,15 +303,15 @@
 			display: none;
 		}
 
-		html.zh-Hans-CN .text.zh-Hans-CN,
-		html.zh-Hant-TW .text.zh-Hant-TW,
+		html.zh-CN .text.zh-CN,
+		html.zh-TW .text.zh-TW,
+		html.zh-HK .text.zh-HK,
 		html.en .text.en,
 		html.ja .text.ja,
 		html.ko .text.ko,
 		html.vi .text.vi,
 		html.id .text.id,
-		html.fr .text.fr,
-		html.yue .text.yue {
+		html.fr .text.fr {
 			display: block;
 		}
 	</style>
@@ -331,6 +332,10 @@
 
 			.browser-image-3 {
 				background-image: url("/static/images/601/mozilla_firefox.png");
+			}
+
+			.browser-image-4 {
+				background-image: url("/static/images/601/supermium.png");
 			}
 
 			.ie-icon {
@@ -365,7 +370,7 @@
 		</td>
 
 		<td class="right">
-			<div lang="zh-Hans-CN" class="text zh-Hans-CN">
+			<div lang="zh-CN" class="text zh-CN">
 				<h1>是时候更换你的浏览器了</h1>
 				<p>
 					你乘坐着 Internet Explorer 来到了 ACG 的海洋，很可惜，你搁浅了……<br />
@@ -378,7 +383,7 @@
 					去改变时代，为这新时代添上一笔自己的色彩，而不是将自己困在过去。
 				</p>
 			</div>
-			<div lang="zh-Hant-TW" class="text zh-Hant-TW">
+			<div lang="zh-TW" class="text zh-TW">
 				<h1>是時候更換你的瀏覽器了</h1>
 				<p>
 					你乘坐著 Internet Explorer 來到了 ACG 的海洋，很可惜，你擱淺了……<br />
@@ -461,7 +466,7 @@
 					Même si vous partagez notre aversion pour la folie, l’agitation et l’isolement de la nouvelle ère, ainsi que notre nostalgie pour le rire, la lenteur et l’ouverture du passé, ce que nous devons faire, c’est changer les temps et ajouter une touche de notre propre couleur à cette nouvelle ère, tout comme ce site Web, plutôt que de rester coincés dans le passé.
 				</p>
 			</div>
-			<div lang="yue" class="text yue">
+			<div lang="zh-HK" class="text zh-HK">
 				<h1>係時候換你嘅瀏覽器喇</h1>
 				<p>
 					你搭住 Internet Explorer 嚟到 ACG 嘅大海，好可惜，部船炒咗……<br />
@@ -476,10 +481,10 @@
 			</div>
 			<div class="browers">
 				<span class="browsers-title">
-					<span lang="zh-Hans-CN" class="text zh-Hans-CN">
+					<span lang="zh-CN" class="text zh-CN">
 						你可以尝试换乘
 					</span>
-					<span lang="zh-Hant-TW" class="text zh-Hant-TW">
+					<span lang="zh-TW" class="text zh-TW">
 						你可以嘗試換乘
 					</span>
 					<span lang="en" class="text en">
@@ -500,27 +505,25 @@
 					<span lang="fr" class="text fr">
 						Vous pouvez essayer de transférer
 					</span>
-					<span lang="yue" class="text yue">
+					<span lang="zh-HK" class="text zh-HK">
 						你可以嘗試轉乘
 					</span>
 				</span>
-				<ul class="browser-cards" id="browser-cards">
-					<li class="browser-card" id="browser-card-1">
+				<ul class="browser-cards new" id="browser-cards">
+					<li class="browser-card new" id="browser-card-1">
 						<div class="browser-image browser-image-1"></div>
 						<h4><b>Microsoft</b><br />Edge</h4>
 					</li>
-					<li class="browser-card" id="browser-card-2">
+					<li class="browser-card new" id="browser-card-2">
 						<div class="browser-image browser-image-2"></div>
 						<h4><b>Google</b><br />Chrome</h4>
 					</li>
-					<li class="browser-card" id="browser-card-3">
+					<li class="browser-card new" id="browser-card-3">
 						<div class="browser-image browser-image-3"></div>
 						<h4><b>Mozilla</b><br />Firefox</h4>
 					</li>
-					<li class="browser-card" id="browser-card-4">
-						<div class="browser-image">
-							<img src="/static/images/601/supermium.png">
-						</div>
+					<li class="browser-card old" id="browser-card-4">
+						<div class="browser-image browser-image-4"></div>
 						<h4>Supermium</h4>
 					</li>
 				</ul>
@@ -535,7 +538,7 @@
 			// 解决点击 browser-card 外边缘无效的问题。
 			var links = [
 				"https://www.microsoft.com/edge/download",
-				document.documentElement.lang === "zh-Hans-CN" ?
+				document.documentElement.lang === "zh-CN" ?
 					"https://www.google.cn/chrome/index.html" :
 					"https://www.google.com/chrome/index.html",
 				"https://www.mozilla.org/firefox/new",
@@ -548,6 +551,15 @@
 						window.open(links[i]);
 					};
 				})(i);
+			}
+			// Windows 8.1 及以下系统改为推荐 Supermium 浏览器。
+			var ua = navigator.userAgent;
+			var browserCardsEl = document.getElementById("browser-cards");
+			var matches = /Windows NT ([0-9.]+)/.exec(ua);
+			if (browserCardsEl && matches) {
+				var winver = parseFloat(matches[1]); // 6.1=Win7, 6.2=Win8, 6.3=Win8.1, 10.0+=Win10/11
+				if (winver < 10 && browserCardsEl.className.indexOf(" old") === -1)
+					browserCardsEl.className = browserCardsEl.className.replace(" new", "") + " old"; // 不直接将 new 替换为 old 是因为万一 new 不存在则替换操作不会被执行。
 			}
 			// 解决窗口过小导致纯 CSS 居中裁掉部分内容问题。
 			function centerMainCard() {
@@ -568,26 +580,9 @@
 	<script>
 		(function () {
 			// 该部分脚本仅在非 IE 浏览器下才会执行。
-			if (!(window.ActiveXObject || "ActiveXObject" in window)) {
+			if (!(window.ActiveXObject || "ActiveXObject" in window))
 				if (params.next)
 					location.href = params.next;
-			}
-		})();
-	</script>
-	<script>
-		(function () {
-			var ua = navigator.userAgent;
-			var browserCardsEl = document.getElementById("browser-cards");
-			if (!browserCardsEl) return;
-			var match = /Windows NT ([0-9.]+)/.exec(ua);
-			if (match) {
-					var verNum = parseFloat(match[1]); // 6.1=Win7, 6.2=Win8, 6.3=Win8.1, 10.0+=Win10/11
-					if (verNum < 10) {
-							if (browserCardsEl.className.indexOf(" old") < 0) {
-									browserCardsEl.className += " old";
-							}
-					}
-			}
 		})();
 	</script>
 </body>
