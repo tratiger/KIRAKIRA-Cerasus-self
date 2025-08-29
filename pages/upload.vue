@@ -14,10 +14,6 @@
 	 */
 	async function uploaded(fileList: File[]) {
 		// DELETE ME: 该判定仅测试阶段使用
-		if (!selfUserInfoStore.userInfo.roles?.includes("administrator")) {
-			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
-			return;
-		}
 
 		successfulUploaded.value = true;
 		if (!isPrefersReducedMotion()) await delay(1500);
@@ -70,11 +66,7 @@
 	function onChangeFile(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const files = getValidFiles(input.files);
-		// DELETE ME: 改判定仅测试阶段使用
-		if (!selfUserInfoStore.userInfo.roles?.includes("administrator")) {
-			useToast("测试阶段该功能仅限管理员使用。", "warning", 5000);
-			return;
-		}
+
 
 		if (files.length > 0)
 			uploaded(files);
